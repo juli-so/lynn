@@ -1,0 +1,70 @@
+p, div, input {
+  padding: 0px;
+  border: 0px;
+  margin: 0px;
+}
+
+#m_accessor {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  /*margin-top: -154px;*/
+  margin-left: -372px;
+  z-index: 99999;
+  display: none;
+}
+
+#m_command_input {
+  box-sizing: content-box;
+  width: 700px;
+  font-family: 'Helvetica Neue';
+  border: 2px #ddd solid;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px; 
+  font-size: 24px;
+  padding: 12px 20px;
+}
+
+.m_suggestion {
+  box-sizing: content-box;
+  width: 700px;
+  font-family: 'Open Sans';
+  color: #777777;
+  border: 2px #ddd solid;
+  border-top: none;
+  padding: 10px 20px;
+  background-color: #fff;
+}
+
+.m_suggestion_current {
+  background-color: lightblue;
+}
+
+.m_id {
+  padding-right: 20px;
+}
+
+.m_title {
+  line-height: 1.4em;
+  font-size: 16px;
+}
+
+.m_tagline {
+  text-align: right;
+  padding-top: 5px;
+  color: green;
+}
+
+.m_tag {
+  padding-right: 10px;
+  font-size: 18px;
+}
+
+.m_dir {
+  color: lightblue;
+}
+
+.m_toread {
+  color: blue;
+}
+
