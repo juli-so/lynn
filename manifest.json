@@ -18,9 +18,11 @@
         "js": [
           "vendor/js/lodash.min.js",
           "vendor/js/jquery.min.js",
-          "lib/content_script/command.js",
-          "lib/content_script/accessor_ui.js",
-          "lib/content_script/accessor.js"
+          "vendor/js/react.js",
+          "lib/content_script/accessor.js",
+          "lib/content_script/message.js",
+          "lib/content_script/shortcut.js",
+          "lib/content_script/main.js"
         ]
       }
     ],

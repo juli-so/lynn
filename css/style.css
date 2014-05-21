@@ -11,7 +11,7 @@ p, div, input {
   /*margin-top: -154px;*/
   margin-left: -372px;
   z-index: 99999;
-  display: none;
+  /*display: none;*/
 }
 
 #m_command_input {

@@ -1,42 +1,55 @@
-##############################################################################
-# 
-# Bookmark Accessor
-#
-##############################################################################
+{ div, span, input } = React.DOM
 
-$(->
-  Command.init()
-  Accessor_ui.init()
-  $('body').append(Accessor_ui.m_accessor)
+# Suggestion
 
-  count = 0
-  Accessor_ui.m_command_input.on('input', ->
-    command = $(@).val()
+Mainline = React.createClass
+  render: ->
+    div {className: 'm_mainline'},
+      span {className: 'm_title'},
+        @props.title
 
-    Command.addListener((message) ->
-        Accessor_ui.renderSuggestion(message.result)
-    )
+Tagline = React.createClass
+  render: ->
+    div {className: 'm_tagline'},
+      _.map @props.tagArray, (tag) ->
+        span {className: 'm_tag'}, '#', tag
 
-    Command.postMessage(Command.request(command))
-  )
+Suggestion = React.createClass
+  render: ->
+    div {className: 'm_suggestion'},
+      Mainline {title: @props.title}
+      Tagline {tagArray: @props.tagArray}
 
-  port = chrome.runtime.connect({ name: 'm_action' })
-  $(document).keyup((event) ->
-    if Accessor_ui.m_command_input.is(":focus")
-      if event.keyCode == 13
-        port.postMessage({ request: 'open', url: Accessor_ui.getCurrentNode().url })
-    if event.keyCode == 66 and event.ctrlKey == true
-      $('#m_accessor').toggle()
-      $('#m_command_input').focus()
-    # Up arrow
-    if event.keyCode == 38
-      Accessor_ui.prevSuggestion()
-    # Down arrow
-    if event.keyCode == 40
-      Accessor_ui.nextSuggestion()
-    # Esc
-    if event.keyCode == 27
-      Accessor_ui.clear()
-  )
-)
+# Accessor
+Accessor = React.createClass
+  getInitialState: ->
+    query: ''
+    nodeArray: []
+
+  componentWillMount: ->
+    Message.addListener ((msg) ->
+      @setState {nodeArray: msg.result}
+    ).bind(@)
+
+  handleChange: (event) ->
+    query = event.target.value
+    @setState {query}
+
+    Message.postMessage {request: 'search', command: query}
+
+  render: ->
+    inputProps =
+      id:'m_command_input'
+      type: 'text'
+      size: '80'
+      placeholder: 'Search for...'
+      onChange: @handleChange
+
+    div {id: 'm_accessor'},
+      input inputProps
+
+      div {id: 'm_suggestion_box'},
+        _.map @state.nodeArray, (node) ->
+          Suggestion {title: node.title, tagArray: node.tagArray}
+
 
