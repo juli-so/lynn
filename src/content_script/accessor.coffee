@@ -26,16 +26,41 @@ Accessor = React.createClass
     query: ''
     nodeArray: []
 
+    accessorVisible: false
+
   componentWillMount: ->
-    Message.addListener ((msg) ->
+    # Listen to response to the message sent in @handleChange
+    Message.addListener (msg) =>
       @setState {nodeArray: msg.result}
-    ).bind(@)
+
+    # Hijack global shortcuts
+    $(document).keyup (event) =>
+      # Invoking command input
+      if event.ctrlKey and event.keyCode == 66
+        @toggle()
+
+  toggle: ->
+    @setState {accessorVisible: not @state.accessorVisible}
+
+  componentDidUpdate: (prevProps, prevStates) ->
+    if @state.accessorVisible
+      $('#m_accessor').show()
+      $('#m_command_input').focus()
+    else
+      $('#m_accessor').hide()
+      $('#m_command_input').focus()
 
   handleChange: (event) ->
     query = event.target.value
     @setState {query}
 
     Message.postMessage {request: 'search', command: query}
+
+  onKeyUp: (event) ->
+    if event.keyCode == 13
+      Message.postMessage({request: 'open', url: @state.nodeArray[0].url})
+    if event.keyCode == 27
+      @reset()
 
   render: ->
     inputProps =
@@ -45,11 +70,13 @@ Accessor = React.createClass
       placeholder: 'Search for...'
       onChange: @handleChange
 
-    div {id: 'm_accessor'},
+    div {id: 'm_accessor', onKeyUp: @onKeyUp},
       input inputProps
 
       div {id: 'm_suggestion_box'},
         _.map @state.nodeArray, (node) ->
-          Suggestion {title: node.title, tagArray: node.tagArray}
+          Suggestion {title: node.title, tagArray: node.tagArray, key: node.id}
 
-
+  reset: ->
+    $('#m_command_input').val('')
+    @setState {query: '', nodeArray: []}
