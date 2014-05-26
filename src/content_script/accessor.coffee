@@ -59,7 +59,6 @@ Accessor = React.createClass
       $('#m_command_input').focus()
     else
       $('#m_accessor').hide()
-      $('#m_command_input').focus()
 
   render: ->
     inputProps =
@@ -96,11 +95,17 @@ Accessor = React.createClass
     currentNodeIndex = (@state.currentNodeIndex + 1) % @state.maxSuggestionNum
     @setState {currentNodeIndex}
 
+  reset: ->
+    @setState {query: '', nodeArray: [], currentNodeIndex: 0}
+
   handleChange: (event) ->
     query = event.target.value
-    @setState {query}
+    if _.isEmpty(query)
+      @reset()
+    else
+      @setState {query}
 
-    Message.postMessage {request: 'search', command: query}
+      Message.postMessage {request: 'search', command: query}
 
   onKeyUp: (event) ->
     if event.keyCode == 13
@@ -108,14 +113,10 @@ Accessor = React.createClass
       Message.postMessage({request: 'open', url})
     # Esc key is hijacked now, I'll hijack it back later
     # if event.keyCode == 27
-    if event.ctrlKey and event.keyCode = 8
-      event.preventDefault()
+    if event.ctrlKey and event.keyCode == 8
       @reset()
     if event.keyCode == 38
       @up()
     if event.keyCode == 40
       @down()
 
-  reset: ->
-    $('#m_command_input').val('')
-    @setState {query: '', nodeArray: []}
