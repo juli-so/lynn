@@ -146,9 +146,6 @@ Bookmark =
     else
       @allDirectory[idOrIDArray]
 
-  nodeIsBookmark: (node) ->
-    node.url?
-
   # node object
   # {
   #   (opt)parentId,
@@ -176,7 +173,7 @@ Bookmark =
     chrome.bookmarks.update(id, changes, callback)
 
   removeNode: (id, callback = _.noop) ->
-    if @nodeIsBookmark(@getNode(id))
+    if @getNode(id).isBookmark
       chrome.bookmarks.remove(id, callback)
     else
       chrome.bookmarks.removeTree(id, callback)
@@ -193,36 +190,32 @@ Bookmark =
   # node.tagArray = linkedTag[node.id] or []
   # !!!
   init: (callback = _.noop) ->
-    initNode = ((node) ->
+    initNode = (node) =>
       @allNode[node.id] = node
 
-      if @nodeIsBookmark(node)
+      node.isBookmark = node.url?
+
+      if node.isBookmark
         @allBookmark[node.id] = node
       else
         @allDirectory[node.id] = node
         _.forEach(node.children, initNode, @)
-    ).bind(@)
 
-    initTag = (->
-      chrome.storage.local.get(['linkedTag', 'linkedID'], ((storageObject) ->
+    initTag = =>
+      chrome.storage.local.get ['linkedTag', 'linkedID'], (storageObject) =>
         @linkedTag = storageObject['linkedTag']
         @linkedID = storageObject['linkedID']
-        _.forEach(@allNode, ((node) ->
+        _.forEach @allNode, (node) =>
           if @linkedTag[node.id]
             node.tagArray = @linkedTag[node.id]
           else
             node.tagArray = @linkedTag[node.id] = []
-        ).bind(@))
 
         callback()
 
-      ).bind(@))
-    ).bind(@)
-
-    chrome.bookmarks.getTree((nodeArray) ->
+    chrome.bookmarks.getTree (nodeArray) =>
       initNode(nodeArray[0])
       initTag()
-    )
 
 
 

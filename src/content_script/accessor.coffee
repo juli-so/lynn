@@ -40,8 +40,9 @@ Accessor = React.createClass
 
   componentWillMount: ->
     # Listen to response to the message sent in @handleChange
-    Message.addListener (msg) =>
-      @setState {nodeArray: msg.result}
+    Message.addListener (message) =>
+      if message.response == 'search'
+        @setState {nodeArray: message.result}
 
     # Hijack global shortcuts
     $(document).keyup (event) =>

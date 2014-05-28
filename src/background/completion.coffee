@@ -24,14 +24,13 @@ Completion =
     tokenArray = query.split(' ')
     newQueryArray = []
 
-    _.forEach(tokenArray, ((token) ->
+    _.forEach tokenArray, (token) =>
       if token[0] == '#'
         newQueryArray.push('#' + @suggestTag(token.slice(1))[0])
       else if token[0] == '@'
         newQueryArray.push(@suggestTag(token)[0])
       else
         newQueryArray.push(token)
-    ).bind(@))
 
     newQueryArray.join(' ')
 

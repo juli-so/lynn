@@ -36,7 +36,7 @@ logNodeArray = (nodeArray, property = 'all') ->
     when 'all'
       c.group('###Log all###')
       _.forEach(nodeArray, (node) ->
-        if Bookmark.nodeIsBookmark(node)
+        if node.isBookmark
           c.group('Bookmark : ' + makeUniform(node.id, 4) + ' | ' + node.title)
           c.log("%c  " + node.url, "color: darkblue")
           logNodeTag(node, 2)
@@ -67,7 +67,7 @@ logNodeArray = (nodeArray, property = 'all') ->
       log('###Log url###')
       _.forEach(nodeArray, (node) ->
         log(makeUniform(node.id, 4) + ' | ' + node.title)
-        if(Bookmark.nodeIsBookmark(node))
+        if node.isBookmark
           log('  ' + node.url)
         else
           log('  Directory')
@@ -75,12 +75,12 @@ logNodeArray = (nodeArray, property = 'all') ->
     when 'children'
       log('###Log children###')
       _.forEach(nodeArray, (node) ->
-        if(Bookmark.nodeIsBookmark(node))
+        if node.isBookmark
           log('  Bookmark')
         else
           log('  ' + node.children.length + ' children')
           _.forEach(node.children, (child) ->
-            if(Bookmark.nodeIsBookmark(child))
+            if child.isBookmark
               log('    Bookmark : ' + makeUniform(child.id, 4) + ' | ' + child.title)
             else
               log('    Directory: ' + makeUniform(child.id, 4) + ' | ' + child.title)
