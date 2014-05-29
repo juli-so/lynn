@@ -1,4 +1,6 @@
-# Handles messages from frontend & execute commands appropriately
+# Handles messages from frontend 
+# Pass messages to Command, which take actions & generate responses
+# Command then pass the response using Message
 
 Message =
   init: ->
@@ -15,4 +17,15 @@ Message =
             response: 'search'
             result: Bookmark.find(Completion.preprocess message.command)
         when 'open'
-          chrome.tabs.create url: message.url, active: false
+          openAllUnderDir = (dirNode) ->
+            _.forEach dirNode.children, (child) ->
+              if child.isBookmark
+                chrome.tabs.create url: child.url, active: false
+              else
+                openAllUnderDir(child)
+
+          if message.node.isBookmark
+            chrome.tabs.create url: message.node.url, active: false
+          else
+            openAllUnderDir message.node
+

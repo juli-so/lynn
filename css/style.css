@@ -25,7 +25,7 @@ p, div, #m_command_input {
   padding: 12px 20px;
 }
 
-.m_suggestion {
+div.m_suggestion {
   box-sizing: content-box;
   width: 700px;
   font-family: 'Open Sans';
@@ -34,6 +34,8 @@ p, div, #m_command_input {
   border-top: none;
   padding: 10px 20px;
   background-color: #fff;
+
+  -webkit-animation-duration: 0.5s;
 }
 
 .m_suggestion_current {

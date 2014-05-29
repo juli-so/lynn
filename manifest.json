@@ -14,12 +14,14 @@
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
-        "css": ["css/style.css"],
+        "css": [
+          "css/style.css",
+          "vendor/css/animate.min.css"
+        ],
         "js": [
           "vendor/js/lodash.min.js",
           "vendor/js/jquery.min.js",
           "vendor/js/react.js",
-          "lib/content_script/shortcut.js",
           "lib/content_script/message.js",
           "lib/content_script/accessor.js",
           "lib/content_script/main.js"
@@ -31,7 +33,6 @@
       "scripts": [
         "vendor/js/lodash.min.js",
         "lib/background/message.js",
-        "lib/background/command.js",
         "lib/background/util.js",
         "lib/background/bookmark.js",
         "lib/background/completion.js",

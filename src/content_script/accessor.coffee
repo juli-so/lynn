@@ -19,7 +19,7 @@ Tagline = React.createClass
 
 Suggestion = React.createClass
   render: ->
-    className = 'm_suggestion'
+    className = 'm_suggestion animated bounceInLeft'
     className += ' m_suggestion_current' if @props.isCurrent
     div {className},
       Mainline {title: @props.title}
@@ -110,8 +110,8 @@ Accessor = React.createClass
 
   onKeyUp: (event) ->
     if event.keyCode == 13
-      url = @state.nodeArray[@state.currentNodeIndex].url
-      Message.postMessage({request: 'open', url})
+      node = @state.nodeArray[@state.currentNodeIndex]
+      Message.postMessage({request: 'open', node})
     # Esc key is hijacked now, I'll hijack it back later
     # if event.keyCode == 27
     if event.ctrlKey and event.keyCode == 8
