@@ -1,5 +1,4 @@
 Now this is used as a todo list.
 
-* Background
-  - query processor
-  - message handler
+Img link to Bookmark.
+Like: 'Shut up and take my money'. Paste link to clipboard via Marniak.
