@@ -21,11 +21,11 @@ p, div, #m_command_input {
   border: 2px #ddd solid;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px; 
-  font-size: 24px;
+  font-size: 20px;
   padding: 12px 20px;
 }
 
-div.m_suggestion {
+#m_suggestion_box > .m_suggestion {
   box-sizing: content-box;
   width: 700px;
   font-family: 'Open Sans';
@@ -35,11 +35,26 @@ div.m_suggestion {
   padding: 10px 20px;
   background-color: #fff;
 
-  -webkit-animation-duration: 0.5s;
+  -webkit-animation-duration: 0.2s;
 }
 
-.m_suggestion_current {
+#m_suggestion_box > .m_suggestion_current {
   background-color: lightblue;
+}
+
+.m_notification {
+  box-sizing: content-box;
+  width: 700px;
+  font-family: 'Open Sans';
+  border: 2px #ddd solid;
+  border-top: none;
+  padding: 10px 20px;
+  background-color: #fff;
+  text-align: right;
+  font-size: 14px;
+
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 .m_id {
@@ -59,7 +74,7 @@ div.m_suggestion {
 
 .m_tag {
   padding-right: 10px;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .m_dir {

@@ -11,12 +11,15 @@
       "tabs"
     ],
 
+    "options_page": "html/option.html",
+
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
         "css": [
           "css/style.css",
-          "vendor/css/animate.min.css"
+          "vendor/css/animate.min.css",
+          "vendor/css/font-awesome.css"
         ],
         "js": [
           "vendor/js/lodash.min.js",
@@ -39,5 +42,9 @@
         "lib/background/test.js",
         "lib/background/main.js"
       ]
-    }
+    },
+
+    "web_accessible_resources": [
+      "vendor/font/fontawesome-webfont.woff"
+    ]
 }

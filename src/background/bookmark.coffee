@@ -46,8 +46,8 @@ Bookmark =
   # ==========================================================================
 
   hasTag: (nodeOrNodeArray, tag) ->
-    if _.isArray(nodeOrNodeArray)
-      _.every(nodeOrNodeArray, ((node) -> @hasTag(node, tag)), @)
+    if _.isArray nodeOrNodeArray
+      _.every nodeOrNodeArray, (node) => @hasTag(node, tag)
     else
       node = nodeOrNodeArray
       @linkedTag[node.id] and _.contains(@linkedTag[node.id], tag)
@@ -58,14 +58,15 @@ Bookmark =
   # For one node, return true if one operation is successful
   # For nodeArray, return true only if every operation is successful
   addTag: (nodeOrNodeArray, tag) ->
-    if tag == ''
-      false
-    if _.isArray(nodeOrNodeArray)
+    unless tag
+      return false
+    if _.isArray nodeOrNodeArray
       result = yes
-      _.forEach(nodeOrNodeArray, ((node) ->
+
+      _.forEach nodeOrNodeArray, (node) =>
         unless @addTag(node, tag)
           result = no
-      ), @)
+
       result
     else
       node = nodeOrNodeArray
@@ -82,12 +83,15 @@ Bookmark =
         true
 
   delTag: (nodeOrNodeArray, tag) ->
-    if _.isArray(nodeOrNodeArray)
+    unless tag
+      return false
+    if _.isArray nodeOrNodeArray
       result = yes
-      _.forEach(nodeOrNodeArray, ((node) ->
+
+      _.forEach nodeOrNodeArray, (node) =>
         unless @delTag(node, tag)
           result = no
-      ), @)
+
       result
     else
       node = nodeOrNodeArray
@@ -99,12 +103,15 @@ Bookmark =
         false
 
   replaceTag: (nodeOrNodeArray, oldTag, newTag) ->
-    if _.isArray(nodeOrNodeArray)
+    unless oldTag and newTag
+      return false
+    if _.isArray nodeOrNodeArray
       result = yes
-      _.forEach(nodeOrNodeArray, ((node) ->
+
+      _.forEach nodeOrNodeArray, (node) =>
         unless @replaceTag(node, oldTag, newTag)
           result = no
-      ), @)
+
       result
     else
       node = nodeOrNodeArray
@@ -123,26 +130,26 @@ Bookmark =
   # ==========================================================================
 
   getID: (nodeOrNodeArray) ->
-    if _.isArray(nodeOrNodeArray)
-      _.map(nodeOrNodeArray, ((node) -> @getID(node)), @)
+    if _.isArray nodeOrNodeArray
+      _.map nodeOrNodeArray, (node) => @getID(node)
     else
       nodeOrNodeArray.id
 
   getNode: (idOrIDArray) ->
-    if _.isArray(idOrIDArray)
-      _.map(idOrIDArray, ((id) -> @getNode(id)), @)
+    if _.isArray idOrIDArray
+      _.map idOrIDArray, (id) => @getNode(id)
     else
       @allNode[idOrIDArray]
 
   getBookmark: (idOrIDArray) ->
-    if _.isArray(idOrIDArray)
-      _.map(idOrIDArray, ((id) -> @getBookmark(id)), @)
+    if _.isArray idOrIDArray
+      _.map idOrIDArray, (id) => @getBookmark(id)
     else
       @allBookmark[idOrIDArray]
 
   getDirectory: (idOrIDArray) ->
-    if _.isArray(idOrIDArray)
-      _.map(idOrIDArray, ((id) -> @getDirectory(id)), @)
+    if _.isArray idOrIDArray
+      _.map idOrIDArray, (id) => @getDirectory(id)
     else
       @allDirectory[idOrIDArray]
 
@@ -217,8 +224,6 @@ Bookmark =
       initNode(nodeArray[0])
       initTag()
 
-
-
   storeTag: ->
     chrome.storage.local.set({
       'linkedTag': @linkedTag,
@@ -246,15 +251,15 @@ Bookmark =
   findByTag: (tagArray, nodeType = 'N', pool = @allNode) ->
     if pool == @allNode
       matchedNodeID = _(tagArray)
-        .map(((tag) -> @linkedID[tag]), @)
+        .map (tag) => @linkedID[tag]
         .compact()
-        .reduce((prev, next) -> _.intersection(prev, next))
+        .reduce (prev, next) -> _.intersection(prev, next)
     else
       poolIDArray = _.map(pool, (node) -> node.id)
       matchedNodeID = _(tagArray)
-        .map(((tag) -> @linkedID[tag]), @)
+        .map (tag) -> @linkedID[tag]
         .compact()
-        .reduce(((prev, next) -> _.intersection(prev, next)), poolIDArray)
+        .reduce ((prev, next) -> _.intersection(prev, next)), poolIDArray
 
     if nodeType == 'B'
       @getBookmark(matchedNodeID)
@@ -281,9 +286,9 @@ Bookmark =
     # Use N as nodetype so custom pool can be passed
     # Still searches for Bookmark by default
     if isCaseSensitive
-      @filter(((node) -> _.contains(node.url, fragment)), 'N', pool)
+      @filter ((node) -> _.contains(node.url, fragment)), 'N', pool
     else
-      @filter(((node) -> Util.ciContains(node.url, fragment)), 'N', pool)
+      @filter ((node) -> Util.ciContains(node.url, fragment)), 'N', pool
 
   find: (query) ->
     return [] if _.isEmpty(query)
