@@ -3,7 +3,7 @@
 task 'build', 'building from src/ to lib/', ->
   exec 'coffee -o lib --no-header -bc src', (err, stdout, stderr) ->
     throw err if err
-    console.log 'Coffee: background script compiled'
+    console.log 'Coffee: build complete'
 
 task 'watch', 'watching src/ and build to lib/', ->
   proc = spawn 'coffee', '-o lib --no-header -bcw src'.split(' ')
