@@ -1,5 +1,10 @@
-Now this is used as a todo list.
+lynn
+===
 
-fadeOut effect
-Img link to Bookmark.
-Like: 'Shut up and take my money'. Paste link to clipboard via Marniak.
+lynn is a gift I built for one of my dearest friends. 
+
+It happens to be a bookmark app.
+
+
+### Version
+0.1.0: Happy birthday!
