@@ -4,84 +4,118 @@ p, div, #m_command_input {
   margin: 0px;
 }
 
-#m_accessor {
+/* lynn */
+
+p, div, span, input {
+  box-sizing: border-box;
+}
+
+.lynn {
   position: fixed;
   top: 100px;
   left: 50%;
-  /*margin-top: -154px;*/
-  margin-left: -372px;
+  margin-left: -350px;
   z-index: 99999;
+
   display: none;
 }
 
-#m_command_input {
-  box-sizing: content-box;
-  width: 700px;
-  font-family: 'Helvetica Neue';
-  border: 2px #ddd solid;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px; 
-  font-size: 20px;
-  padding: 12px 20px;
+.hidden {
+  display: none;
 }
 
-#m_suggestion_box > .m_suggestion {
-  box-sizing: content-box;
+/* lynn top */
+
+.lynn_top {
+  border: 2px #ddd solid;
+}
+
+.lynn_console {
+  width: 640px;
+  height: 50px;
+  padding: 12px 20px;
+  border: none;
+  border-right: 2px #ddd solid;
+
+  font-size: 20px;
+  font-family: 'Helvetica Neue';
+}
+
+.lynn_console_status {
+  display: inline-block;
+  vertical-align: top;
+
+  width: 60px;
+  height: 50px;
+}
+
+.lynn_console_status_icon {
+  display: inline-block;
+  text-align: center;
+  
+  width: 60px;
+  height: 50px;
+
+  padding-top: 12px;
+}
+
+/* lynn mid */
+
+.lynn_mid {
+  border-left: 2px #ddd solid;
+  border-right: 2px #ddd solid;
+}
+
+.lynn_suggestion {
   width: 700px;
+
   font-family: 'Open Sans';
   color: #777777;
-  border: 2px #ddd solid;
-  border-top: none;
-  padding: 10px 20px;
-  background-color: #fff;
 
+  padding: 12px 20px;
+  border-bottom: 2px #ddd solid;
+
+  background-color: #fff;
+}
+
+div.lynn_suggestion {
   -webkit-animation-duration: 0.2s;
 }
 
-#m_suggestion_box > .m_suggestion_current {
+.lynn_suggestion_current {
   background-color: lightblue;
 }
 
-.m_notification {
-  box-sizing: content-box;
-  width: 700px;
-  font-family: 'Open Sans';
-  border: 2px #ddd solid;
-  border-top: none;
-  padding: 10px 20px;
-  background-color: #fff;
-  text-align: right;
-  font-size: 14px;
-
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
-
-.m_id {
-  padding-right: 20px;
-}
-
-.m_title {
-  line-height: 1.4em;
+.lynn_mainline {
   font-size: 16px;
 }
 
-.m_tagline {
+.lynn_tagline {
   text-align: right;
-  padding-top: 5px;
+  font-size: 16px;
   color: green;
 }
 
-.m_tag {
-  padding-right: 10px;
-  font-size: 16px;
+.lynn_tag {
+  padding-left: 5px;
 }
 
-.m_dir {
-  color: lightblue;
+/* lynn bot */
+.lynn_bot {
+  border: 2px #ddd solid;
+  border-top: none;
 }
 
-.m_toread {
-  color: blue;
+.lynn_pageView {
+  display: inline-block;
+  width: 700px;
+  height: 40px;
+
+  text-align: right;
+  font-size: 14px;
+
+  padding: 12px;
 }
 
+
+/* lynn end */

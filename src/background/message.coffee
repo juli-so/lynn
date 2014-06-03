@@ -57,6 +57,7 @@ Message =
         chrome.tabs.create url: message.node.url, active: false
       else
         openAllUnderDir message.node
+    response: 'open'
 
   tag: (message, option) ->
     if option.a

@@ -2,7 +2,8 @@ $(->
   Message.init()
 
   # Init UI
-  $('body').prepend("<div id='react'>")
-  React.renderComponent Accessor(), $('#react')[0]
+  $mountPoint = $("<div id='lynn'>")
+  $('body').prepend($mountPoint)
+  React.renderComponent Lynn(), $mountPoint[0]
 
 )

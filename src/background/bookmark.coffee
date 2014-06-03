@@ -220,7 +220,7 @@ Bookmark =
 
         callback()
 
-    chrome.bookmarks.getTree (nodeArray) =>
+    chrome.bookmarks.getSubTree '1', (nodeArray) =>
       initNode(nodeArray[0])
       initTag()
 
@@ -249,17 +249,24 @@ Bookmark =
   # All following functions starting with 'find' return Array of Node
   #
   findByTag: (tagArray, nodeType = 'N', pool = @allNode) ->
-    if pool == @allNode
-      matchedNodeID = _(tagArray)
-        .map (tag) => @linkedID[tag]
-        .compact()
-        .reduce (prev, next) -> _.intersection(prev, next)
+    # Get rid of non-existent tags
+    tagArray = _.filter tagArray, (tag) =>
+      @linkedID[tag]
+
+    if _.isEmpty tagArray
+      return pool
     else
-      poolIDArray = _.map(pool, (node) -> node.id)
-      matchedNodeID = _(tagArray)
-        .map (tag) -> @linkedID[tag]
-        .compact()
-        .reduce ((prev, next) -> _.intersection(prev, next)), poolIDArray
+      if pool == @allNode
+        matchedNodeID = _(tagArray)
+          .map (tag) => @linkedID[tag]
+          .compact()
+          .reduce (prev, next) -> _.intersection(prev, next)
+      else
+        poolIDArray = _.map(pool, (node) -> node.id)
+        matchedNodeID = _(tagArray)
+          .map (tag) => @linkedID[tag]
+          .compact()
+          .reduce ((prev, next) -> _.intersection(prev, next)), poolIDArray
 
     if nodeType == 'B'
       @getBookmark(matchedNodeID)
@@ -306,5 +313,6 @@ Bookmark =
         keywordArray.push(token)
     )
 
+    console.log keywordArray, tagArray
     @findByTag(tagArray, 'N', @findByTitleContains(keywordArray))
 
