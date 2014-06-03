@@ -11,7 +11,7 @@ KeyMatch =
   pageDown: (event) ->
     event.keyCode is 34
 
-  switch: (event) ->
+  getCommand: (event) ->
     ctrl = ''
     shift = ''
     if event.ctrlKey
@@ -19,11 +19,12 @@ KeyMatch =
     if event.shiftKey
       shift = 's-'
 
-    command = ctrl + shift + event.keyCode
-    switch command
+    ctrl + shift + event.keyCode
+
+  switchInQueryMode: (event) ->
+    switch @getCommand(event)
       # enter
       when '13' then 'open'
-      when 's-13' then 'openInNewTab'
 
       # backspace
       when 'c-8' then 'reset'
@@ -39,4 +40,29 @@ KeyMatch =
 
       else 'noop'
 
+  switchInSelectMode: (event) ->
+    switch @getCommand(event)
+      when '33' then 'pageUp'
+      when '34' then 'pageDown'
+      when '38' then 'up'
+      when '40' then 'down'
+
+      when '9' then 'nextCommandMode'
+      when 's-9' then 'prevCommandMode'
+
+      when '13' then 's_open'
+      when '37' then 's_select'
+      else 'noop'
+
+  switchInCommandMode: (event) ->
+    switch @getCommand(event)
+      when '33' then 'pageUp'
+      when '34' then 'pageDown'
+      when '38' then 'up'
+      when '40' then 'down'
+
+      when '9' then 'nextCommandMode'
+      when 's-9' then 'prevCommandMode'
+
+      else 'noop'
 

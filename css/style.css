@@ -1,12 +1,9 @@
-p, div, #m_command_input {
-  padding: 0px;
-  border: 0px;
-  margin: 0px;
-}
-
 /* lynn */
 
-p, div, span, input {
+.lynn p, 
+.lynn div, 
+.lynn span, 
+.lynn input {
   box-sizing: border-box;
 }
 
@@ -26,10 +23,15 @@ div.lynn {
   display: none;
 }
 
+.transparent {
+  opacity: 0;
+}
+
 /* lynn top */
 
 .lynn_top {
   border: 2px #ddd solid;
+  background-color: #fff;
 }
 
 .lynn_console {
@@ -66,6 +68,7 @@ div.lynn {
 .lynn_mid {
   border-left: 2px #ddd solid;
   border-right: 2px #ddd solid;
+  background-color: #fff;
 }
 
 .lynn_suggestion {
@@ -76,12 +79,14 @@ div.lynn {
 
   padding: 12px 20px;
   border-bottom: 2px #ddd solid;
-
-  background-color: #fff;
 }
 
 div.lynn_suggestion {
   -webkit-animation-duration: 0.2s;
+}
+
+.lynn_suggestion_selected {
+  background-color: lightgray;
 }
 
 .lynn_suggestion_current {
@@ -109,9 +114,32 @@ div.lynn_suggestion {
   background-color: #fff;
 }
 
+.lynn_info {
+  display: inline-block;
+  vertical-align: top;
+  width: 100px;
+  height: 40px;
+
+  font-size: 14px;
+
+  padding: 12px;
+  padding-left: 20px;
+}
+
+.lynn_select_info {
+  display: inline-block;
+  vertical-align: top;
+  width: 500px;
+  height: 40px;
+
+  font-size: 14px;
+  padding: 12px;
+}
+
 .lynn_pageView {
   display: inline-block;
-  width: 700px;
+  vertical-align: top;
+  width: 100px;
   height: 40px;
 
   text-align: right;

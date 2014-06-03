@@ -31,7 +31,7 @@ Message =
   addListener: (port) ->
     port.onMessage.addListener (message) =>
       {command, option} = @parse(message.request)
-      option = {} unless option
+      option or= {}
       port.postMessage Message[command](message, option)
 
   # Command functions
@@ -58,6 +58,10 @@ Message =
       else
         openAllUnderDir message.node
     response: 'open'
+
+  openNodeArray: (message) ->
+    _.forEach message.nodeArray, (node) ->
+      chrome.tabs.create url: node.url, active: false
 
   tag: (message, option) ->
     if option.a

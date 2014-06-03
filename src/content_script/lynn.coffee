@@ -16,7 +16,7 @@ div.lynn
       div.lynn_tagline
         [span.lynn_tag]
   div.lynn_bot
-    ?
+    span.lynn_info
     span.lynn_pageView
 
 ###
@@ -51,25 +51,31 @@ Mid = React.createClass
     className = 'lynn_mid'
     className += ' hidden' if not @props.visible
 
-    div {className},
-      _.map @props.nodeArray[start...end], (node, index) =>
-        if index is @props.currentNodeIndex
+    if @props.command_mode is 'query'
+      div {className},
+        _.map @props.nodeArray[start...end], (node, index) =>
           Suggestion
             title: node.title
             tagArray: node.tagArray
             key: node.id
-            isCurrent: yes
-        else
+            isCurrent: index is @props.currentNodeIndex
+    else
+      div {className},
+        _.map @props.nodeArray[start...end], (node, index) =>
           Suggestion
             title: node.title
             tagArray: node.tagArray
             key: node.id
-            isCurrent: false
+            isCurrent: index is @props.currentNodeIndex
+            isSelected: _.contains(@props.selectedArray, index)
+
 
 Suggestion = React.createClass
   render: ->
     className = 'lynn_suggestion animated fadeInDown'
     className += ' lynn_suggestion_current' if @props.isCurrent
+    className += ' lynn_suggestion_selected' if @props.isSelected
+
     div {className},
       div className: 'lynn_mainline',
         span className: 'lynn_title',
@@ -91,7 +97,17 @@ Bot = React.createClass
     className = 'lynn_bot'
     className += ' hidden' if not @props.visible
 
+    infoString = @props.nodeArray.length + ' result'
+    infoString += 's' if @props.nodeArray.length > 1
+    selectString = ''
+    if @props.command_mode is 'select'
+      selectString += @props.selectedArray.length + ' selected'
+      
     div {className},
+      span className: 'lynn_info',
+        infoString
+      span className: 'lynn_select_info',
+        selectString
       span className: 'lynn_pageView',
         'Page ' + numToString[@props.page]
 
@@ -101,7 +117,6 @@ Lynn = React.createClass
   getInitialState: ->
     # Global
     visible: no
-    animate: 'fadeInDown'
 
     # Top
     command: ''
@@ -109,6 +124,7 @@ Lynn = React.createClass
 
     # Mid
     nodeArray: []
+    selectedArray: []
     maxSuggestionNum: MAX_SUGGESTION_NUM
     currentNodeIndex: 0
     currentPage: 1
@@ -128,10 +144,17 @@ Lynn = React.createClass
       else
         # Shortcut when lynn is shown
         if @state.visible
-          @[KeyMatch.switch(event)](event)
+          if @state.command_mode is 'query'
+            @[KeyMatch.switchInQueryMode event] event
+          else if @state.command_mode is 'select'
+            @[KeyMatch.switchInSelectMode event] event
+          else
+            @[KeyMatch.switchInCommandMode event] event
 
   render: ->
-    className = 'lynn animated ' + @state.animate
+    className = 'lynn animated fadeInDown'
+    className += ' hidden' unless @state.visible
+
     div {className},
       Top
         onConsoleChange: @onConsoleChange
@@ -143,9 +166,15 @@ Lynn = React.createClass
         maxSuggestionNum: @state.maxSuggestionNum
         currentNodeIndex: @state.currentNodeIndex
         currentPage: @state.currentPage
+        command_mode: @state.command_mode
+        selectedArray: @state.selectedArray
       Bot
         visible: not _.isEmpty @state.command
+        nodeArray: @state.nodeArray
         page: @state.currentPage
+
+        command_mode: @state.command_mode
+        selectedArray: @state.selectedArray
 
   # Event Handlers
   onConsoleChange: (event) ->
@@ -171,17 +200,17 @@ Lynn = React.createClass
   
   toggle: ->
     if @state.visible
+      @reset()
       @setState
-        visible: no
-        animate: 'fadeOutUp'
-      $('.lynn_console').focus()
+        visible: false
     else
       @setState
-        visible: yes
-        animate: 'fadeInDown'
+        visible: true
+      $('.lynn_console').focus()
 
+  # -- query mode helpers
   open: ->
-    node = @state.nodeArray[@state.currentNodeIndex]
+    node = @state.nodearray[@state.currentnodeindex]
     Message.postMessage {request: 'open', node}
 
   up: (event) ->
@@ -196,12 +225,14 @@ Lynn = React.createClass
     @setState {currentNodeIndex}
 
   pageUp: ->
+    event.preventDefault()
     if @state.currentPage > 1
       @setState
         currentPage: @state.currentPage - 1
         currentNodeIndex: 0
 
   pageDown: ->
+    event.preventDefault()
     if @state.currentPage * @state.maxSuggestionNum < @state.nodeArray.length
       @setState
         currentPage: @state.currentPage + 1
@@ -237,4 +268,18 @@ Lynn = React.createClass
       command_mode = 'command'
 
     @setState {command_mode}
+
+  # -- select mode helpers
+  s_select: (event) ->
+    event.preventDefault()
+    selectedNodeIndex = @state.currentNodeIndex +
+      (@state.currentPage - 1) * @state.maxSuggestionNum
+    unless _.contains(@state.selectedArray, selectedNodeIndex)
+      selectedArray = @state.selectedArray.concat([selectedNodeIndex])
+      @setState {selectedArray}
+
+  s_open: (event) ->
+    nodeArray = _.filter @state.nodeArray, (node, index) =>
+      _.contains(@state.selectedArray, index)
+    Message.postMessage {request: 'openNodeArray', nodeArray}
 
