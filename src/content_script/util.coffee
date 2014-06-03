@@ -21,14 +21,21 @@ KeyMatch =
 
     command = ctrl + shift + event.keyCode
     switch command
+      # enter
       when '13' then 'open'
       when 's-13' then 'openInNewTab'
+
+      # backspace
       when 'c-8' then 'reset'
 
       when '33' then 'pageUp'
       when '34' then 'pageDown'
       when '38' then 'up'
       when '40' then 'down'
+
+      # tab
+      when '9' then 'nextCommandMode'
+      when 's-9' then 'prevCommandMode'
 
       else 'noop'
 

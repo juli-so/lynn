@@ -127,7 +127,7 @@ Lynn = React.createClass
       else
         # Shortcut when lynn is shown
         if @state.visible
-          @[KeyMatch.switch(event)]()
+          @[KeyMatch.switch(event)](event)
 
   render: ->
     div className: 'lynn',
@@ -148,10 +148,20 @@ Lynn = React.createClass
   # Event Handlers
   onConsoleChange: (event) ->
     command = event.target.value
-    command_mode = if command[0] is ':' then 'command' else 'query'
-    @setState {command, command_mode, currentNodeIndex: 0, currentPage: 1}
+    if command[0] is ':'
+      @setState
+        command: command
+        command_mode: 'command'
+        currentNodeIndex: 0
+        currentPage: 1
+    else
+      @setState
+        command: command
+        command_mode: 'query'
+        currentNodeIndex: 0
+        currentPage: 1
 
-    Message.postMessage {request: 'search', command}
+      Message.postMessage {request: 'search', command}
 
 
   # Helpers used in shortcuts
@@ -176,7 +186,6 @@ Lynn = React.createClass
     currentNodeIndex = (@state.currentNodeIndex + 1) % @state.maxSuggestionNum
     @setState {currentNodeIndex}
 
-
   pageUp: ->
     if @state.currentPage > 1
       @setState
@@ -197,4 +206,26 @@ Lynn = React.createClass
       nodeArray: []
       currentNodeIndex: 0
       currentPage: 1
+
+  nextCommandMode: (event) ->
+    event.preventDefault()
+    if @state.command_mode is 'query'
+      command_mode = 'select'
+    else if @state.command_mode is 'select'
+      command_mode = 'command'
+    else
+      command_mode = 'query'
+
+    @setState {command_mode}
+    
+  prevCommandMode: (event) ->
+    event.preventDefault()
+    if @state.command_mode is 'select'
+      command_mode = 'query'
+    else if @state.command_mode is 'command'
+      command_mode = 'select'
+    else
+      command_mode = 'command'
+
+    @setState {command_mode}
 
