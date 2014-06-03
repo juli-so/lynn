@@ -68,7 +68,7 @@ Mid = React.createClass
 
 Suggestion = React.createClass
   render: ->
-    className = 'lynn_suggestion animated fadeInLeft'
+    className = 'lynn_suggestion animated fadeInDown'
     className += ' lynn_suggestion_current' if @props.isCurrent
     div {className},
       div className: 'lynn_mainline',
@@ -101,6 +101,7 @@ Lynn = React.createClass
   getInitialState: ->
     # Global
     visible: no
+    animate: 'fadeInDown'
 
     # Top
     command: ''
@@ -130,7 +131,8 @@ Lynn = React.createClass
           @[KeyMatch.switch(event)](event)
 
   render: ->
-    div className: 'lynn',
+    className = 'lynn animated ' + @state.animate
+    div {className},
       Top
         onConsoleChange: @onConsoleChange
         command: @state.command
@@ -168,21 +170,28 @@ Lynn = React.createClass
   noop: _.noop # for unmatched shortcuts
   
   toggle: ->
-    @setState visible: not @state.visible
-    $('.lynn').toggle()
     if @state.visible
+      @setState
+        visible: no
+        animate: 'fadeOutUp'
       $('.lynn_console').focus()
+    else
+      @setState
+        visible: yes
+        animate: 'fadeInDown'
 
   open: ->
     node = @state.nodeArray[@state.currentNodeIndex]
     Message.postMessage {request: 'open', node}
 
-  up: ->
+  up: (event) ->
+    event.preventDefault()
     currentNodeIndex = (@state.currentNodeIndex + @state.maxSuggestionNum - 1) \
       % @state.maxSuggestionNum
     @setState {currentNodeIndex}
 
-  down: ->
+  down: (event) ->
+    event.preventDefault()
     currentNodeIndex = (@state.currentNodeIndex + 1) % @state.maxSuggestionNum
     @setState {currentNodeIndex}
 

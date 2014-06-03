@@ -23,7 +23,6 @@
         ],
         "js": [
           "vendor/js/lodash.min.js",
-          "vendor/js/mousetrap.min.js",
           "vendor/js/jquery.min.js",
           "vendor/js/react.js",
           "lib/content_script/util.js",

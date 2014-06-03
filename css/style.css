@@ -16,8 +16,10 @@ p, div, span, input {
   left: 50%;
   margin-left: -350px;
   z-index: 99999;
+}
 
-  display: none;
+div.lynn {
+  -webkit-animation-duration: 0.2s;
 }
 
 .hidden {
