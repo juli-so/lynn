@@ -210,7 +210,7 @@ Lynn = React.createClass
 
   # -- query mode helpers
   open: ->
-    node = @state.nodearray[@state.currentnodeindex]
+    node = @state.nodeArray[@state.currentNodeIndex]
     Message.postMessage {request: 'open', node}
 
   up: (event) ->

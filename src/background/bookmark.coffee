@@ -210,8 +210,8 @@ Bookmark =
 
     initTag = =>
       chrome.storage.local.get ['linkedTag', 'linkedID'], (storageObject) =>
-        @linkedTag = storageObject['linkedTag']
-        @linkedID = storageObject['linkedID']
+        @linkedTag = storageObject['linkedTag'] || {}
+        @linkedID = storageObject['linkedID'] || {}
         _.forEach @allNode, (node) =>
           if @linkedTag[node.id]
             node.tagArray = @linkedTag[node.id]
@@ -313,6 +313,5 @@ Bookmark =
         keywordArray.push(token)
     )
 
-    console.log keywordArray, tagArray
     @findByTag(tagArray, 'N', @findByTitleContains(keywordArray))
 
