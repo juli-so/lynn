@@ -31,10 +31,8 @@ KeyMatch =
 
   matchInQueryMode: (event) ->
     switch @getCommand(event)
-      # enter
       when '13' then 'open'
 
-      # backspace
       when 'c-8' then 'reset'
 
       when '33' then 'pageUp'
@@ -42,7 +40,6 @@ KeyMatch =
       when '38' then 'up'
       when '40' then 'down'
 
-      # tab
       when '9' then 'nextCommandMode'
       when 's-9' then 'prevCommandMode'
 
@@ -59,6 +56,8 @@ KeyMatch =
       when 's-9' then 'prevCommandMode'
 
       when '13' then 's_open'
+      # 'o'
+      when '79' then 's_open'
       when '37' then 's_select'
       when '39' then 's_unselect'
       else 'noop'

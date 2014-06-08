@@ -101,6 +101,7 @@ SelectAction =
       @setState {selectedArray}
 
   open: (event) ->
+    event.preventDefault()
     nodeArray = _.filter @state.nodeArray, (node, index) =>
       _.contains(@state.selectedArray, index)
     Message.postMessage {request: 'openNodeArray', nodeArray}
