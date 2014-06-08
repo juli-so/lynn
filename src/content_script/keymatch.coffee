@@ -1,9 +1,10 @@
+# Matching shortcut keycode to action names
 # c_x: C-x
 # c_X: C-S-x
 # s_x: S-x
 
 KeyMatch =
-  c_b: (event) ->
+  ctrlB: (event) ->
     event.ctrlKey and event.keyCode is 66
   
   pageUp: (event) ->
@@ -21,7 +22,14 @@ KeyMatch =
 
     ctrl + shift + event.keyCode
 
-  switchInQueryMode: (event) ->
+  match: (event, command_mode) ->
+    switch command_mode
+      when 'query' then @matchInQueryMode(event)
+      when 'select' then @matchInSelectMode(event)
+      when 'command' then @matchInCommandMode(event)
+      else 'noop'
+
+  matchInQueryMode: (event) ->
     switch @getCommand(event)
       # enter
       when '13' then 'open'
@@ -40,7 +48,7 @@ KeyMatch =
 
       else 'noop'
 
-  switchInSelectMode: (event) ->
+  matchInSelectMode: (event) ->
     switch @getCommand(event)
       when '33' then 'pageUp'
       when '34' then 'pageDown'
@@ -54,7 +62,7 @@ KeyMatch =
       when '37' then 's_select'
       else 'noop'
 
-  switchInCommandMode: (event) ->
+  matchInCommandMode: (event) ->
     switch @getCommand(event)
       when '33' then 'pageUp'
       when '34' then 'pageDown'
@@ -63,6 +71,8 @@ KeyMatch =
 
       when '9' then 'nextCommandMode'
       when 's-9' then 'prevCommandMode'
+
+      when '13' then 'c_open'
 
       else 'noop'
 

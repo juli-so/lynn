@@ -25,8 +25,9 @@
           "vendor/js/lodash.min.js",
           "vendor/js/jquery.min.js",
           "vendor/js/react.js",
-          "lib/content_script/util.js",
+          "lib/content_script/keymatch.js",
           "lib/content_script/message.js",
+          "lib/content_script/action.js",
           "lib/content_script/lynn.js",
           "lib/content_script/main.js"
         ]

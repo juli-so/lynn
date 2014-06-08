@@ -138,18 +138,16 @@ Lynn = React.createClass
     
     $(document).keydown (event) =>
       # Global invoke
-      if KeyMatch.c_b(event)
-        @toggle()
+      if KeyMatch.ctrlB(event)
+        console.log 'here'
+        SharedAction.toggle.call(@)
 
       else
         # Shortcut when lynn is shown
         if @state.visible
-          if @state.command_mode is 'query'
-            @[KeyMatch.switchInQueryMode event] event
-          else if @state.command_mode is 'select'
-            @[KeyMatch.switchInSelectMode event] event
-          else
-            @[KeyMatch.switchInCommandMode event] event
+          actionName = KeyMatch.match(event, @state.command_mode)
+          console.log Action.matchAction(actionName)
+          Action.matchAction(actionName).call(@, event)
 
   render: ->
     className = 'lynn animated fadeInDown'
@@ -194,92 +192,4 @@ Lynn = React.createClass
 
       Message.postMessage {request: 'search', command}
 
-
-  # Helpers used in shortcuts
-  noop: _.noop # for unmatched shortcuts
-  
-  toggle: ->
-    if @state.visible
-      @reset()
-      @setState
-        visible: false
-    else
-      @setState
-        visible: true
-      $('.lynn_console').focus()
-
-  # -- query mode helpers
-  open: ->
-    node = @state.nodeArray[@state.currentNodeIndex]
-    Message.postMessage {request: 'open', node}
-
-  up: (event) ->
-    event.preventDefault()
-    currentNodeIndex = (@state.currentNodeIndex + @state.maxSuggestionNum - 1) \
-      % @state.maxSuggestionNum
-    @setState {currentNodeIndex}
-
-  down: (event) ->
-    event.preventDefault()
-    currentNodeIndex = (@state.currentNodeIndex + 1) % @state.maxSuggestionNum
-    @setState {currentNodeIndex}
-
-  pageUp: ->
-    event.preventDefault()
-    if @state.currentPage > 1
-      @setState
-        currentPage: @state.currentPage - 1
-        currentNodeIndex: 0
-
-  pageDown: ->
-    event.preventDefault()
-    if @state.currentPage * @state.maxSuggestionNum < @state.nodeArray.length
-      @setState
-        currentPage: @state.currentPage + 1
-        currentNodeIndex: 0
-      
-  reset: ->
-    @setState
-      command: ''
-      command_mode: 'query'
-
-      nodeArray: []
-      currentNodeIndex: 0
-      currentPage: 1
-
-  nextCommandMode: (event) ->
-    event.preventDefault()
-    if @state.command_mode is 'query'
-      command_mode = 'select'
-    else if @state.command_mode is 'select'
-      command_mode = 'command'
-    else
-      command_mode = 'query'
-
-    @setState {command_mode}
-    
-  prevCommandMode: (event) ->
-    event.preventDefault()
-    if @state.command_mode is 'select'
-      command_mode = 'query'
-    else if @state.command_mode is 'command'
-      command_mode = 'select'
-    else
-      command_mode = 'command'
-
-    @setState {command_mode}
-
-  # -- select mode helpers
-  s_select: (event) ->
-    event.preventDefault()
-    selectedNodeIndex = @state.currentNodeIndex +
-      (@state.currentPage - 1) * @state.maxSuggestionNum
-    unless _.contains(@state.selectedArray, selectedNodeIndex)
-      selectedArray = @state.selectedArray.concat([selectedNodeIndex])
-      @setState {selectedArray}
-
-  s_open: (event) ->
-    nodeArray = _.filter @state.nodeArray, (node, index) =>
-      _.contains(@state.selectedArray, index)
-    Message.postMessage {request: 'openNodeArray', nodeArray}
 

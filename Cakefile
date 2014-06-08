@@ -11,7 +11,7 @@ task 'watch', 'watching src/ and build to lib/', ->
   proc.on 'exit', (returnCode) -> process.exit returnCode
 
 task 'clean', 'clean lib folder', ->
-  exec 'rm -f lib/background/* lib/content_script/*', (err, stdout, stderr) ->
+  exec 'rm -f lib/background/* lib/content_script/* lib/option/*', (err, stdout, stderr) ->
     throw err if err
     console.log 'finished cleaning'
 
