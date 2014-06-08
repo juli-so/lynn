@@ -89,7 +89,15 @@ SelectAction =
     selectedNodeIndex = @state.currentNodeIndex +
       (@state.currentPage - 1) * @state.maxSuggestionNum
     unless _.contains(@state.selectedArray, selectedNodeIndex)
-      selectedArray = @state.selectedArray.concat([selectedNodeIndex])
+      selectedArray = _.union(@state.selectedArray, [selectedNodeIndex])
+      @setState {selectedArray}
+
+  unselect: (event) ->
+    event.preventDefault()
+    selectedNodeIndex = @state.currentNodeIndex +
+      (@state.currentPage - 1) * @state.maxSuggestionNum
+    if _.contains(@state.selectedArray, selectedNodeIndex)
+      selectedArray = _.without(@state.selectedArray, selectedNodeIndex)
       @setState {selectedArray}
 
   open: (event) ->

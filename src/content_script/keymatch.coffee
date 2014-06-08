@@ -60,6 +60,7 @@ KeyMatch =
 
       when '13' then 's_open'
       when '37' then 's_select'
+      when '39' then 's_unselect'
       else 'noop'
 
   matchInCommandMode: (event) ->
