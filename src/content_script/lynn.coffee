@@ -67,7 +67,7 @@ Mid = React.createClass
             tagArray: node.tagArray
             key: node.id
             isCurrent: index is @props.currentNodeIndex
-            isSelected: _.contains(@props.selectedArray, index)
+            isSelected: _.contains(@props.selectedArray, start + index)
 
 
 Suggestion = React.createClass
@@ -139,14 +139,12 @@ Lynn = React.createClass
     $(document).keydown (event) =>
       # Global invoke
       if KeyMatch.ctrlB(event)
-        console.log 'here'
         SharedAction.toggle.call(@)
 
       else
         # Shortcut when lynn is shown
         if @state.visible
           actionName = KeyMatch.match(event, @state.command_mode)
-          console.log Action.matchAction(actionName)
           Action.matchAction(actionName).call(@, event)
 
   render: ->
@@ -174,7 +172,6 @@ Lynn = React.createClass
         command_mode: @state.command_mode
         selectedArray: @state.selectedArray
 
-  # Event Handlers
   onConsoleChange: (event) ->
     command = event.target.value
     if command[0] is ':'

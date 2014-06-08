@@ -55,6 +55,7 @@ SharedAction =
       command_mode: 'query'
 
       nodeArray: []
+      selectedArray: []
       currentNodeIndex: 0
       currentPage: 1
 
