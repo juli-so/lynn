@@ -35,9 +35,9 @@ Top = React.createClass
         onChange: @props.onConsoleChange
 
       span className: 'lynn_console_status',
-        if @props.command_mode is 'query'
+        if @props.mode is 'query'
           span className: 'lynn_console_status_icon fa fa-search fa-2x'
-        else if @props.command_mode is 'select'
+        else if @props.mode is 'select'
           span className: 'lynn_console_status_icon fa fa-files-o fa-2x'
         else
           span className: 'lynn_console_status_icon fa fa-terminal fa-2x'
@@ -51,20 +51,19 @@ Mid = React.createClass
     className = 'lynn_mid'
     className += ' hidden' if not @props.visible
 
-    if @props.command_mode is 'query'
+    if @props.mode is 'query'
       div {className},
         _.map @props.nodeArray[start...end], (node, index) =>
           Suggestion
-            title: node.title
-            tagArray: node.tagArray
+            node: node
             key: node.id
             isCurrent: index is @props.currentNodeIndex
     else
       div {className},
         _.map @props.nodeArray[start...end], (node, index) =>
+          console.log node
           Suggestion
-            title: node.title
-            tagArray: node.tagArray
+            node: node
             key: node.id
             isCurrent: index is @props.currentNodeIndex
             isSelected: _.contains(@props.selectedArray, start + index)
@@ -79,9 +78,9 @@ Suggestion = React.createClass
     div {className},
       div className: 'lynn_mainline',
         span className: 'lynn_title',
-          @props.title
+          @props.node.title
       div className: 'lynn_tagline',
-        _.map @props.tagArray, (tag) ->
+        _.map @props.node.tagArray, (tag) ->
           if tag[0] is '@'
             span {className: 'lynn_tag'}, tag
           else
@@ -100,7 +99,7 @@ Bot = React.createClass
     infoString = @props.nodeArray.length + ' result'
     infoString += 's' if @props.nodeArray.length > 1
     selectString = ''
-    if @props.command_mode is 'select'
+    if @props.mode is 'select'
       selectString += @props.selectedArray.length + ' selected'
       
     div {className},
@@ -109,7 +108,7 @@ Bot = React.createClass
       span className: 'lynn_select_info',
         selectString
       span className: 'lynn_pageView',
-        'Page ' + numToString[@props.page]
+        'Page ' + numToString[@props.currentPage]
 
 # lynn
 
@@ -120,7 +119,7 @@ Lynn = React.createClass
 
     # Top
     command: ''
-    command_mode: 'query' # query | select | command
+    mode: 'query' # query | select | command
 
     # Mid
     nodeArray: []
@@ -144,7 +143,7 @@ Lynn = React.createClass
       else
         # Shortcut when lynn is shown
         if @state.visible
-          actionName = KeyMatch.match(event, @state.command_mode)
+          actionName = KeyMatch.match(event, @state.mode)
           Action.matchAction(actionName).call(@, event)
 
   render: ->
@@ -155,21 +154,21 @@ Lynn = React.createClass
       Top
         onConsoleChange: @onConsoleChange
         command: @state.command
-        command_mode: @state.command_mode
+        mode: @state.mode
       Mid
         visible: not _.isEmpty @state.command
         nodeArray: @state.nodeArray
         maxSuggestionNum: @state.maxSuggestionNum
         currentNodeIndex: @state.currentNodeIndex
         currentPage: @state.currentPage
-        command_mode: @state.command_mode
+        mode: @state.mode
         selectedArray: @state.selectedArray
       Bot
         visible: not _.isEmpty @state.command
         nodeArray: @state.nodeArray
-        page: @state.currentPage
+        currentPage: @state.currentPage
 
-        command_mode: @state.command_mode
+        mode: @state.mode
         selectedArray: @state.selectedArray
 
   onConsoleChange: (event) ->
@@ -177,13 +176,13 @@ Lynn = React.createClass
     if command[0] is ':'
       @setState
         command: command
-        command_mode: 'command'
+        mode: 'command'
         currentNodeIndex: 0
         currentPage: 1
     else
       @setState
         command: command
-        command_mode: 'query'
+        mode: 'query'
         currentNodeIndex: 0
         currentPage: 1
 

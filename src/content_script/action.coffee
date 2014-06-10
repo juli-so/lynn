@@ -51,8 +51,8 @@ SharedAction =
       
   reset: ->
     @setState
-      command: ''
-      command_mode: 'query'
+      input: ''
+      mode: 'query'
 
       nodeArray: []
       selectedArray: []
@@ -61,25 +61,25 @@ SharedAction =
 
   nextCommandMode: (event) ->
     event.preventDefault()
-    if @state.command_mode is 'query'
-      command_mode = 'select'
-    else if @state.command_mode is 'select'
-      command_mode = 'command'
+    if @state.mode is 'query'
+      mode = 'select'
+    else if @state.mode is 'select'
+      mode = 'command'
     else
-      command_mode = 'query'
+      mode = 'query'
 
-    @setState {command_mode}
+    @setState {mode}
     
   prevCommandMode: (event) ->
     event.preventDefault()
-    if @state.command_mode is 'select'
-      command_mode = 'query'
-    else if @state.command_mode is 'command'
-      command_mode = 'select'
+    if @state.mode is 'select'
+      mode = 'query'
+    else if @state.mode is 'command'
+      mode = 'select'
     else
-      command_mode = 'command'
+      mode = 'command'
 
-    @setState {command_mode}
+    @setState {mode}
 
 QueryAction =
 
@@ -107,9 +107,9 @@ SelectAction =
     Message.postMessage {request: 'openNodeArray', nodeArray}
 
 CommandAction =
-  open: (event) ->
-    console.log @s
-    if @state.command is ':g'
+  execute: (event) ->
+    # example or custom shortcuts
+    if @state.input is ':1'
       Message.postMessage
         request: 'open'
         node:

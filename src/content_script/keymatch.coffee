@@ -22,8 +22,8 @@ KeyMatch =
 
     ctrl + shift + event.keyCode
 
-  match: (event, command_mode) ->
-    switch command_mode
+  match: (event, mode) ->
+    switch mode
       when 'query' then @matchInQueryMode(event)
       when 'select' then @matchInSelectMode(event)
       when 'command' then @matchInCommandMode(event)
@@ -72,7 +72,7 @@ KeyMatch =
       when '9' then 'nextCommandMode'
       when 's-9' then 'prevCommandMode'
 
-      when '13' then 'c_open'
+      when '13' then 'c_execute'
 
       else 'noop'
 
