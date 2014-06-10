@@ -121,7 +121,7 @@ Lynn = React.createClass
 
   # React methods
   getInitialState: ->
-    visible: yes
+    visible: no
     input: ''
     mode: 'query' # query | select | command
 
