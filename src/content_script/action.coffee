@@ -22,31 +22,38 @@ SharedAction =
 
   open: ->
     node = @state.nodeArray[@state.currentNodeIndex]
-    Message.postMessage {request: 'open', node}
+    Message.postMessage { request: 'open', node }
 
   up: (event) ->
     event.preventDefault()
-    currentNodeIndex = (@state.currentNodeIndex + @state.maxSuggestionNum - 1) \
-      % @state.maxSuggestionNum
-    @setState {currentNodeIndex}
+
+    currentNodeIndex = \
+      (@state.currentNodeIndex + @state.MAX_SUGGESTION_NUM - 1) %
+        @state.MAX_SUGGESTION_NUM
+    @setState { currentNodeIndex }
 
   down: (event) ->
     event.preventDefault()
-    currentNodeIndex = (@state.currentNodeIndex + 1) % @state.maxSuggestionNum
-    @setState {currentNodeIndex}
+
+    currentNodeIndex = (@state.currentNodeIndex + 1) % @state.MAX_SUGGESTION_NUM
+    @setState { currentNodeIndex }
 
   pageUp: ->
     event.preventDefault()
-    if @state.currentPage > 1
+
+    if @state.currentPageIndex > 0
       @setState
-        currentPage: @state.currentPage - 1
+        currentPageIndex: @state.currentPageIndex - 1
         currentNodeIndex: 0
 
   pageDown: ->
     event.preventDefault()
-    if @state.currentPage * @state.maxSuggestionNum < @state.nodeArray.length
+
+    currentPageLastNodeIndex =
+      (@state.currentPageIndex + 1) * @state.MAX_SUGGESTION_NUM
+    if currentPageLastNodeIndex < @state.nodeArray.length
       @setState
-        currentPage: @state.currentPage + 1
+        currentPageIndex: @state.currentPageIndex + 1
         currentNodeIndex: 0
       
   reset: ->
@@ -56,11 +63,13 @@ SharedAction =
 
       nodeArray: []
       selectedArray: []
+
       currentNodeIndex: 0
-      currentPage: 1
+      currentPageIndex: 0
 
   nextCommandMode: (event) ->
     event.preventDefault()
+
     if @state.mode is 'query'
       mode = 'select'
     else if @state.mode is 'select'
@@ -68,10 +77,11 @@ SharedAction =
     else
       mode = 'query'
 
-    @setState {mode}
+    @setState { mode }
     
   prevCommandMode: (event) ->
     event.preventDefault()
+
     if @state.mode is 'select'
       mode = 'query'
     else if @state.mode is 'command'
@@ -79,32 +89,35 @@ SharedAction =
     else
       mode = 'command'
 
-    @setState {mode}
+    @setState { mode }
 
 QueryAction =
 
 SelectAction =
   select: (event) ->
     event.preventDefault()
+
     selectedNodeIndex = @state.currentNodeIndex +
-      (@state.currentPage - 1) * @state.maxSuggestionNum
+      @state.currentPageIndex * @state.MAX_SUGGESTION_NUM
     unless _.contains(@state.selectedArray, selectedNodeIndex)
       selectedArray = _.union(@state.selectedArray, [selectedNodeIndex])
-      @setState {selectedArray}
+      @setState { selectedArray }
 
   unselect: (event) ->
     event.preventDefault()
+
     selectedNodeIndex = @state.currentNodeIndex +
-      (@state.currentPage - 1) * @state.maxSuggestionNum
+      (@state.currentPageIndex) * @state.MAX_SUGGESTION_NUM
     if _.contains(@state.selectedArray, selectedNodeIndex)
       selectedArray = _.without(@state.selectedArray, selectedNodeIndex)
-      @setState {selectedArray}
+      @setState { selectedArray }
 
   open: (event) ->
     event.preventDefault()
+
     nodeArray = _.filter @state.nodeArray, (node, index) =>
       _.contains(@state.selectedArray, index)
-    Message.postMessage {request: 'openNodeArray', nodeArray}
+    Message.postMessage { request: 'openNodeArray', nodeArray }
 
 CommandAction =
   execute: (event) ->

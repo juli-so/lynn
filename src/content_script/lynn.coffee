@@ -1,6 +1,6 @@
 MAX_SUGGESTION_NUM = 8
 
-{ div, span, input } = React.DOM
+{ div, span } = React.DOM
 
 ###
 Structure
@@ -25,13 +25,16 @@ div.lynn
 
 Top = React.createClass
   render: ->
+    { input } = React.DOM
+
     div className: 'lynn_top',
       input
         className: 'lynn_console'
         type: 'text'
         size: '80'
-        value: @props.command
         placeholder: 'Search for...'
+
+        value: @props.input
         onChange: @props.onConsoleChange
 
       span className: 'lynn_console_status',
@@ -46,25 +49,26 @@ Top = React.createClass
 
 Mid = React.createClass
   render: ->
-    start = (@props.currentPage - 1) * @props.maxSuggestionNum
-    end = Math.min(@props.nodeArray.length, start + @props.maxSuggestionNum)
+    start = @props.currentPageIndex * @props.MAX_SUGGESTION_NUM
+    end = Math.min(@props.nodeArray.length, start + @props.MAX_SUGGESTION_NUM)
     className = 'lynn_mid'
-    className += ' hidden' if not @props.visible
 
     if @props.mode is 'query'
       div {className},
         _.map @props.nodeArray[start...end], (node, index) =>
           Suggestion
-            node: node
             key: node.id
+
+            node: node
             isCurrent: index is @props.currentNodeIndex
+            isSelected: false
     else
       div {className},
         _.map @props.nodeArray[start...end], (node, index) =>
-          console.log node
           Suggestion
-            node: node
             key: node.id
+
+            node: node
             isCurrent: index is @props.currentNodeIndex
             isSelected: _.contains(@props.selectedArray, start + index)
 
@@ -94,7 +98,6 @@ Bot = React.createClass
       'Six', 'Seven', 'Eight', 'Nine', 'Ten']
 
     className = 'lynn_bot'
-    className += ' hidden' if not @props.visible
 
     infoString = @props.nodeArray.length + ' result'
     infoString += 's' if @props.nodeArray.length > 1
@@ -108,33 +111,33 @@ Bot = React.createClass
       span className: 'lynn_select_info',
         selectString
       span className: 'lynn_pageView',
-        'Page ' + numToString[@props.currentPage]
+        'Page ' + numToString[@props.currentPageIndex + 1]
 
 # lynn
-
 Lynn = React.createClass
-  getInitialState: ->
-    # Global
-    visible: no
+  # @state
+  #   - getInitialState
+  #   - option loaded in componentWillMount
 
-    # Top
-    command: ''
+  # React methods
+  getInitialState: ->
+    visible: yes
+    input: ''
     mode: 'query' # query | select | command
 
-    # Mid
     nodeArray: []
-    selectedArray: []
-    maxSuggestionNum: MAX_SUGGESTION_NUM
-    currentNodeIndex: 0
-    currentPage: 1
+    selectedNodeArray: []
 
-    # Bot
+    currentNodeIndex: 0
+    currentPageIndex: 0
 
   componentWillMount: ->
+    # listen to search callback
     Message.addListener (message) =>
       if message.response is 'search'
         @setState nodeArray: message.result
-    
+
+    # keydown events
     $(document).keydown (event) =>
       # Global invoke
       if KeyMatch.ctrlB(event)
@@ -146,46 +149,50 @@ Lynn = React.createClass
           actionName = KeyMatch.match(event, @state.mode)
           Action.matchAction(actionName).call(@, event)
 
+    # ~ 
+    # load options
+    @setState { MAX_SUGGESTION_NUM }
+
   render: ->
     className = 'lynn animated fadeInDown'
     className += ' hidden' unless @state.visible
 
     div {className},
       Top
+        input: @state.input
+        mode: @state.mode
+
         onConsoleChange: @onConsoleChange
-        command: @state.command
-        mode: @state.mode
+
       Mid
-        visible: not _.isEmpty @state.command
-        nodeArray: @state.nodeArray
-        maxSuggestionNum: @state.maxSuggestionNum
-        currentNodeIndex: @state.currentNodeIndex
-        currentPage: @state.currentPage
-        mode: @state.mode
-        selectedArray: @state.selectedArray
-      Bot
-        visible: not _.isEmpty @state.command
-        nodeArray: @state.nodeArray
-        currentPage: @state.currentPage
+        MAX_SUGGESTION_NUM: @state.MAX_SUGGESTION_NUM
 
         mode: @state.mode
+
+        nodeArray: @state.nodeArray
         selectedArray: @state.selectedArray
+
+        currentNodeIndex: @state.currentNodeIndex
+        currentPageIndex: @state.currentPageIndex
+
+      Bot
+        mode: @state.mode
+
+        nodeArray: @state.nodeArray
+        selectedArray: @state.selectedArray
+
+        currentPageIndex: @state.currentPageIndex
+
 
   onConsoleChange: (event) ->
-    command = event.target.value
-    if command[0] is ':'
-      @setState
-        command: command
-        mode: 'command'
-        currentNodeIndex: 0
-        currentPage: 1
-    else
-      @setState
-        command: command
-        mode: 'query'
-        currentNodeIndex: 0
-        currentPage: 1
+    input = event.target.value
+    @setState
+      input: input
+      mode: if input[0] is ':' then 'command' else 'query'
+      currentNodeIndex: 0
+      currentPageIndex: 0
 
-      Message.postMessage {request: 'search', command}
-
-
+    if input[0] isnt ':'
+      Message.postMessage
+        request: 'search'
+        command: input
