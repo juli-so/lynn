@@ -26,13 +26,17 @@ div.lynn
 Top = React.createClass
   render: ->
     { input } = React.DOM
+    if @props.mode is 'command'
+      inputPlaceHolder = 'Your command...'
+    else
+      inputPlaceHolder = 'Search for...'
 
     div className: 'lynn_top',
       input
         className: 'lynn_console'
         type: 'text'
         size: '80'
-        placeholder: 'Search for...'
+        placeholder: inputPlaceHolder
 
         value: @props.input
         onChange: @props.onConsoleChange
@@ -126,7 +130,7 @@ Lynn = React.createClass
     mode: 'query' # query | select | command
 
     nodeArray: []
-    selectedNodeArray: []
+    selectedArray: []
 
     currentNodeIndex: 0
     currentPageIndex: 0
@@ -134,7 +138,7 @@ Lynn = React.createClass
   componentWillMount: ->
     # listen to search callback
     Message.addListener (message) =>
-      if message.response is 'search'
+      if message.response && message.response is 'search'
         @setState nodeArray: message.result
 
     # keydown events
@@ -186,13 +190,16 @@ Lynn = React.createClass
 
   onConsoleChange: (event) ->
     input = event.target.value
-    @setState
-      input: input
-      mode: if input[0] is ':' then 'command' else 'query'
-      currentNodeIndex: 0
-      currentPageIndex: 0
+    if @state.mode is 'query'
+      @setState
+        input: input
+        mode: if input[0] is ':' then 'command' else 'query'
+        currentNodeIndex: 0
+        currentPageIndex: 0
 
-    if input[0] isnt ':'
-      Message.postMessage
-        request: 'search'
-        command: input
+      if input[0] isnt ':'
+        Message.postMessage
+          request: 'search'
+          command: input
+    else
+      @setState { input }

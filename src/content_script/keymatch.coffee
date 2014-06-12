@@ -7,11 +7,6 @@ KeyMatch =
   ctrlB: (event) ->
     event.ctrlKey and event.keyCode is 66
   
-  pageUp: (event) ->
-    event.keyCode is 33
-  pageDown: (event) ->
-    event.keyCode is 34
-
   getCommand: (event) ->
     ctrl = ''
     shift = ''
@@ -23,6 +18,9 @@ KeyMatch =
     ctrl + shift + event.keyCode
 
   match: (event, mode) ->
+    # for debugging
+    if @getCommand(event) is 'c-68'
+      return 'print'
     switch mode
       when 'query' then @matchInQueryMode(event)
       when 'select' then @matchInSelectMode(event)
@@ -33,6 +31,7 @@ KeyMatch =
     switch @getCommand(event)
       when '13' then 'open'
 
+      when '27' then 'hide'
       when 'c-8' then 'reset'
 
       when '33' then 'pageUp'
@@ -40,20 +39,23 @@ KeyMatch =
       when '38' then 'up'
       when '40' then 'down'
 
-      when '9' then 'nextCommandMode'
-      when 's-9' then 'prevCommandMode'
+      when '9' then 'nextMode'
+      when 's-9' then 'prevMode'
 
       else 'noop'
 
   matchInSelectMode: (event) ->
     switch @getCommand(event)
+      when '27' then 'hide'
+      when 'c-8' then 'reset'
+
       when '33' then 'pageUp'
       when '34' then 'pageDown'
       when '38' then 'up'
       when '40' then 'down'
 
-      when '9' then 'nextCommandMode'
-      when 's-9' then 'prevCommandMode'
+      when '9' then 'nextMode'
+      when 's-9' then 'prevMode'
 
       when '13' then 's_open'
       # 'o'
@@ -64,13 +66,16 @@ KeyMatch =
 
   matchInCommandMode: (event) ->
     switch @getCommand(event)
+      when '27' then 'hide'
+      when 'c-8' then 'reset'
+
       when '33' then 'pageUp'
       when '34' then 'pageDown'
       when '38' then 'up'
       when '40' then 'down'
 
-      when '9' then 'nextCommandMode'
-      when 's-9' then 'prevCommandMode'
+      when '9' then 'nextMode'
+      when 's-9' then 'prevMode'
 
       when '13' then 'c_execute'
 

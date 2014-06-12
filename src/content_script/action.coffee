@@ -9,6 +9,10 @@ Action =
 
 SharedAction =
   noop: _.noop
+
+  print: (event) ->
+    event.preventDefault()
+    console.log @state
   
   toggle: ->
     if @state.visible
@@ -19,6 +23,11 @@ SharedAction =
       @setState
         visible: true
       $('.lynn_console').focus()
+
+  hide: (event) ->
+    event.preventDefault()
+    SharedAction.reset.call(@)
+    @setState { visible: false }
 
   open: ->
     node = @state.nodeArray[@state.currentNodeIndex]
@@ -67,7 +76,7 @@ SharedAction =
       currentNodeIndex: 0
       currentPageIndex: 0
 
-  nextCommandMode: (event) ->
+  nextMode: (event) ->
     event.preventDefault()
 
     if @state.mode is 'query'
@@ -78,8 +87,9 @@ SharedAction =
       mode = 'query'
 
     @setState { mode }
+    @setState { input: '' } if mode is 'command'
     
-  prevCommandMode: (event) ->
+  prevMode: (event) ->
     event.preventDefault()
 
     if @state.mode is 'select'
@@ -90,6 +100,7 @@ SharedAction =
       mode = 'command'
 
     @setState { mode }
+    @setState { input: '' } if mode is 'command'
 
 QueryAction =
 
@@ -121,11 +132,22 @@ SelectAction =
 
 CommandAction =
   execute: (event) ->
+    tokenArray = @state.input.split(' ')
     # example or custom shortcuts
-    if @state.input is ':1'
+    if tokenArray[0] is ':1'
       Message.postMessage
         request: 'open'
         node:
           url: 'http://www.google.com'
           isBookmark: true
 
+    if tokenArray[0] is ':tag'
+      currenNode = @state.nodeArray[@state.currentNodeIndex +
+        @state.currentPageIndex * @state.MAX_SUGGESTION_NUM]
+      Message.postMessage
+        request: @state.input.slice(1)
+        node: currenNode
+
+    if tokenArray[0] is ':sync'
+      Message.postMessage
+        request: 'sync'

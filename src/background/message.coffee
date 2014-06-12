@@ -13,7 +13,7 @@ Message =
     tokenArray = request.split(' ')
     command = tokenArray[0]
     if tokenArray.length == 1
-      {command}
+      { command }
     else
       optionString = ' ' + tokenArray.slice(1).join(' ')
 
@@ -24,7 +24,7 @@ Message =
         optionArgArray = singleOption.split(' ').slice(1)
         option[optionName] = optionArgArray
 
-      {command, option}
+      { command, option }
 
   # Listen to message from front
   # Define stucture of messages sent to & from front
@@ -35,6 +35,8 @@ Message =
       port.postMessage Message[command](message, option)
 
   # Command functions
+  # By default send back an object containing 'response'
+
   search: (message) ->
     response: 'search'
     result: Bookmark.find(Completion.preprocess message.command)
@@ -70,4 +72,8 @@ Message =
     if option.d
       _.forEach option.d, (optionArg) ->
         Bookmark.delTag message.node, optionArg
+    response: 'tag'
 
+  sync: (message, option) ->
+    Bookmark.storeTag()
+    response: 'sync'
