@@ -145,7 +145,7 @@ Lynn = React.createClass
     $(document).keydown (event) =>
       # Global invoke
       if KeyMatch.ctrlB(event)
-        SharedAction.toggle.call(@)
+        CommonAction.toggle.call(@)
 
       else
         # Shortcut when lynn is shown

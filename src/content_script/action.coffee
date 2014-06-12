@@ -5,9 +5,9 @@ Action =
       when 'q_' then QueryAction[actionName[2..]]
       when 's_' then SelectAction[actionName[2..]]
       when 'c_' then CommandAction[actionName[2..]]
-      else SharedAction[actionName]
+      else CommonAction[actionName]
 
-SharedAction =
+CommonAction =
   noop: _.noop
 
   print: (event) ->
@@ -16,7 +16,7 @@ SharedAction =
   
   toggle: ->
     if @state.visible
-      SharedAction.reset.call(@)
+      CommonAction.reset.call(@)
       @setState
         visible: false
     else
@@ -26,7 +26,7 @@ SharedAction =
 
   hide: (event) ->
     event.preventDefault()
-    SharedAction.reset.call(@)
+    CommonAction.reset.call(@)
     @setState { visible: false }
 
   open: ->
