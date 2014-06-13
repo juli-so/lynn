@@ -1,4 +1,5 @@
 # Handles messages from frontend by taking action & sending back messages
+# Actions are defined in action.coffee
 
 Message =
   init: ->
@@ -12,9 +13,7 @@ Message =
 
     tokenArray = request.split(' ')
     command = tokenArray[0]
-    if tokenArray.length == 1
-      { command }
-    else
+    if tokenArray.length > 1
       optionString = ' ' + tokenArray.slice(1).join(' ')
 
       optionArray = optionString.split(' -').slice(1)
@@ -24,15 +23,20 @@ Message =
         optionArgArray = singleOption.split(' ').slice(1)
         option[optionName] = optionArgArray
 
-      { command, option }
+    { command, option }
 
   # Listen to message from front
-  # Define stucture of messages sent to & from front
+  # Messages are expected to be in this form
+  # message =
+  #   request: Action[request]
+  #   args: 
   addListener: (port) ->
     port.onMessage.addListener (message) =>
-      {command, option} = @parse(message.request)
-      option or= {}
-      port.postMessage Message[command](message, option)
+      if message.action
+        port.postMessage(Action[message.request](message))
+      else
+        {command, option} = @parse(message.request)
+        port.postMessage Message[command](message, option)
 
   # Command functions
   # By default send back an object containing 'response'

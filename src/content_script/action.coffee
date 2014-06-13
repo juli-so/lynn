@@ -28,8 +28,12 @@ CommonAction =
     @setState { visible: false }
 
   open: ->
-    node = @state.nodeArray[@state.currentNodeIndex]
-    Message.postMessage { request: 'open', node }
+    Message.postMessage
+      request: 'openBookmark'
+      action: yes
+      node: @getCurrentNode()
+      option:
+        active: no
 
   up: ->
     currentNodeIndex = \
@@ -120,11 +124,9 @@ CommandAction =
           isBookmark: true
 
     if tokenArray[0] is ':tag'
-      currenNode = @state.nodeArray[@state.currentNodeIndex +
-        @state.currentPageIndex * @state.MAX_SUGGESTION_NUM]
       Message.postMessage
         request: @state.input.slice(1)
-        node: currenNode
+        node: @getCurrentNode()
 
     if tokenArray[0] is ':sync'
       Message.postMessage

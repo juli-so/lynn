@@ -37,6 +37,7 @@
     "background": {
       "scripts": [
         "vendor/js/lodash.min.js",
+        "lib/background/action.js",
         "lib/background/message.js",
         "lib/background/util.js",
         "lib/background/bookmark.js",

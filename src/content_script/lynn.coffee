@@ -207,4 +207,11 @@ Lynn = React.createClass
       else
         @setState { input }
 
+  getCurrentNodeIndex: ->
+    @state.currentPageIndex * @state.MAX_SUGGESTION_NUM +
+      @state.currentNodeIndex
+
+  getCurrentNode: ->
+    @state.nodeArray[@getCurrentNodeIndex()]
+
 
