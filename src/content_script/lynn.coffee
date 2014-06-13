@@ -28,6 +28,8 @@ Top = React.createClass
     { input } = React.DOM
     if @props.mode is 'command'
       inputPlaceHolder = 'Your command...'
+    else if @props.mode is 'fast'
+      inputPlaceHolder = 'Invoke fast command!'
     else
       inputPlaceHolder = 'Search for...'
 
@@ -43,11 +45,13 @@ Top = React.createClass
 
       span className: 'lynn_console_status',
         if @props.mode is 'query'
-          span className: 'lynn_console_status_icon fa fa-search fa-2x'
+          span className: 'lynn_console_status_icon fa fa-2x fa-search'
         else if @props.mode is 'select'
-          span className: 'lynn_console_status_icon fa fa-files-o fa-2x'
+          span className: 'lynn_console_status_icon fa fa-2x fa-files-o'
+        else if @props.mode is 'command'
+          span className: 'lynn_console_status_icon fa fa-2x fa-terminal'
         else
-          span className: 'lynn_console_status_icon fa fa-terminal fa-2x'
+          span className: 'lynn_console_status_icon fa fa-2x fa-bolt'
 
 # lynn_mid
 
@@ -127,7 +131,7 @@ Lynn = React.createClass
   getInitialState: ->
     visible: no
     input: ''
-    mode: 'query' # query | select | command
+    mode: 'query' # query | select | command | fast
 
     nodeArray: []
     selectedArray: []
@@ -151,6 +155,8 @@ Lynn = React.createClass
         # Shortcut when lynn is shown
         if @state.visible
           actionName = KeyMatch.match(event, @state.mode)
+          event.preventDefault() if actionName isnt 'noop'
+
           Action.matchAction(actionName).call(@, event)
 
     # ~ 
@@ -201,5 +207,10 @@ Lynn = React.createClass
         Message.postMessage
           request: 'search'
           command: input
-    else
-      @setState { input }
+    else if @state.mode is 'command'
+      if input[-1..] is ':'
+        @setState { input: ':' }
+      else
+        @setState { input }
+
+

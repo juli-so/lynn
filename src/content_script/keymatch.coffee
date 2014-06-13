@@ -18,53 +18,69 @@ KeyMatch =
     ctrl + shift + event.keyCode
 
   match: (event, mode) ->
+    keyCode = @getCommand(event)
     # for debugging
-    if @getCommand(event) is 'c-68'
+    if keyCode is 'c-76'
       return 'print'
 
-    return @matchCommon(event) if @matchCommon(event) isnt 'noop'
+    #return @matchCommon(keyCode) if @matchCommon(keyCode) isnt 'noop'
 
-    switch mode
-      when 'query' then @matchInQueryMode(event)
-      when 'select' then @matchInSelectMode(event)
-      when 'command' then @matchInCommandMode(event)
+    action = switch mode
+      when 'query' then @matchInQueryMode(keyCode)
+      when 'select' then @matchInSelectMode(keyCode)
+      when 'command' then @matchInCommandMode(keyCode)
+      when 'fast' then @matchInFastMode(keyCode)
       else 'noop'
 
-  matchCommon: (event) ->
-    switch @getCommand(event)
+    if action is 'noop' then @matchCommon(keyCode) else action
+
+  matchCommon: (keyCode) ->
+    switch keyCode
       when '27' then 'hide'
       when 'c-8' then 'reset'
 
-      when '38' then 'up'
-      when '40' then 'down'
+      when '38'   then 'up'
+      when 'c-75' then 'up'
+      when '40'   then 'down'
+      when 'c-74' then 'down'
 
-      when '33' then 'pageUp'
-      when '34' then 'pageDown'
+      when '33'   then 'pageUp'
+      when 'c-85' then 'pageUp'
+      when '34'   then 'pageDown'
+      when 'c-68' then 'pageDown'
 
-      when '9' then 'nextMode'
+      when '9'   then 'nextMode'
       when 's-9' then 'prevMode'
 
       else 'noop'
 
-
-  matchInQueryMode: (event) ->
-    switch @getCommand(event)
+  matchInQueryMode: (keyCode) ->
+    switch keyCode
       when '13' then 'open'
 
       else 'noop'
 
-  matchInSelectMode: (event) ->
-    switch @getCommand(event)
+  matchInSelectMode: (keyCode) ->
+    switch keyCode
       when '13' then 's_open'
       when '79' then 's_open'
+
       when '37' then 's_select'
       when '39' then 's_unselect'
 
+      when '70' then 's_fastMode'
+
       else 'noop'
 
-  matchInCommandMode: (event) ->
-    switch @getCommand(event)
+  matchInCommandMode: (keyCode) ->
+    switch keyCode
       when '13' then 'c_execute'
 
       else 'noop'
 
+  matchInFastMode: (keyCode) ->
+    switch keyCode
+      when '13' then 'f_execute'
+      when '9' then 'f_selectMode'
+
+      else 'noop'

@@ -5,13 +5,13 @@ Action =
       when 'q_' then QueryAction[actionName[2..]]
       when 's_' then SelectAction[actionName[2..]]
       when 'c_' then CommandAction[actionName[2..]]
+      when 'f_' then FastAction[actionName[2..]]
       else CommonAction[actionName]
 
 CommonAction =
   noop: _.noop
 
-  print: (event) ->
-    event.preventDefault()
+  print: ->
     console.log @state
   
   toggle: ->
@@ -24,8 +24,7 @@ CommonAction =
         visible: true
       $('.lynn_console').focus()
 
-  hide: (event) ->
-    event.preventDefault()
+  hide: ->
     CommonAction.reset.call(@)
     @setState { visible: false }
 
@@ -33,31 +32,23 @@ CommonAction =
     node = @state.nodeArray[@state.currentNodeIndex]
     Message.postMessage { request: 'open', node }
 
-  up: (event) ->
-    event.preventDefault()
-
+  up: ->
     currentNodeIndex = \
       (@state.currentNodeIndex + @state.MAX_SUGGESTION_NUM - 1) %
         @state.MAX_SUGGESTION_NUM
     @setState { currentNodeIndex }
 
-  down: (event) ->
-    event.preventDefault()
-
+  down: ->
     currentNodeIndex = (@state.currentNodeIndex + 1) % @state.MAX_SUGGESTION_NUM
     @setState { currentNodeIndex }
 
   pageUp: ->
-    event.preventDefault()
-
     if @state.currentPageIndex > 0
       @setState
         currentPageIndex: @state.currentPageIndex - 1
         currentNodeIndex: 0
 
   pageDown: ->
-    event.preventDefault()
-
     currentPageLastNodeIndex =
       (@state.currentPageIndex + 1) * @state.MAX_SUGGESTION_NUM
     if currentPageLastNodeIndex < @state.nodeArray.length
@@ -76,9 +67,7 @@ CommonAction =
       currentNodeIndex: 0
       currentPageIndex: 0
 
-  nextMode: (event) ->
-    event.preventDefault()
-
+  nextMode: ->
     if @state.mode is 'query'
       mode = 'select'
     else if @state.mode is 'select'
@@ -87,11 +76,8 @@ CommonAction =
       mode = 'query'
 
     @setState { mode }
-    @setState { input: '' } if mode is 'command'
     
-  prevMode: (event) ->
-    event.preventDefault()
-
+  prevMode: ->
     if @state.mode is 'select'
       mode = 'query'
     else if @state.mode is 'command'
@@ -100,41 +86,38 @@ CommonAction =
       mode = 'command'
 
     @setState { mode }
-    @setState { input: '' } if mode is 'command'
 
 QueryAction =
 
 SelectAction =
-  select: (event) ->
-    event.preventDefault()
+  open: ->
+    nodeArray = _.filter @state.nodeArray, (node, index) =>
+      _.contains(@state.selectedArray, index)
+    Message.postMessage { request: 'openNodeArray', nodeArray }
 
+  select: ->
     selectedNodeIndex = @state.currentNodeIndex +
       @state.currentPageIndex * @state.MAX_SUGGESTION_NUM
     unless _.contains(@state.selectedArray, selectedNodeIndex)
       selectedArray = _.union(@state.selectedArray, [selectedNodeIndex])
       @setState { selectedArray }
 
-  unselect: (event) ->
-    event.preventDefault()
-
+  unselect: ->
     selectedNodeIndex = @state.currentNodeIndex +
       (@state.currentPageIndex) * @state.MAX_SUGGESTION_NUM
     if _.contains(@state.selectedArray, selectedNodeIndex)
       selectedArray = _.without(@state.selectedArray, selectedNodeIndex)
       @setState { selectedArray }
 
-  open: (event) ->
-    event.preventDefault()
+  fastMode: ->
+    @setState { input: '', mode: 'fast' }
 
-    nodeArray = _.filter @state.nodeArray, (node, index) =>
-      _.contains(@state.selectedArray, index)
-    Message.postMessage { request: 'openNodeArray', nodeArray }
 
 CommandAction =
-  execute: (event) ->
+  execute: ->
     tokenArray = @state.input.split(' ')
     # example or custom shortcuts
-    if tokenArray[0] is ':1'
+    if tokenArray[0] is ':g'
       Message.postMessage
         request: 'open'
         node:
@@ -151,3 +134,11 @@ CommandAction =
     if tokenArray[0] is ':sync'
       Message.postMessage
         request: 'sync'
+
+FastAction =
+  execute: ->
+    console.log 'here 1'
+
+  selectMode: ->
+    console.log '2'
+

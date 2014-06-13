@@ -117,7 +117,7 @@ div.lynn_suggestion {
 .lynn_info {
   display: inline-block;
   vertical-align: top;
-  width: 100px;
+  width: 120px;
   height: 40px;
 
   font-size: 14px;
@@ -129,7 +129,7 @@ div.lynn_suggestion {
 .lynn_select_info {
   display: inline-block;
   vertical-align: top;
-  width: 500px;
+  width: 480px;
   height: 40px;
 
   font-size: 14px;
