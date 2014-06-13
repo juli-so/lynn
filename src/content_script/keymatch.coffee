@@ -27,9 +27,8 @@ KeyMatch =
 
     action = switch mode
       when 'query' then @matchInQueryMode(keyCode)
-      when 'select' then @matchInSelectMode(keyCode)
-      when 'command' then @matchInCommandMode(keyCode)
       when 'fast' then @matchInFastMode(keyCode)
+      when 'command' then @matchInCommandMode(keyCode)
       else 'noop'
 
     if action is 'noop' then @matchCommon(keyCode) else action
@@ -60,27 +59,18 @@ KeyMatch =
 
       else 'noop'
 
-  matchInSelectMode: (keyCode) ->
+  matchInFastMode: (keyCode) ->
     switch keyCode
-      when '13' then 's_open'
-      when '79' then 's_open'
+      when '13' then 'f_open'
+      when '79' then 'f_open'
 
-      when '37' then 's_select'
-      when '39' then 's_unselect'
-
-      when '70' then 's_fastMode'
+      when '37' then 'f_select'
+      when '39' then 'f_unselect'
 
       else 'noop'
 
   matchInCommandMode: (keyCode) ->
     switch keyCode
       when '13' then 'c_execute'
-
-      else 'noop'
-
-  matchInFastMode: (keyCode) ->
-    switch keyCode
-      when '13' then 'f_execute'
-      when '9' then 'f_selectMode'
 
       else 'noop'

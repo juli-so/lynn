@@ -114,7 +114,7 @@ div.lynn_suggestion {
   background-color: #fff;
 }
 
-.lynn_info {
+.lynn_bot_left {
   display: inline-block;
   vertical-align: top;
   width: 120px;
@@ -126,7 +126,7 @@ div.lynn_suggestion {
   padding-left: 20px;
 }
 
-.lynn_select_info {
+.lynn_bot_mid {
   display: inline-block;
   vertical-align: top;
   width: 480px;
@@ -136,7 +136,7 @@ div.lynn_suggestion {
   padding: 12px;
 }
 
-.lynn_pageView {
+.lynn_bot_right {
   display: inline-block;
   vertical-align: top;
   width: 100px;

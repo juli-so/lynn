@@ -44,14 +44,11 @@ Top = React.createClass
         onChange: @props.onConsoleChange
 
       span className: 'lynn_console_status',
-        if @props.mode is 'query'
-          span className: 'lynn_console_status_icon fa fa-2x fa-search'
-        else if @props.mode is 'select'
-          span className: 'lynn_console_status_icon fa fa-2x fa-files-o'
-        else if @props.mode is 'command'
-          span className: 'lynn_console_status_icon fa fa-2x fa-terminal'
-        else
-          span className: 'lynn_console_status_icon fa fa-2x fa-bolt'
+        span
+          className: 'lynn_console_status_icon fa fa-2x ' + switch @props.mode
+            when 'query'   then 'fa-search'
+            when 'fast'    then 'fa-bolt'
+            when 'command' then 'fa-terminal'
 
 # lynn_mid
 
@@ -109,16 +106,13 @@ Bot = React.createClass
 
     infoString = @props.nodeArray.length + ' result'
     infoString += 's' if @props.nodeArray.length > 1
-    selectString = ''
-    if @props.mode is 'select'
-      selectString += @props.selectedArray.length + ' selected'
       
     div {className},
-      span className: 'lynn_info',
+      span className: 'lynn_bot_left',
         infoString
-      span className: 'lynn_select_info',
-        selectString
-      span className: 'lynn_pageView',
+      span className: 'lynn_bot_mid',
+        ''
+      span className: 'lynn_bot_right',
         'Page ' + numToString[@props.currentPageIndex + 1]
 
 # lynn
@@ -131,7 +125,7 @@ Lynn = React.createClass
   getInitialState: ->
     visible: no
     input: ''
-    mode: 'query' # query | select | command | fast
+    mode: 'query' # query | fast | command
 
     nodeArray: []
     selectedArray: []

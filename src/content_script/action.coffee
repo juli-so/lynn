@@ -3,9 +3,8 @@ Action =
   matchAction: (actionName) ->
     switch actionName[0..1]
       when 'q_' then QueryAction[actionName[2..]]
-      when 's_' then SelectAction[actionName[2..]]
-      when 'c_' then CommandAction[actionName[2..]]
       when 'f_' then FastAction[actionName[2..]]
+      when 'c_' then CommandAction[actionName[2..]]
       else CommonAction[actionName]
 
 CommonAction =
@@ -69,8 +68,8 @@ CommonAction =
 
   nextMode: ->
     if @state.mode is 'query'
-      mode = 'select'
-    else if @state.mode is 'select'
+      mode = 'fast'
+    else if @state.mode is 'fast'
       mode = 'command'
     else
       mode = 'query'
@@ -78,10 +77,10 @@ CommonAction =
     @setState { mode }
     
   prevMode: ->
-    if @state.mode is 'select'
+    if @state.mode is 'fast'
       mode = 'query'
     else if @state.mode is 'command'
-      mode = 'select'
+      mode = 'fast'
     else
       mode = 'command'
 
@@ -89,7 +88,7 @@ CommonAction =
 
 QueryAction =
 
-SelectAction =
+FastAction =
   open: ->
     nodeArray = _.filter @state.nodeArray, (node, index) =>
       _.contains(@state.selectedArray, index)
@@ -108,10 +107,6 @@ SelectAction =
     if _.contains(@state.selectedArray, selectedNodeIndex)
       selectedArray = _.without(@state.selectedArray, selectedNodeIndex)
       @setState { selectedArray }
-
-  fastMode: ->
-    @setState { input: '', mode: 'fast' }
-
 
 CommandAction =
   execute: ->
@@ -134,11 +129,4 @@ CommandAction =
     if tokenArray[0] is ':sync'
       Message.postMessage
         request: 'sync'
-
-FastAction =
-  execute: ->
-    console.log 'here 1'
-
-  selectMode: ->
-    console.log '2'
 
