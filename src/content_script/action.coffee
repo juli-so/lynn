@@ -7,33 +7,64 @@ Action =
       when 'c_' then CommandAction[actionName[2..]]
       else CommonAction[actionName]
 
+# For all following methods
+# When they get called, their @ refer to Lynn
 CommonAction =
   noop: _.noop
 
   print: ->
     console.log @state
   
-  toggle: ->
-    if @state.visible
-      CommonAction.reset.call(@)
-      @setState
-        visible: false
-    else
-      @setState
-        visible: true
-      $('.lynn_console').focus()
 
   hide: ->
-    CommonAction.reset.call(@)
-    @setState { visible: false }
+    @callAction('reset')
+    @setState { visible: no }
+
+  show: ->
+    @setState { visible: yes }
+    $('.lynn_console').focus()
+
+  toggle: ->
+    if @state.visible
+      @callAction('hide')
+    else
+      @callAction('show')
+
 
   open: ->
     Message.postMessage
-      request: 'openBookmark'
-      action: yes
+      request: 'open'
+      node: @getCurrentNode()
+      option:
+        active: yes
+
+    @callAction('hide')
+
+  openInBackground: ->
+    Message.postMessage
+      request: 'open'
       node: @getCurrentNode()
       option:
         active: no
+
+  openInNewWindow: ->
+    Message.postMessage
+      request: 'openInNewWindow'
+      node: @getCurrentNode()
+      option:
+        incognito: no
+
+    @callAction('hide')
+
+  openInNewIncognitoWindow: ->
+    Message.postMessage
+      request: 'openInNewWindow'
+      node: @getCurrentNode()
+      option:
+        incognito: yes
+
+    @callAction('hide')
+
 
   up: ->
     currentNodeIndex = \
@@ -44,6 +75,7 @@ CommonAction =
   down: ->
     currentNodeIndex = (@state.currentNodeIndex + 1) % @state.MAX_SUGGESTION_NUM
     @setState { currentNodeIndex }
+
 
   pageUp: ->
     if @state.currentPageIndex > 0
@@ -59,6 +91,7 @@ CommonAction =
         currentPageIndex: @state.currentPageIndex + 1
         currentNodeIndex: 0
       
+
   reset: ->
     @setState
       input: ''
@@ -69,6 +102,7 @@ CommonAction =
 
       currentNodeIndex: 0
       currentPageIndex: 0
+
 
   nextMode: ->
     if @state.mode is 'query'
@@ -90,13 +124,57 @@ CommonAction =
 
     @setState { mode }
 
+
+
 QueryAction =
+
+
 
 FastAction =
   open: ->
-    nodeArray = _.filter @state.nodeArray, (node, index) =>
-      _.contains(@state.selectedArray, index)
-    Message.postMessage { request: 'openNodeArray', nodeArray }
+    if _.isEmpty(@state.selectedArray)
+      @callAction('open')
+    else
+      Message.postMessage
+        request: 'open'
+        nodeArray: _.at(@state.nodeArray, @state.selectedArray)
+        option:
+          active: yes
+      @callAction('hide')
+
+  openInBackground: ->
+    if _.isEmpty(@state.selectedArray)
+      @callAction('openInBackground')
+    else
+      Message.postMessage
+        request: 'open'
+        nodeArray: _.at(@state.nodeArray, @state.selectedArray)
+        option:
+          active: no
+
+  openInNewWindow: ->
+    if _.isEmpty(@state.selectedArray)
+      @callAction('openInNewWindow')
+    else
+      Message.postMessage
+        request: 'openInNewWindow'
+        nodeArray: _.at(@state.nodeArray, @state.selectedArray)
+        option:
+          incognito: no
+
+        @callAction('hide')
+
+  openInNewIncognitoWindow: ->
+    if _.isEmpty(@state.selectedArray)
+      @callAction('openInNewIncognitoWindow')
+    else
+      Message.postMessage
+        request: 'openInNewWindow'
+        nodeArray: _.at(@state.nodeArray, @state.selectedArray)
+        option:
+          incognito: yes
+
+        @callAction('hide')
 
   select: ->
     selectedNodeIndex = @state.currentNodeIndex +
@@ -112,6 +190,8 @@ FastAction =
       selectedArray = _.without(@state.selectedArray, selectedNodeIndex)
       @setState { selectedArray }
 
+
+
 CommandAction =
   execute: ->
     tokenArray = @state.input.split(' ')
@@ -121,14 +201,4 @@ CommandAction =
         request: 'open'
         node:
           url: 'http://www.google.com'
-          isBookmark: true
-
-    if tokenArray[0] is ':tag'
-      Message.postMessage
-        request: @state.input.slice(1)
-        node: @getCurrentNode()
-
-    if tokenArray[0] is ':sync'
-      Message.postMessage
-        request: 'sync'
-
+          isBookmark: yes

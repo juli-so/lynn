@@ -26,8 +26,8 @@ KeyMatch =
     #return @matchCommon(keyCode) if @matchCommon(keyCode) isnt 'noop'
 
     action = switch mode
-      when 'query' then @matchInQueryMode(keyCode)
-      when 'fast' then @matchInFastMode(keyCode)
+      when 'query'   then @matchInQueryMode(keyCode)
+      when 'fast'    then @matchInFastMode(keyCode)
       when 'command' then @matchInCommandMode(keyCode)
       else 'noop'
 
@@ -35,42 +35,56 @@ KeyMatch =
 
   matchCommon: (keyCode) ->
     switch keyCode
-      when '27' then 'hide'
-      when 'c-8' then 'reset'
+      when '27'     then 'hide'
+      when 'c-8'    then 'reset'
 
-      when '38'   then 'up'
-      when 'c-75' then 'up'
-      when '40'   then 'down'
-      when 'c-74' then 'down'
+      when '38'     then 'up'
+      when 'c-75'   then 'up'
+      when '40'     then 'down'
+      when 'c-74'   then 'down'
 
-      when '33'   then 'pageUp'
-      when 'c-85' then 'pageUp'
-      when '34'   then 'pageDown'
-      when 'c-68' then 'pageDown'
+      when '33'     then 'pageUp'
+      when 'c-85'   then 'pageUp'
+      when '34'     then 'pageDown'
+      when 'c-68'   then 'pageDown'
 
-      when '9'   then 'nextMode'
-      when 's-9' then 'prevMode'
+      when '9'      then 'nextMode'
+      when 's-9'    then 'prevMode'
 
       else 'noop'
 
   matchInQueryMode: (keyCode) ->
     switch keyCode
-      when '13' then 'open'
+      when '13'     then 'open'
+      when 'c-13'   then 'openInBackground'
+      when 's-13'   then 'openInNewWindow'
+      when 'c-s-13' then 'openInNewIncognitoWindow'
 
       else 'noop'
 
   matchInFastMode: (keyCode) ->
     switch keyCode
-      when '13' then 'f_open'
-      when '79' then 'f_open'
+      when '13'     then 'f_open'
+      when '79'     then 'f_open'
+      when 'c-13'   then 'f_openInBackground'
+      when 'c-79'   then 'f_openInBackground'
+      when 's-13'   then 'f_openInNewWindow'
+      when 's-79'   then 'f_openInNewWindow'
+      when 'c-s-13' then 'f_openInNewIncognitoWindow'
+      when 'c-s-79' then 'f_openInNewIncognitoWindow'
 
-      when '37' then 'f_select'
-      when '39' then 'f_unselect'
+      when '75'     then 'up'
+      when '74'     then 'down'
+
+      when '37'     then 'f_select'
+      when '72'     then 'f_select'
+      when '39'     then 'f_unselect'
+      when '76'     then 'f_unselect'
 
       else 'noop'
 
   matchInCommandMode: (keyCode) ->
     switch keyCode
-      when '13' then 'c_execute'
+      when '13'     then 'c_execute'
 
       else 'noop'

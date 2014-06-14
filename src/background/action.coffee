@@ -1,11 +1,33 @@
 # Defines Actions requested to be performed by front-end
+# All methods take a single argument 'message', return
 
 Action =
-  # Opening webpages
-  openBookmark: (message) ->
-    chrome.tabs.create
-      url: message.node.url
-      active: message.option.active
-    { response: 'openBookmark' }
+  search: (message) ->
+    response: 'search'
+    result: Bookmark.find(Completion.preprocess(message.input))
+  
+  # Opening bookmarks
+  open: (message) ->
+    if message.node
+      chrome.tabs.create
+        url: message.node.url
+        active: message.option.active
+    else
+      _.forEach message.nodeArray, (node) ->
+        chrome.tabs.create
+          url: node.url
+          active: message.option.active
 
+    { response: 'open' }
 
+  openInNewWindow: (message) ->
+    if message.node
+      url = message.node.url
+    else
+      url = _.pluck(message.nodeArray, 'url')
+
+    chrome.windows.create
+      url: url
+      incognito: message.option.incognito
+
+    { response: 'openInNewWindow' }

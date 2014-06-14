@@ -136,7 +136,7 @@ Lynn = React.createClass
   componentWillMount: ->
     # listen to search callback
     Message.addListener (message) =>
-      if message.response && message.response is 'search'
+      if message.response and message.response is 'search'
         @setState nodeArray: message.result
 
     # keydown events
@@ -151,7 +151,7 @@ Lynn = React.createClass
           actionName = KeyMatch.match(event, @state.mode)
           event.preventDefault() if actionName isnt 'noop'
 
-          Action.matchAction(actionName).call(@, event)
+          @callAction(actionName)
 
     # ~ 
     # load options
@@ -200,7 +200,7 @@ Lynn = React.createClass
       if input[0] isnt ':'
         Message.postMessage
           request: 'search'
-          command: input
+          input: input
     else if @state.mode is 'command'
       if input[-1..] is ':'
         @setState { input: ':' }
@@ -214,4 +214,5 @@ Lynn = React.createClass
   getCurrentNode: ->
     @state.nodeArray[@getCurrentNodeIndex()]
 
-
+  callAction: (actionName) ->
+    Action.matchAction(actionName).call(@)
