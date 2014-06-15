@@ -177,19 +177,14 @@ FastAction =
         @callAction('hide')
 
   select: ->
-    selectedNodeIndex = @state.currentNodeIndex +
-      @state.currentPageIndex * @state.MAX_SUGGESTION_NUM
-    unless _.contains(@state.selectedArray, selectedNodeIndex)
-      selectedArray = _.union(@state.selectedArray, [selectedNodeIndex])
+    unless _.contains(@state.selectedArray, @getCurrentNodeIndex())
+      selectedArray = _.union(@state.selectedArray, [@getCurrentNodeIndex()])
       @setState { selectedArray }
 
   unselect: ->
-    selectedNodeIndex = @state.currentNodeIndex +
-      (@state.currentPageIndex) * @state.MAX_SUGGESTION_NUM
-    if _.contains(@state.selectedArray, selectedNodeIndex)
-      selectedArray = _.without(@state.selectedArray, selectedNodeIndex)
+    if _.contains(@state.selectedArray, @getCurrentNodeIndex())
+      selectedArray = _.without(@state.selectedArray, @getCurrentNodeIndex())
       @setState { selectedArray }
-
 
 
 CommandAction =

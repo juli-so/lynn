@@ -25,6 +25,7 @@
           "vendor/js/lodash.min.js",
           "vendor/js/jquery.min.js",
           "vendor/js/react.js",
+
           "lib/content_script/keymatch.js",
           "lib/content_script/message.js",
           "lib/content_script/action.js",
@@ -37,6 +38,7 @@
     "background": {
       "scripts": [
         "vendor/js/lodash.min.js",
+
         "lib/background/action.js",
         "lib/background/message.js",
         "lib/background/util.js",

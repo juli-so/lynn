@@ -23,8 +23,6 @@ KeyMatch =
     if keyCode is 'c-76'
       return 'print'
 
-    #return @matchCommon(keyCode) if @matchCommon(keyCode) isnt 'noop'
-
     action = switch mode
       when 'query'   then @matchInQueryMode(keyCode)
       when 'fast'    then @matchInFastMode(keyCode)
