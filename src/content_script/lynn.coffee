@@ -142,7 +142,7 @@ Lynn = React.createClass
     # keydown events
     $(document).keydown (event) =>
       # Global invoke
-      if KeyMatch.ctrlB(event)
+      if KeyMatch.isInvoked(event)
         CommonAction.toggle.call(@)
 
       else

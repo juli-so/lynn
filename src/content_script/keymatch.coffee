@@ -1,13 +1,77 @@
+# Keycode
+Key =
+  '8'  : 'backspace'
+  '9'  : 'tab'
+  '13' : 'enter'
+  '27' : 'esc'
+
+  '33' : 'pageUp'
+  '34' : 'pageDown'
+  '35' : 'end'
+  '36' : 'home'
+
+  '38' : 'upArrow'
+  '40' : 'downArrow'
+  '37' : 'leftArrow'
+  '39' : 'rightArrow'
+
+  '188': 'comma'
+  '190': 'period'
+  '186': 'semicolon'
+  '191': 'forwardSlash'
+  '220': 'backSlash'
+  '192': 'grave'
+  '219': 'openBracket'
+  '221': 'closeBracket'
+
+  '48' : '0'
+  '49' : '1'
+  '50' : '2'
+  '51' : '3'
+  '52' : '4'
+  '53' : '5'
+  '54' : '6'
+  '55' : '7'
+  '56' : '8'
+  '57' : '9'
+
+  '65' : 'a'
+  '66' : 'b'
+  '67' : 'c'
+  '68' : 'd'
+  '69' : 'e'
+  '70' : 'f'
+  '71' : 'g'
+  '72' : 'h'
+  '73' : 'i'
+  '74' : 'j'
+  '75' : 'k'
+  '76' : 'l'
+  '77' : 'm'
+  '78' : 'n'
+  '79' : 'o'
+  '80' : 'p'
+  '81' : 'q'
+  '82' : 'r'
+  '83' : 's'
+  '84' : 't'
+  '85' : 'u'
+  '86' : 'v'
+  '87' : 'w'
+  '88' : 'x'
+  '89' : 'y'
+  '90' : 'z'
+
 # Matching shortcut keycode to action names
 # c_x: C-x
 # c_X: C-S-x
 # s_x: S-x
 
 KeyMatch =
-  ctrlB: (event) ->
-    event.ctrlKey and event.keyCode is 66
+  isInvoked: (event) ->
+    @getKeyString(event) is 'c-b'
   
-  getCommand: (event) ->
+  getKeyString: (event) ->
     ctrl = ''
     shift = ''
     if event.ctrlKey
@@ -15,74 +79,74 @@ KeyMatch =
     if event.shiftKey
       shift = 's-'
 
-    ctrl + shift + event.keyCode
+    ctrl + shift + Key[event.keyCode.toString()]
 
   match: (event, mode) ->
-    keyCode = @getCommand(event)
+    keyString = @getKeyString(event)
     # for debugging
-    if keyCode is 'c-76'
+    if keyString is 'c-l'
       return 'print'
 
     action = switch mode
-      when 'query'   then @matchInQueryMode(keyCode)
-      when 'fast'    then @matchInFastMode(keyCode)
-      when 'command' then @matchInCommandMode(keyCode)
+      when 'query'   then @matchInQueryMode(keyString)
+      when 'fast'    then @matchInFastMode(keyString)
+      when 'command' then @matchInCommandMode(keyString)
       else 'noop'
 
-    if action is 'noop' then @matchCommon(keyCode) else action
+    if action is 'noop' then @matchCommon(keyString) else action
 
-  matchCommon: (keyCode) ->
-    switch keyCode
-      when '27'     then 'hide'
-      when 'c-8'    then 'reset'
+  matchCommon: (keyString) ->
+    switch keyString
+      when 'esc'         then 'hide'
+      when 'c-backspace' then 'reset'
 
-      when '38'     then 'up'
-      when 'c-75'   then 'up'
-      when '40'     then 'down'
-      when 'c-74'   then 'down'
+      when 'upArrow'     then 'up'
+      when 'c-k'         then 'up'
+      when 'downArrow'   then 'down'
+      when 'c-j'         then 'down'
 
-      when '33'     then 'pageUp'
-      when 'c-85'   then 'pageUp'
-      when '34'     then 'pageDown'
-      when 'c-68'   then 'pageDown'
+      when 'pageUp'      then 'pageUp'
+      when 'c-u'         then 'pageUp'
+      when 'pageDown'    then 'pageDown'
+      when 'c-d'         then 'pageDown'
 
-      when '9'      then 'nextMode'
-      when 's-9'    then 'prevMode'
-
-      else 'noop'
-
-  matchInQueryMode: (keyCode) ->
-    switch keyCode
-      when '13'     then 'open'
-      when 'c-13'   then 'openInBackground'
-      when 's-13'   then 'openInNewWindow'
-      when 'c-s-13' then 'openInNewIncognitoWindow'
+      when 'tab'         then 'nextMode'
+      when 's-tab'       then 'prevMode'
 
       else 'noop'
 
-  matchInFastMode: (keyCode) ->
-    switch keyCode
-      when '13'     then 'f_open'
-      when '79'     then 'f_open'
-      when 'c-13'   then 'f_openInBackground'
-      when 'c-79'   then 'f_openInBackground'
-      when 's-13'   then 'f_openInNewWindow'
-      when 's-79'   then 'f_openInNewWindow'
-      when 'c-s-13' then 'f_openInNewIncognitoWindow'
-      when 'c-s-79' then 'f_openInNewIncognitoWindow'
-
-      when '75'     then 'up'
-      when '74'     then 'down'
-
-      when '37'     then 'f_select'
-      when '72'     then 'f_select'
-      when '39'     then 'f_unselect'
-      when '76'     then 'f_unselect'
+  matchInQueryMode: (keyString) ->
+    switch keyString
+      when 'enter'       then 'q_open'
+      when 'c-enter'     then 'q_openInBackground'
+      when 's-enter'     then 'q_openInNewWindow'
+      when 'c-s-enter'   then 'q_openInNewIncognitoWindow'
 
       else 'noop'
 
-  matchInCommandMode: (keyCode) ->
-    switch keyCode
-      when '13'     then 'c_execute'
+  matchInFastMode: (keyString) ->
+    switch keyString
+      when 'enter'       then 'f_open'
+      when 'o'           then 'f_open'
+      when 'c-enter'     then 'f_openInBackground'
+      when 'c-o'         then 'f_openInBackground'
+      when 's-enter'     then 'f_openInNewWindow'
+      when 's-o'         then 'f_openInNewWindow'
+      when 'c-s-enter'   then 'f_openInNewIncognitoWindow'
+      when 'c-s-o'       then 'f_openInNewIncognitoWindow'
+
+      when 'k'           then 'up'
+      when 'j'           then 'down'
+
+      when 'leftArrow'   then 'f_select'
+      when 'h'           then 'f_select'
+      when 'rightArrow'  then 'f_unselect'
+      when 'l'           then 'f_unselect'
+
+      else 'noop'
+
+  matchInCommandMode: (keyString) ->
+    switch keyString
+      when 'enter'  then 'c_execute'
 
       else 'noop'

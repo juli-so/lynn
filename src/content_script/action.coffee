@@ -31,41 +31,6 @@ CommonAction =
       @callAction('show')
 
 
-  open: ->
-    Message.postMessage
-      request: 'open'
-      node: @getCurrentNode()
-      option:
-        active: yes
-
-    @callAction('hide')
-
-  openInBackground: ->
-    Message.postMessage
-      request: 'open'
-      node: @getCurrentNode()
-      option:
-        active: no
-
-  openInNewWindow: ->
-    Message.postMessage
-      request: 'openInNewWindow'
-      node: @getCurrentNode()
-      option:
-        incognito: no
-
-    @callAction('hide')
-
-  openInNewIncognitoWindow: ->
-    Message.postMessage
-      request: 'openInNewWindow'
-      node: @getCurrentNode()
-      option:
-        incognito: yes
-
-    @callAction('hide')
-
-
   up: ->
     currentNodeIndex = \
       (@state.currentNodeIndex + @state.MAX_SUGGESTION_NUM - 1) %
@@ -127,13 +92,46 @@ CommonAction =
 
 
 QueryAction =
+  open: ->
+    Message.postMessage
+      request: 'open'
+      node: @getCurrentNode()
+      option:
+        active: yes
+
+    @callAction('hide')
+
+  openInBackground: ->
+    Message.postMessage
+      request: 'open'
+      node: @getCurrentNode()
+      option:
+        active: no
+
+  openInNewWindow: ->
+    Message.postMessage
+      request: 'openInNewWindow'
+      node: @getCurrentNode()
+      option:
+        incognito: no
+
+    @callAction('hide')
+
+  openInNewIncognitoWindow: ->
+    Message.postMessage
+      request: 'openInNewWindow'
+      node: @getCurrentNode()
+      option:
+        incognito: yes
+
+    @callAction('hide')
 
 
 
 FastAction =
   open: ->
     if _.isEmpty(@state.selectedArray)
-      @callAction('open')
+      @callAction('q_open')
     else
       Message.postMessage
         request: 'open'
@@ -144,7 +142,7 @@ FastAction =
 
   openInBackground: ->
     if _.isEmpty(@state.selectedArray)
-      @callAction('openInBackground')
+      @callAction('q_openInBackground')
     else
       Message.postMessage
         request: 'open'
@@ -154,7 +152,7 @@ FastAction =
 
   openInNewWindow: ->
     if _.isEmpty(@state.selectedArray)
-      @callAction('openInNewWindow')
+      @callAction('q_openInNewWindow')
     else
       Message.postMessage
         request: 'openInNewWindow'
@@ -166,7 +164,7 @@ FastAction =
 
   openInNewIncognitoWindow: ->
     if _.isEmpty(@state.selectedArray)
-      @callAction('openInNewIncognitoWindow')
+      @callAction('q_openInNewIncognitoWindow')
     else
       Message.postMessage
         request: 'openInNewWindow'
