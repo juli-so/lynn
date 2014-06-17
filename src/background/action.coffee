@@ -6,6 +6,8 @@ Action =
     response: 'search'
     result: Bookmark.find(Completion.preprocess(message.input))
   
+  # ------------------------------------------------------------
+
   # Opening bookmarks
   open: (message) ->
     if message.node
@@ -31,3 +33,14 @@ Action =
       incognito: message.option.incognito
 
     { response: 'openInNewWindow' }
+
+  # ------------------------------------------------------------
+
+  addTag: (message) ->
+    if message.tag
+      Bookmark.addTag(message.node, message.tag)
+    else
+      _.forEach message.tagArray, (tag) ->
+        Bookmark.addTag(message.node, tag)
+
+    { response: 'addTag' }

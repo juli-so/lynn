@@ -69,6 +69,9 @@ Bookmark =
   addTag: (node, tag) ->
     return false if tag[0] isnt '#' and tag[0] isnt '@'
 
+    # in case the node is sent from front end
+    node = @allNode[node.id]
+
     if _.contains(node.tagArray, tag)
       false
     else
@@ -79,6 +82,9 @@ Bookmark =
 
   delTag: (node, tag) ->
     return false if tag[0] isnt '#' and tag[0] isnt '@'
+
+    # in case the node is sent from front end
+    node = @allNode[node.id]
 
     if _.contains(node.tagArray, tag)
       _.pull(node.tagArray, tag)
@@ -158,8 +164,11 @@ Bookmark =
       pool = @_toNodeObject(@findByTagArray(tagArray))
 
       return [] if _.isEmpty(pool)
-      return _.toArray(pool) if _.isEmpty(keywordArray)
-      console.log pool
+
       @findByTitleArray(keywordArray, no, pool)
     else
       @findByTitleArray(keywordArray, no, @allNode)
+
+  # ------------------------------------------------------------
+  # Find and Filter end
+  # ------------------------------------------------------------

@@ -5,7 +5,11 @@ Action =
       when 'q_' then QueryAction[actionName[2..]]
       when 'f_' then FastAction[actionName[2..]]
       when 'c_' then CommandAction[actionName[2..]]
+      when 's_' then SpecialAction[actionName[2..]]
       else CommonAction[actionName]
+
+# --------------------------------------------------------------
+# --------------------------------------------------------------
 
 # For all following methods
 # When they get called, their @ refer to Lynn
@@ -15,6 +19,7 @@ CommonAction =
   print: ->
     console.log @state
   
+  # ------------------------------------------------------------
 
   hide: ->
     @callAction('reset')
@@ -30,6 +35,18 @@ CommonAction =
     else
       @callAction('show')
 
+  reset: ->
+    @setState
+      input: ''
+      mode: 'query'
+
+      nodeArray: []
+      selectedArray: []
+
+      currentNodeIndex: 0
+      currentPageIndex: 0
+
+  # ------------------------------------------------------------
 
   up: ->
     currentNodeIndex = \
@@ -41,6 +58,7 @@ CommonAction =
     currentNodeIndex = (@state.currentNodeIndex + 1) % @state.MAX_SUGGESTION_NUM
     @setState { currentNodeIndex }
 
+  # ------------------------------------------------------------
 
   pageUp: ->
     if @state.currentPageIndex > 0
@@ -56,18 +74,7 @@ CommonAction =
         currentPageIndex: @state.currentPageIndex + 1
         currentNodeIndex: 0
       
-
-  reset: ->
-    @setState
-      input: ''
-      mode: 'query'
-
-      nodeArray: []
-      selectedArray: []
-
-      currentNodeIndex: 0
-      currentPageIndex: 0
-
+  # ------------------------------------------------------------
 
   nextMode: ->
     if @state.mode is 'query'
@@ -89,7 +96,8 @@ CommonAction =
 
     @setState { mode }
 
-
+# --------------------------------------------------------------
+# --------------------------------------------------------------
 
 QueryAction =
   open: ->
@@ -126,7 +134,8 @@ QueryAction =
 
     @callAction('hide')
 
-
+# --------------------------------------------------------------
+# --------------------------------------------------------------
 
 FastAction =
   open: ->
@@ -174,6 +183,8 @@ FastAction =
 
         @callAction('hide')
 
+  # ------------------------------------------------------------
+
   select: ->
     unless _.contains(@state.selectedArray, @getCurrentNodeIndex())
       selectedArray = _.union(@state.selectedArray, [@getCurrentNodeIndex()])
@@ -184,14 +195,49 @@ FastAction =
       selectedArray = _.without(@state.selectedArray, @getCurrentNodeIndex())
       @setState { selectedArray }
 
+  # ------------------------------------------------------------
+
+  tag: ->
+    @setState { specialMode: 'tag' }
+
+
+# --------------------------------------------------------------
+# --------------------------------------------------------------
 
 CommandAction =
   execute: ->
     tokenArray = @state.input.split(' ')
     # example or custom shortcuts
-    if tokenArray[0] is ':g'
+    if tokenArray[0] is ':1'
       Message.postMessage
         request: 'open'
-        node:
-          url: 'http://www.google.com'
-          isBookmark: yes
+        nodeArray: [
+          { url: 'http://www.google.com' },
+          { url: 'http://lodash.com/docs' }
+        ]
+        option:
+          active: no
+
+# --------------------------------------------------------------
+# --------------------------------------------------------------
+
+SpecialAction =
+  confirm: ->
+    @callAction('s_' + @state.specialMode)
+    @setState { specialMode: 'no' }
+
+  abort: ->
+    @callAction('reset')
+    @setState { specialMode: 'no' }
+
+  tag: ->
+    tokenArray = @state.input.split(' ')
+    tagArray = _.filter tokenArray, (token) ->
+      token[0] is '#' or token[0] is '@'
+
+    Message.postMessage
+      request: 'addTag'
+      node: @getCurrentNode()
+      tagArray: tagArray
+
+

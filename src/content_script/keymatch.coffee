@@ -81,19 +81,26 @@ KeyMatch =
 
     ctrl + shift + Key[event.keyCode.toString()]
 
-  match: (event, mode) ->
+  # ------------------------------------------------------------
+
+  match: (event, mode, specialMode) ->
     keyString = @getKeyString(event)
     # for debugging
     if keyString is 'c-l'
       return 'print'
 
-    action = switch mode
-      when 'query'   then @matchInQueryMode(keyString)
-      when 'fast'    then @matchInFastMode(keyString)
-      when 'command' then @matchInCommandMode(keyString)
-      else 'noop'
+    if specialMode isnt 'no'
+      action = @matchInSpecialMode(keyString)
+    else
+      action = switch mode
+        when 'query'   then @matchInQueryMode(keyString)
+        when 'fast'    then @matchInFastMode(keyString)
+        when 'command' then @matchInCommandMode(keyString)
+        else 'noop'
 
-    if action is 'noop' then @matchCommon(keyString) else action
+      if action is 'noop' then @matchCommon(keyString) else action
+
+  # ------------------------------------------------------------
 
   matchCommon: (keyString) ->
     switch keyString
@@ -114,6 +121,8 @@ KeyMatch =
       when 's-tab'       then 'prevMode'
 
       else 'noop'
+
+  # ------------------------------------------------------------
 
   matchInQueryMode: (keyString) ->
     switch keyString
@@ -143,10 +152,20 @@ KeyMatch =
       when 'rightArrow'  then 'f_unselect'
       when 'l'           then 'f_unselect'
 
+      when 't'           then 'f_tag'
+
       else 'noop'
 
   matchInCommandMode: (keyString) ->
     switch keyString
       when 'enter'  then 'c_execute'
+
+      else 'noop'
+  # ------------------------------------------------------------
+
+  matchInSpecialMode: (keyString) ->
+    switch keyString
+      when 'enter' then 's_confirm'
+      when 'esc' then 's_abort'
 
       else 'noop'

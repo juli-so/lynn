@@ -5,14 +5,12 @@
 ##############################################################################
 
 Completion =
-  allTagName: []
-
-  init: ->
-    @allTagName = Object.keys(Bookmark.tagNodeArray)
 
   # Return an array of tag
   suggestTag: (fragment) ->
-    result = _.filter(@allTagName, (tag) ->
+    allTagName = Object.keys(Bookmark.tagNodeArray)
+
+    result = _.filter(allTagName, (tag) ->
       _.contains(tag, fragment)
     )
     if _.isEmpty(result) then [fragment] else result

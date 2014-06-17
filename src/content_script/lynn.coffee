@@ -108,7 +108,11 @@ Bot = React.createClass
       span className: 'lynn_bot_left',
         infoString
       span className: 'lynn_bot_mid',
-        ''
+        if @props.specialMode is 'no'
+          ''
+        else
+          'Speical Mode: '
+          @props.specialMode
       span className: 'lynn_bot_right',
         'Page ' + numToString[@props.currentPageIndex + 1]
 
@@ -123,6 +127,9 @@ Lynn = React.createClass
     visible: no
     input: ''
     mode: 'query' # query | fast | command
+    # in special mode, mode and nodeArray change won't be triggered
+    # when 'no' it is disabled
+    specialMode: 'no'
 
     nodeArray: []
     selectedArray: []
@@ -145,7 +152,7 @@ Lynn = React.createClass
       else
         # Shortcut when lynn is shown
         if @state.visible
-          actionName = KeyMatch.match(event, @state.mode)
+          actionName = KeyMatch.match(event, @state.mode, @state.specialMode)
           event.preventDefault() if actionName isnt 'noop'
 
           @callAction(actionName)
@@ -153,6 +160,8 @@ Lynn = React.createClass
     # ~ 
     # load options
     @setState { MAX_SUGGESTION_NUM }
+
+  # ------------------------------------------------------------
 
   render: ->
     className = 'lynn animated fadeInDown'
@@ -178,31 +187,39 @@ Lynn = React.createClass
 
       Bot
         mode: @state.mode
+        specialMode: @state.specialMode
 
         nodeArray: @state.nodeArray
         selectedArray: @state.selectedArray
 
         currentPageIndex: @state.currentPageIndex
 
+  # ------------------------------------------------------------
 
   onConsoleChange: (event) ->
     input = event.target.value
-    if @state.mode is 'query'
-      @setState
-        input: input
-        mode: if input[0] is ':' then 'command' else 'query'
-        currentNodeIndex: 0
-        currentPageIndex: 0
 
-      if input[0] isnt ':'
-        Message.postMessage
-          request: 'search'
-          input: input
-    else if @state.mode is 'command'
-      if input[-1..] is ':'
-        @setState { input: ':' }
+    @setState { input } if @state.mode isnt 'fast'
+
+    if @state.specialMode is 'no'
+      if input[-1..] is ':' and @state.mode isnt 'command'
+        @setState
+          input: ':'
+          mode: 'command'
       else
-        @setState { input }
+        if @state.mode is 'query'
+          @setState
+            currentNodeIndex: 0
+            currentPageIndex: 0
+
+          Message.postMessage
+            request: 'search'
+            input: input
+    # in specialMode invoked in fast mode
+    else
+      @setState { input }
+
+  # ------------------------------------------------------------
 
   getCurrentNodeIndex: ->
     @state.currentPageIndex * @state.MAX_SUGGESTION_NUM +

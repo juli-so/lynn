@@ -4,6 +4,6 @@
 #
 ##############################################################################
 
-Bookmark.init(-> Completion.init())
+Bookmark.init()
 
 Message.init()
