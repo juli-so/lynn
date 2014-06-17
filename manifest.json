@@ -41,10 +41,9 @@
 
         "lib/background/action.js",
         "lib/background/message.js",
-        "lib/background/util.js",
         "lib/background/bookmark.js",
         "lib/background/completion.js",
-        "lib/background/test.js",
+        "lib/background/log.js",
         "lib/background/main.js"
       ]
     },

@@ -1,317 +1,165 @@
-##############################################################################
-#
-#  Bookmark manager functionality
-#    -> Manage tags
-#      * Check, retrieve, add, remove, replace tags of Node
-#      * Sync to/from storage
-#    -> Manage bookmarks
-#      * Get, create, move, update, remove Node
-#    -> Main functionality
-#      * Retrieve Node from Chrome
-#      * Search for Node with different criteria
-#      
-##############################################################################
-#  
-#  ! Node refers to chrome.bookmarks.BookmarkTreeNode
-#    Node = Bookmark | Directory
-#  ! Storage refers to chrome.storage.local, may change in future
-#
-##############################################################################
-
 Bookmark =
-  # id = Node.id
-  #
-  # { id: Node }
-  # allNode = allBookmark + allDirectory
-  # Some filter function use 'nodeType' as an argument, which could be
-  #   'N' -> Node
-  #   'B' -> Bookmark
-  #   'D' -> Directory
-  allNode: {}
-  allBookmark: {}
-  allDirectory: {}
-  # { id: [tag] }
-  linkedTag: {}
-  # { tag: [id] }
-  linkedID: {}
+  allNode: {} # id -> Node
 
-  # ==========================================================================
-  #
-  #  Tag
-  #    * Tags are plain strings, but empty string is not allowed
-  #    * Each Node is associated with an array of unique tags
-  #    * Change of tags are reflected in storage immediately, since i/o on 
-  #      storage is cheap
-  #    
-  # ==========================================================================
+  nodeTagArray: {} # Node.id -> Node.tagArray
+  tagNodeArray: {} # tag -> [Node.id]
 
-  hasTag: (nodeOrNodeArray, tag) ->
-    if _.isArray nodeOrNodeArray
-      _.every nodeOrNodeArray, (node) => @hasTag(node, tag)
-    else
-      node = nodeOrNodeArray
-      @linkedTag[node.id] and _.contains(@linkedTag[node.id], tag)
+  # ------------------------------------------------------------
+  # Helper functions
+  # ------------------------------------------------------------
+  _ciContains: (str, fragment) ->
+    str.toLowerCase().indexOf(fragment.toLowerCase()) isnt -1
 
-  getTagArray: (nodeOrNodeArray) ->
-    @linkedTag[node.id] or []
+  # ------------------------------------------------------------
+  # End helper functions
+  # ------------------------------------------------------------
 
-  # For one node, return true if one operation is successful
-  # For nodeArray, return true only if every operation is successful
-  addTag: (nodeOrNodeArray, tag) ->
-    unless tag
-      return false
-    if _.isArray nodeOrNodeArray
-      result = yes
+  # ------------------------------------------------------------
+  # Init
+  # ------------------------------------------------------------
 
-      _.forEach nodeOrNodeArray, (node) =>
-        unless @addTag(node, tag)
-          result = no
-
-      result
-    else
-      node = nodeOrNodeArray
-      if @hasTag(node, tag)
-        false
-      else
-        if not @linkedTag[node.id]
-          @linkedTag[node.id] = []
-        @linkedTag[node.id].push(tag)
-
-        if not @linkedID[tag]
-          @linkedID[tag] = []
-        @linkedID[tag].push(node.id)
-        true
-
-  delTag: (nodeOrNodeArray, tag) ->
-    unless tag
-      return false
-    if _.isArray nodeOrNodeArray
-      result = yes
-
-      _.forEach nodeOrNodeArray, (node) =>
-        unless @delTag(node, tag)
-          result = no
-
-      result
-    else
-      node = nodeOrNodeArray
-      if @hasTag(node, tag)
-        _.pull(@linkedTag[node.id], tag)
-        _.pull(@linkedID[tag], node.id)
-        true
-      else
-        false
-
-  replaceTag: (nodeOrNodeArray, oldTag, newTag) ->
-    unless oldTag and newTag
-      return false
-    if _.isArray nodeOrNodeArray
-      result = yes
-
-      _.forEach nodeOrNodeArray, (node) =>
-        unless @replaceTag(node, oldTag, newTag)
-          result = no
-
-      result
-    else
-      node = nodeOrNodeArray
-      if @delTag(node, oldTag)
-        @addTag(node, newTag)
-        true
-      else
-        false
-
-  # ==========================================================================
-  #
-  #  Node
-  #    * Functions with side effect change allNode immediately, but the real 
-  #      effect on chrome.bookmarks is asynchronous
-  #
-  # ==========================================================================
-
-  getID: (nodeOrNodeArray) ->
-    if _.isArray nodeOrNodeArray
-      _.map nodeOrNodeArray, (node) => @getID(node)
-    else
-      nodeOrNodeArray.id
-
-  getNode: (idOrIDArray) ->
-    if _.isArray idOrIDArray
-      _.map idOrIDArray, (id) => @getNode(id)
-    else
-      @allNode[idOrIDArray]
-
-  getBookmark: (idOrIDArray) ->
-    if _.isArray idOrIDArray
-      _.map idOrIDArray, (id) => @getBookmark(id)
-    else
-      @allBookmark[idOrIDArray]
-
-  getDirectory: (idOrIDArray) ->
-    if _.isArray idOrIDArray
-      _.map idOrIDArray, (id) => @getDirectory(id)
-    else
-      @allDirectory[idOrIDArray]
-
-  # node object
-  # {
-  #   (opt)parentId,
-  #   (opt)index,
-  #   (opt)title,
-  #   (opt)url
-  # }
-  createNode: (node, callback = _.noop) ->
-    chrome.bookmarks.create(node, callback)
-
-  # destination object
-  # {
-  #   (opt)parentId,
-  #   (opt)index
-  # }
-  moveNode: (id, destination, callback = _.noop) ->
-    chrome.bookmarks.move(id, destination, callback)
-    
-  # changes object
-  # {
-  #   (opt)title,
-  #   (opt)url
-  # }
-  updateNode: (id, changes, callback = _.noop) ->
-    chrome.bookmarks.update(id, changes, callback)
-
-  removeNode: (id, callback = _.noop) ->
-    if @getNode(id).isBookmark
-      chrome.bookmarks.remove(id, callback)
-    else
-      chrome.bookmarks.removeTree(id, callback)
-
-  # ==========================================================================
-  #
-  #  Main functionality
-  #
-  # ==========================================================================
-
-  # Retrieve Node from chrome and tags from storage
-  # !!!
-  # A 'tagArray' property is added to node for ease of operation on node 
-  # node.tagArray = linkedTag[node.id] or []
-  # !!!
+  # does not include directories
   init: (callback = _.noop) ->
     initNode = (node) =>
-      @allNode[node.id] = node
-
       node.isBookmark = node.url?
 
       if node.isBookmark
-        @allBookmark[node.id] = node
+        @allNode[node.id] = node
       else
-        @allDirectory[node.id] = node
-        _.forEach(node.children, initNode, @)
+        _.forEach(node.children, initNode)
 
     initTag = =>
-      chrome.storage.local.get ['linkedTag', 'linkedID'], (storageObject) =>
-        @linkedTag = storageObject['linkedTag'] || {}
-        @linkedID = storageObject['linkedID'] || {}
-        _.forEach @allNode, (node) =>
-          if @linkedTag[node.id]
-            node.tagArray = @linkedTag[node.id]
-          else
-            node.tagArray = @linkedTag[node.id] = []
+      chrome.storage.local.get ['nodeTagArray', 'tagNodeArray'], (storageObject) =>
+        @nodeTagArray = storageObject['nodeTagArray'] || {}
+        @tagNodeArray = storageObject['tagNodeArray'] || {}
 
+        _.forEach @allNode, (node) =>
+          if @nodeTagArray[node.id]
+            node.tagArray = @nodeTagArray[node.id]
+          else
+            node.tagArray = @nodeTagArray[node.id] = []
+
+        # initNode only contains synchronous calls but initTag has async calls
+        # Put callback here to ensure it happens after all initiation
         callback()
 
-    chrome.bookmarks.getSubTree '1', (nodeArray) =>
+    # '1' for 'Bookmarks Bar' in chrome by default
+    # Later might let user specify root
+    chrome.bookmarks.getSubTree '1', (nodeArray) ->
       initNode(nodeArray[0])
       initTag()
 
+  # ------------------------------------------------------------
+  # Init end
+  # ------------------------------------------------------------
+  
+  # ------------------------------------------------------------
+  # Tag operation
+  # ------------------------------------------------------------
   storeTag: ->
-    chrome.storage.local.set({
-      'linkedTag': @linkedTag,
-      'linkedID': @linkedID
-    })
+    chrome.storage.local.set
+      'nodeTagArray': @nodeTagArray
+      'tagNodeArray': @tagNodeArray
 
-  # When nodeType is B | D, custom pool will be ignored
-  # When nodeType is N, custom pool can be passed in
-  # This allows chained filtering
-  filter: (f, nodeType = 'N', pool = @allNode) ->
-    if nodeType == 'B'
-      pool = @allBookmark
-    if nodeType == 'D'
-      pool = @allDirectory
+  cleanTag: ->
+    chrome.storage.local.set
+      'nodeTagArray': []
+      'tagNodeArray': []
 
-    result = []
-    _.forEach(pool, (node) ->
-      result.push(node) if f(node)
-    )
-    result
-    
-  # 
-  # All following functions starting with 'find' return Array of Node
-  #
-  findByTag: (tagArray, nodeType = 'N', pool = @allNode) ->
-    # Get rid of non-existent tags
-    tagArray = _.filter tagArray, (tag) =>
-      @linkedID[tag]
+  addTag: (node, tag) ->
+    return false if tag[0] isnt '#' and tag[0] isnt '@'
 
-    if _.isEmpty tagArray
-      return pool
+    if _.contains(node.tagArray, tag)
+      false
     else
-      if pool == @allNode
-        matchedNodeID = _(tagArray)
-          .map (tag) => @linkedID[tag]
-          .compact()
-          .reduce (prev, next) -> _.intersection(prev, next)
-      else
-        poolIDArray = _.map(pool, (node) -> node.id)
-        matchedNodeID = _(tagArray)
-          .map (tag) => @linkedID[tag]
-          .compact()
-          .reduce ((prev, next) -> _.intersection(prev, next)), poolIDArray
+      node.tagArray.push(tag)
+      @tagNodeArray[tag] or= []
+      @tagNodeArray[tag].push(node.id)
+      true
 
-    if nodeType == 'B'
-      @getBookmark(matchedNodeID)
-    else if nodeType == 'D'
-      @getDirectory(matchedNodeID)
+  delTag: (node, tag) ->
+    return false if tag[0] isnt '#' and tag[0] isnt '@'
+
+    if _.contains(node.tagArray, tag)
+      _.pull(node.tagArray, tag)
+      _.pull(@tagNodeArray[tag], node.id)
+      true
     else
-      @getNode(matchedNodeID)
+      false
 
-  findByTitleContains: (fragmentArray, nodeType = 'N', isCaseSensitive = no, pool = @allNode) ->
+  # ------------------------------------------------------------
+  # Tag operation end
+  # ------------------------------------------------------------
+
+  # ------------------------------------------------------------
+  # Find and Filter
+  # ------------------------------------------------------------
+  # Change nodeArray to { node.id: node } object to allow chaining
+  _toNodeObject: (nodeArray) ->
+    _.zipObject(_.pluck(nodeArray, 'id'), nodeArray)
+
+  findByTag: (tag, pool = @allNode) ->
+    idList = @tagNodeArray[tag]
+    _.compact(_.at(pool, idList))
+
+  findByTagArray: (tagArray, pool = @allNode) ->
+    if _.isEmpty(tagArray)
+      result = pool
+    else
+      reduceFunc = (accumulator, tag) =>
+        @_toNodeObject(@findByTag(tag, accumulator))
+
+      result = _.reduce(tagArray, reduceFunc, pool)
+
+    _.toArray(result)
+
+  findByTitle: (fragment, isCaseSensitive = no, pool = @allNode) ->
     if isCaseSensitive
-      filterFunc = (node) ->
-        _.every(fragmentArray, (fragment) ->
-          _.contains(node.title, fragment)
-        )
+      _.filter pool, (node) ->
+        _.contains(node.title, fragment)
     else
-      filterFunc = (node) ->
-        _.every(fragmentArray, (fragment) ->
-          Util.ciContains(node.title, fragment)
-        )
-    @filter(filterFunc, nodeType, pool)
+      _.filter pool, (node) =>
+        @_ciContains(node.title, fragment)
 
-  # No nodeType since only Bookmark has URL
-  findByURLContains: (fragment, isCaseSensitive = no, pool = @allBookmark) ->
-    # Use N as nodetype so custom pool can be passed
-    # Still searches for Bookmark by default
-    if isCaseSensitive
-      @filter ((node) -> _.contains(node.url, fragment)), 'N', pool
+  findByTitleArray: (fragmentArray, isCaseSensitive = no, pool = @allNode) ->
+    if _.isEmpty(fragmentArray)
+      result = pool
     else
-      @filter ((node) -> Util.ciContains(node.url, fragment)), 'N', pool
+      reduceFunc = (accumulator, fragment) =>
+        @_toNodeObject(@findByTitle(fragment, isCaseSensitive, accumulator))
+
+      result = _.reduce(fragmentArray, reduceFunc, pool)
+
+    _.toArray(result)
+
+  findByURL: (fragment, isCaseSensitive = no, pool = @allNode) ->
+    if isCaseSensitive
+      _.filter pool, (node) ->
+        _.contains(node.url, fragment)
+    else
+      _.filter pool, (node) =>
+        @_ciContains(node.url, fragment)
 
   find: (query) ->
     return [] if _.isEmpty(query)
-    
+
     tokenArray = query.split(' ')
     keywordArray = []
     tagArray = []
 
-    _.forEach(tokenArray, (token) ->
-      if token[0] == '#'
-        tagArray.push(token.slice(1))
-      else if token[0] == '@'
+    _.forEach tokenArray, (token) ->
+      if token[0] is '#' or token[0] is '@'
         tagArray.push(token)
       else
         keywordArray.push(token)
-    )
 
-    @findByTag(tagArray, 'N', @findByTitleContains(keywordArray))
+    # If there is tag, use it to largely reduce the pool size
+    if not _.isEmpty(tagArray)
+      pool = @_toNodeObject(@findByTagArray(tagArray))
 
+      return [] if _.isEmpty(pool)
+      return _.toArray(pool) if _.isEmpty(keywordArray)
+      console.log pool
+      @findByTitleArray(keywordArray, no, pool)
+    else
+      @findByTitleArray(keywordArray, no, @allNode)
