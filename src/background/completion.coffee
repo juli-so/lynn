@@ -8,7 +8,7 @@ Completion =
   allTagName: []
 
   init: ->
-    @allTagName = Object.keys(Bookmark.linkedID)
+    @allTagName = Object.keys(Bookmark.tagNodeArray)
 
   # Return an array of tag
   suggestTag: (fragment) ->
@@ -25,9 +25,7 @@ Completion =
     newQueryArray = []
 
     _.forEach tokenArray, (token) =>
-      if token[0] == '#'
-        newQueryArray.push('#' + @suggestTag(token.slice(1))[0])
-      else if token[0] == '@'
+      if token[0] is '#' or token[0] is '@'
         newQueryArray.push(@suggestTag(token)[0])
       else
         newQueryArray.push(token)

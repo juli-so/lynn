@@ -90,10 +90,7 @@ Suggestion = React.createClass
           @props.node.title
       div className: 'lynn_tagline',
         _.map @props.node.tagArray, (tag) ->
-          if tag[0] is '@'
-            span {className: 'lynn_tag'}, tag
-          else
-            span {className: 'lynn_tag'}, '#', tag
+          span {className: 'lynn_tag'}, tag
 
 # lynn_bot
 
