@@ -18,12 +18,13 @@ Completion =
   # Preprocess query before sending it to Bookmark.find
   # Currently only complete each unfinished tag
   preprocess: (query) ->
+    return '#' if query is '#'
 
     tokenArray = query.split(' ')
     newQueryArray = []
 
     _.forEach tokenArray, (token) =>
-      if token[0] is '#' or token[0] is '@'
+      if Bookmark.isTag(token)
         newQueryArray.push(@suggestTag(token)[0])
       else
         newQueryArray.push(token)

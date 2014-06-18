@@ -219,6 +219,7 @@ CommandAction =
         ]
         option:
           active: no
+      @callAction('hide')
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------
@@ -226,6 +227,7 @@ CommandAction =
 SpecialAction =
   confirm: ->
     @callAction('s_' + @state.specialMode)
+    @setState { input: '' }
     @setState { specialMode: 'no' }
 
   abort: ->

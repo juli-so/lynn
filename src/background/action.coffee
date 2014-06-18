@@ -4,7 +4,7 @@
 Action =
   search: (message) ->
     response: 'search'
-    result: Bookmark.find(Completion.preprocess(message.input))
+    result: Bookmark.find(message.input)
   
   # ------------------------------------------------------------
 

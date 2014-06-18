@@ -217,7 +217,6 @@ Lynn = React.createClass
     # in specialMode invoked in fast mode
     else
       if @state.specialMode is 'tag'
-        console.log 'here'
         tagArray = _.filter input.split(' '), (token) ->
           token[0] is '#' or token[0] is '@'
 

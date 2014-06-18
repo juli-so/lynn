@@ -56,18 +56,14 @@ Bookmark =
   # ------------------------------------------------------------
   # Tag operation
   # ------------------------------------------------------------
-  storeTag: ->
-    chrome.storage.local.set
-      'nodeTagArray': @nodeTagArray
-      'tagNodeArray': @tagNodeArray
+  isTag: (tag) ->
+    tag[0] is '#' or tag[0] is '@'
 
-  cleanTag: ->
-    chrome.storage.local.set
-      'nodeTagArray': []
-      'tagNodeArray': []
-
+  isntTag: (tag) ->
+    not @isTag(tag)
+  
   addTag: (node, tag) ->
-    return false if tag[0] isnt '#' and tag[0] isnt '@'
+    return false if @isntTag(tag)
 
     # in case the node is sent from front end
     node = @allNode[node.id]
@@ -81,7 +77,7 @@ Bookmark =
       true
 
   delTag: (node, tag) ->
-    return false if tag[0] isnt '#' and tag[0] isnt '@'
+    return false if @isntTag(tag)
 
     # in case the node is sent from front end
     node = @allNode[node.id]
@@ -92,6 +88,16 @@ Bookmark =
       true
     else
       false
+
+  storeTag: ->
+    chrome.storage.local.set
+      'nodeTagArray': @nodeTagArray
+      'tagNodeArray': @tagNodeArray
+
+  cleanTag: ->
+    chrome.storage.local.set
+      'nodeTagArray': []
+      'tagNodeArray': []
 
   # ------------------------------------------------------------
   # Tag operation end
@@ -104,18 +110,36 @@ Bookmark =
   _toNodeObject: (nodeArray) ->
     _.zipObject(_.pluck(nodeArray, 'id'), nodeArray)
 
+  # Shortname
+  _toNO: (nodeArray) ->
+    _.zipObject(_.pluck(nodeArray, 'id'), nodeArray)
+
+  # ------------------------------------------------------------
+
   findByTag: (tag, pool = @allNode) ->
     idList = @tagNodeArray[tag]
     _.compact(_.at(pool, idList))
 
+  # find node that has ALL the tags in tagArray
   findByTagArray: (tagArray, pool = @allNode) ->
     if _.isEmpty(tagArray)
       result = pool
     else
       reduceFunc = (accumulator, tag) =>
-        @_toNodeObject(@findByTag(tag, accumulator))
+        @_toNO(@findByTag(tag, accumulator))
 
       result = _.reduce(tagArray, reduceFunc, pool)
+
+    _.toArray(result)
+
+  # find node that has AT LEAST ONE tag in tagArray
+  findByTagRange: (tagArray, pool = @allNode) ->
+    if _.isEmpty(tagArray)
+      result = pool
+    else
+      result = {}
+      _.forEach tagArray, (tag) =>
+        result = _.defaults(result, @_toNO(@findByTag(tag, pool)))
 
     _.toArray(result)
 
@@ -127,14 +151,26 @@ Bookmark =
       _.filter pool, (node) =>
         @_ciContains(node.title, fragment)
 
+  # find node that has ALL fragments in fragmentArray
   findByTitleArray: (fragmentArray, isCaseSensitive = no, pool = @allNode) ->
     if _.isEmpty(fragmentArray)
       result = pool
     else
       reduceFunc = (accumulator, fragment) =>
-        @_toNodeObject(@findByTitle(fragment, isCaseSensitive, accumulator))
+        @_toNO(@findByTitle(fragment, isCaseSensitive, accumulator))
 
       result = _.reduce(fragmentArray, reduceFunc, pool)
+
+    _.toArray(result)
+
+  # find node that has AT LEAST ONE fragment
+  findByTitleRange: (fragmentArray, isCaseSensitive = no, pool = @allNode) ->
+    if _.isEmpty(fragmentArray)
+      result = pool
+    else
+      result = {}
+      _.forEach fragmentArray, (fragment) =>
+        result = _.defaults(result, @_toNO(@findByTitle(fragment, no, pool)))
 
     _.toArray(result)
 
@@ -146,29 +182,45 @@ Bookmark =
       _.filter pool, (node) =>
         @_ciContains(node.url, fragment)
 
-  find: (query) ->
+  # ------------------------------------------------------------
+
+  _suggestTag: (tagFragment) ->
+    return [] if @isntTag(tagFragment)
+
+    allTagName = Object.keys(@tagNodeArray)
+
+    _.filter allTagName, (tag) ->
+      _.contains(tag, tagFragment)
+
+  find: (query, pool = @allNode) ->
     # Special cases
     return [] if _.isEmpty(query)
 
+    if query is '#'
+      return @findByTagRange(Object.keys(@tagNodeArray))
+
+    # process query and tokenize tag and keyword
     tokenArray = query.split(' ')
     keywordArray = []
     tagArray = []
 
-    _.forEach tokenArray, (token) ->
-      if token[0] is '#' or token[0] is '@'
+    _.forEach tokenArray, (token) =>
+      if @isTag(token)
         tagArray.push(token)
       else
         keywordArray.push(token)
 
-    # If there is tag, use it to largely reduce the pool size
     if not _.isEmpty(tagArray)
-      pool = @_toNodeObject(@findByTagArray(tagArray))
+      suggestedTagArray = _(tagArray)
+                            .map((tag) => @_suggestTag(tag))
+                            .flatten()
+                            .uniq()
+                            .value()
+      pool = @_toNO(@findByTagRange(suggestedTagArray))
 
       return [] if _.isEmpty(pool)
 
-      @findByTitleArray(keywordArray, no, pool)
-    else
-      @findByTitleArray(keywordArray, no, @allNode)
+    @findByTitleArray(keywordArray, no, pool)
 
   # ------------------------------------------------------------
   # Find and Filter end

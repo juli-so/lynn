@@ -20,15 +20,15 @@ makeUniform = (str, length, char=' ') ->
   diff = length - str.length
   str + makeCharString(diff)
 
+pad = (str, length, char = ' ') ->
+  makeCharString(length, char) + str
+
 logNodeTag = (node, charNum, char = ' ') ->
   if node.tagArray.length > 0
-    strArray = []
-    strArray.push(makeCharString(charNum, char))
-    logArray(strArray.concat(_.map(node.tagArray, (tag) ->
-      if tag[0] == '@' then tag + ' ' else '#' + tag + ' '
-    )))
+    nodeStr = node.tagArray.join(' ')
+    log(pad(nodeStr, charNum))
   else
-    log(makeCharString(charNum, char) + 'Node Array: Empty')
+    log(pad('Node Array: Empty', charNum))
 
 logNodeArray = (nodeArray, property = 'all') ->
   log('==================================================')
