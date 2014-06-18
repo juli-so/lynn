@@ -111,8 +111,7 @@ Bot = React.createClass
         if @props.specialMode is 'no'
           ''
         else
-          'Speical Mode: '
-          @props.specialMode
+          'Speical Mode: ' + @props.specialMode
       span className: 'lynn_bot_right',
         'Page ' + numToString[@props.currentPageIndex + 1]
 
@@ -217,6 +216,16 @@ Lynn = React.createClass
             input: input
     # in specialMode invoked in fast mode
     else
+      if @state.specialMode is 'tag'
+        console.log 'here'
+        tagArray = _.filter input.split(' '), (token) ->
+          token[0] is '#' or token[0] is '@'
+
+        nodeArray = @state.nodeArray
+        currentNode = @getCurrentNode()
+        currentNode.tagArray = tagArray
+        nodeArray[@getCurrentNodeIndex] = currentNode
+        @setState { nodeArray }
       @setState { input }
 
   # ------------------------------------------------------------

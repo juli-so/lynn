@@ -147,6 +147,7 @@ Bookmark =
         @_ciContains(node.url, fragment)
 
   find: (query) ->
+    # Special cases
     return [] if _.isEmpty(query)
 
     tokenArray = query.split(' ')
