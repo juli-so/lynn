@@ -45,7 +45,6 @@
         "lib/background/action.js",
         "lib/background/message.js",
         "lib/background/bookmark.js",
-        "lib/background/completion.js",
         "lib/background/log.js",
         "lib/background/main.js"
       ]
