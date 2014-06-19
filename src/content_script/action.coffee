@@ -22,11 +22,19 @@ CommonAction =
   # ------------------------------------------------------------
 
   hide: ->
+    console.log 'hide'
     @callAction('reset')
-    @setState { visible: no }
+    @setState { animation: 'fadeOutUp' }
+
+    timeOutFunc = =>
+      @setState { visible: no }
+    setTimeout(timeOutFunc, 200)
 
   show: ->
-    @setState { visible: yes }
+    console.log 'show'
+    @setState
+      visible: yes
+      animation: 'fadeInDown'
     $('.lynn_console').focus()
 
   toggle: ->
@@ -109,6 +117,9 @@ CommonAction =
   # ------------------------------------------------------------
 
   test: ->
+    timeOutFunc = =>
+      @callAction('hide')
+    setTimeout(timeOutFunc, 1000)
 
 
 # --------------------------------------------------------------

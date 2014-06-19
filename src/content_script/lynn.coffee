@@ -137,6 +137,9 @@ Lynn = React.createClass
     # when 'no' it is disabled
     specialMode: 'no'
 
+    # when 'no' animation is disabled
+    animation: 'fadeInDown'
+
     nodeArray: []
     selectedArray: []
 
@@ -170,7 +173,9 @@ Lynn = React.createClass
   # ------------------------------------------------------------
 
   render: ->
-    className = 'lynn animated fadeInDown'
+    className = 'lynn'
+    if @state.animation isnt 'no'
+      className += ' animated ' + @state.animation
     className += ' hidden' unless @state.visible
 
     div {className},
