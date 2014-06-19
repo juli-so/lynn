@@ -79,6 +79,8 @@ div.lynn {
 
   padding: 12px 20px;
   border-bottom: 2px #ddd solid;
+
+  text-align: left;
 }
 
 div.lynn_suggestion {
@@ -124,6 +126,8 @@ div.lynn_suggestion {
 
   padding: 12px;
   padding-left: 20px;
+
+  text-align: left;
 }
 
 .lynn_bot_mid {
@@ -134,6 +138,8 @@ div.lynn_suggestion {
 
   font-size: 14px;
   padding: 12px;
+
+  text-align: center;
 }
 
 .lynn_bot_right {
@@ -146,6 +152,8 @@ div.lynn_suggestion {
   font-size: 14px;
 
   padding: 12px;
+
+  text-align: right;
 }
 
 

@@ -98,7 +98,7 @@ KeyMatch =
         when 'command' then @matchInCommandMode(keyString)
         else 'noop'
 
-      if action is 'noop' then @matchCommon(keyString) else action
+    if action is 'noop' then @matchCommon(keyString) else action
 
   # ------------------------------------------------------------
 
@@ -119,6 +119,8 @@ KeyMatch =
 
       when 'tab'         then 'nextMode'
       when 's-tab'       then 'prevMode'
+
+      when 'c-r'         then 'test'
 
       else 'noop'
 

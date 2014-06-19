@@ -38,7 +38,9 @@ CommonAction =
   reset: ->
     @setState
       input: ''
+      cachedInput: ''
       mode: 'query'
+      specialMode: 'no'
 
       nodeArray: []
       selectedArray: []
@@ -78,23 +80,36 @@ CommonAction =
 
   nextMode: ->
     if @state.mode is 'query'
-      mode = 'fast'
+      @setState { mode: 'fast' }
     else if @state.mode is 'fast'
-      mode = 'command'
+      @setState
+        mode: 'command'
+        input: ':'
+        cachedInput: @state.input
     else
-      mode = 'query'
+      @setState
+        mode: 'query'
+        input: @state.cachedInput
+        cachedInput: ''
 
-    @setState { mode }
-    
   prevMode: ->
     if @state.mode is 'fast'
-      mode = 'query'
+      @setState { mode: 'query' }
     else if @state.mode is 'command'
-      mode = 'fast'
+      @setState
+        mode: 'fast'
+        input: @state.cachedInput
+        cachedInput: ''
     else
-      mode = 'command'
+      @setState
+        mode: 'command'
+        input: ':'
+        cachedInput: @state.input
 
-    @setState { mode }
+  # ------------------------------------------------------------
+
+  test: ->
+
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------
@@ -200,7 +215,7 @@ FastAction =
   tag: ->
     @setState
       specialMode: 'tag'
-      input: ''
+      input: @getCurrentNode().tagArray.join(' ') + ' '
 
 
 # --------------------------------------------------------------
@@ -221,6 +236,20 @@ CommandAction =
           active: no
       @callAction('hide')
 
+    else if tokenArray[0] is ':add' or tokenArray[0] is ':a'
+      @setState
+        specialMode: 'addBookmark'
+        input: ''
+
+      Listener.setListener 'a_queryTab', (message) =>
+        tab = message.tabArray[0]
+
+      Message.postMessage
+        request: 'queryTab'
+        queryInfo:
+          active: yes
+          currentWindow: yes
+
 # --------------------------------------------------------------
 # --------------------------------------------------------------
 
@@ -231,7 +260,6 @@ SpecialAction =
     @setState { specialMode: 'no' }
 
   abort: ->
-    @callAction('reset')
     @setState { specialMode: 'no' }
 
   tag: ->
@@ -243,5 +271,12 @@ SpecialAction =
       request: 'addTag'
       node: @getCurrentNode()
       tagArray: tagArray
+
+  addBookmark: ->
+    Message.addListener (message) ->
+      if message.response and message.response is 'a_queryTab'
+        console.log message.tabArray
+
+
 
 

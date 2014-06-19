@@ -4,7 +4,8 @@
 Message =
   init: ->
     chrome.runtime.onConnect.addListener (port) =>
-      @addListener port
+      @port = port
+      @addListener()
 
   # Listen to message from front
   # Messages are expected to be in this form
@@ -19,6 +20,9 @@ Message =
   #   option:
   #     optionA: yes
   #     optionB: no
-  addListener: (port) ->
-    port.onMessage.addListener (message) =>
-      port.postMessage(Action[message.request](message))
+  addListener: ->
+    @port.onMessage.addListener (message) =>
+      @port.postMessage(Action[message.request](message))
+
+  postMessage: (message) ->
+    @port.postMessage message

@@ -6,8 +6,8 @@ Message =
   init: ->
     @port = chrome.runtime.connect { }
 
-  postMessage: (msg) ->
-    @port.postMessage msg
+  postMessage: (message) ->
+    @port.postMessage message
 
   addListener: (callback) ->
     @port.onMessage.addListener callback

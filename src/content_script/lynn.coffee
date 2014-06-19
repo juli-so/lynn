@@ -26,6 +26,7 @@ div.lynn
 Top = React.createClass
   render: ->
     { input } = React.DOM
+
     if @props.mode is 'command'
       inputPlaceHolder = 'Your command...'
     else if @props.mode is 'fast'
@@ -99,6 +100,10 @@ Bot = React.createClass
     numToString = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five',
       'Six', 'Seven', 'Eight', 'Nine', 'Ten']
 
+    specialModeStringMap =
+      'tag': 'Tag'
+      'addBookmark': 'Add Bookmark'
+
     className = 'lynn_bot'
 
     infoString = @props.nodeArray.length + ' result'
@@ -111,7 +116,7 @@ Bot = React.createClass
         if @props.specialMode is 'no'
           ''
         else
-          'Speical Mode: ' + @props.specialMode
+          'Speical Mode: ' + specialModeStringMap[@props.specialMode]
       span className: 'lynn_bot_right',
         'Page ' + numToString[@props.currentPageIndex + 1]
 
@@ -125,6 +130,8 @@ Lynn = React.createClass
   getInitialState: ->
     visible: no
     input: ''
+    # Used between mode switching to save search query
+    cachedInput: ''
     mode: 'query' # query | fast | command
     # in special mode, mode and nodeArray change won't be triggered
     # when 'no' it is disabled
@@ -198,34 +205,8 @@ Lynn = React.createClass
   onConsoleChange: (event) ->
     input = event.target.value
 
-    @setState { input } if @state.mode isnt 'fast'
-
-    if @state.specialMode is 'no'
-      if input[-1..] is ':' and @state.mode isnt 'command'
-        @setState
-          input: ':'
-          mode: 'command'
-      else
-        if @state.mode is 'query'
-          @setState
-            currentNodeIndex: 0
-            currentPageIndex: 0
-
-          Message.postMessage
-            request: 'search'
-            input: input
-    # in specialMode invoked in fast mode
-    else
-      if @state.specialMode is 'tag'
-        tagArray = _.filter input.split(' '), (token) ->
-          token[0] is '#' or token[0] is '@'
-
-        nodeArray = @state.nodeArray
-        currentNode = @getCurrentNode()
-        currentNode.tagArray = tagArray
-        nodeArray[@getCurrentNodeIndex] = currentNode
-        @setState { nodeArray }
-      @setState { input }
+    handler = Handler.matchHandler(@state.mode, @state.specialMode)
+    handler.call(@, event)
 
   # ------------------------------------------------------------
 

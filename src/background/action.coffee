@@ -1,5 +1,17 @@
 # Defines Actions requested to be performed by front-end
-# All methods take a single argument 'message', return
+#
+# All methods 
+#   - take a single argument 'message'
+#   - returns a message object that'll be posted after its execution
+#
+# Sometimes async operations can't return result immediately
+# A message taking the form
+# {
+#   response: 'a_action'
+#   data...
+# }
+# will be posted to frontend
+#
 
 Action =
   search: (message) ->
@@ -44,3 +56,14 @@ Action =
         Bookmark.addTag(message.node, tag)
 
     { response: 'addTag' }
+
+  # ------------------------------------------------------------
+
+  queryTab: (message) ->
+    chrome.tabs.query message.queryInfo, (tabArray) ->
+      Message.postMessage
+        response: 'a_queryTab'
+        tabArray: tabArray
+
+    { response: 'queryTab' }
+
