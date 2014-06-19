@@ -34,7 +34,7 @@ div.lynn {
   background-color: #fff;
 }
 
-.lynn_console {
+input[type="text"].lynn_console {
   width: 640px;
   height: 50px;
   padding: 12px 20px;
@@ -43,6 +43,15 @@ div.lynn {
 
   font-size: 20px;
   font-family: 'Helvetica Neue';
+
+  border: none;
+
+  box-shadow: none;
+}
+
+input[type="text"].lynn_console:focus {
+  border: none;
+  box-shadow: none;
 }
 
 .lynn_console_status {

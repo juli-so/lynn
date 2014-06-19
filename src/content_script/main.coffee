@@ -1,5 +1,6 @@
 $(->
   Message.init()
+  Listener.init()
 
   # Init UI
   $mountPoint = $("<div id='lynn'>")

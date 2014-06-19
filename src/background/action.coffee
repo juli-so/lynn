@@ -57,6 +57,10 @@ Action =
 
     { response: 'addTag' }
 
+
+  storeTag: (message) ->
+    Bookmark.storeTag()
+
   # ------------------------------------------------------------
 
   queryTab: (message) ->
@@ -66,4 +70,11 @@ Action =
         tabArray: tabArray
 
     { response: 'queryTab' }
+
+  # ------------------------------------------------------------
+  # Bookmark Operation
+  # ------------------------------------------------------------
+
+  addBookmark: (message) ->
+    Bookmark.create(message.bookmark, message.tagArray)
 

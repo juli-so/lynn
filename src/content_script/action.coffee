@@ -213,42 +213,85 @@ FastAction =
   # ------------------------------------------------------------
 
   tag: ->
+    if _.isEmpty(@getCurrentNode().tagArray)
+      input = ''
+    else
+      input = @getCurrentNode().tagArray.join(' ') + ' '
+
     @setState
       specialMode: 'tag'
-      input: @getCurrentNode().tagArray.join(' ') + ' '
+      input: input
 
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------
 
+# Map command to command actions
+CommandMap =
+  '1'         : 'c_one'
+
+  'tag'       : 'c_tag'
+
+  'a'         : 'c_addBookmark'
+  'add'       : 'c_addBookmark'
+
+  's'         : 'c_storeTag'
+  'sTag'      : 'c_storeTag'
+
+# Command is entered and then executed
+# If additional user-input is needed, enter specialMode
 CommandAction =
   execute: ->
-    tokenArray = @state.input.split(' ')
-    # example or custom shortcuts
-    if tokenArray[0] is ':1'
-      Message.postMessage
-        request: 'open'
-        nodeArray: [
-          { url: 'http://www.google.com' },
-          { url: 'http://lodash.com/docs' }
-        ]
-        option:
-          active: no
-      @callAction('hide')
+    if @state.input[0] isnt ':'
+      return
 
-    else if tokenArray[0] is ':add' or tokenArray[0] is ':a'
+    command = @state.input.split(' ')[0][1..]
+    actionName = CommandMap[command]
+
+    @callAction(actionName)
+
+  # ------------------------------------------------------------
+
+  one: ->
+    Message.postMessage
+      request: 'open'
+      nodeArray: [
+        { url: 'http://www.google.com' },
+        { url: 'http://lodash.com/docs' }
+      ]
+      option:
+        active: no
+
+    @callAction('hide')
+
+  addBookmark: ->
+    @setState
+      specialMode: 'addBookmark'
+      input: ''
+
+    Listener.setListener 'a_queryTab', (message) =>
+      console.log 'here'
+      tab = message.tabArray[0]
+      node =
+        title: tab.title
+        # This property is specifically added for this operation
+        # Doesn't exist in normal nodes
+        url: tab.url
+
       @setState
-        specialMode: 'addBookmark'
-        input: ''
+        nodeArray: [node]
 
-      Listener.setListener 'a_queryTab', (message) =>
-        tab = message.tabArray[0]
+      Listener.removeListener('a_queryTab')
 
-      Message.postMessage
-        request: 'queryTab'
-        queryInfo:
-          active: yes
-          currentWindow: yes
+    Message.postMessage
+      request: 'queryTab'
+      queryInfo:
+        active: yes
+        currentWindow: yes
+
+  storeTag: ->
+    Message.postMessage
+      request: 'storeTag'
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------
@@ -262,6 +305,8 @@ SpecialAction =
   abort: ->
     @setState { specialMode: 'no' }
 
+  # ------------------------------------------------------------
+
   tag: ->
     tokenArray = @state.input.split(' ')
     tagArray = _.filter tokenArray, (token) ->
@@ -273,9 +318,13 @@ SpecialAction =
       tagArray: tagArray
 
   addBookmark: ->
-    Message.addListener (message) ->
-      if message.response and message.response is 'a_queryTab'
-        console.log message.tabArray
+    node = @state.nodeArray[0]
+    Message.postMessage
+      request: 'addBookmark'
+      bookmark:
+        title: node.title
+        url: node.url
+      tagArray: node.tagArray
 
 
 

@@ -15,6 +15,7 @@ InputHandler =
         input: ':'
         cachedInput: @state.input
         mode: 'command'
+      return
 
     @setState
       input: input
@@ -28,6 +29,7 @@ InputHandler =
   fast: (event) ->
 
   command: (event) ->
+    input = event.target.value
     @setState { input: input }
 
   s_tag: (event) ->
@@ -44,3 +46,12 @@ InputHandler =
     @setState { nodeArray, input }
 
   s_addBookmark: (event) ->
+    input = event.target.value
+    tagArray = _.filter input.split(' '), (token) ->
+      Util.isTag(token)
+
+    # make the current tags in input field show on node
+    nodeArray = @state.nodeArray
+    nodeArray[0].tagArray = tagArray
+
+    @setState { nodeArray, input }

@@ -106,6 +106,7 @@ Bookmark =
   # ------------------------------------------------------------
   # Find and Filter
   # ------------------------------------------------------------
+
   # Change nodeArray to { node.id: node } object to allow chaining
   _toNodeObject: (nodeArray) ->
     _.zipObject(_.pluck(nodeArray, 'id'), nodeArray)
@@ -225,3 +226,28 @@ Bookmark =
   # ------------------------------------------------------------
   # Find and Filter end
   # ------------------------------------------------------------
+
+  # ------------------------------------------------------------
+  # Bookmark operation
+  # ------------------------------------------------------------
+
+  create: (bookmark, tagArray) ->
+    bookmark = _.assign(bookmark, { parentId: '232' })
+    chrome.bookmarks.create bookmark, (result) =>
+      @allNode[result.id] = result
+
+      result.tagArray = @nodeTagArray[result.id] = []
+      _.forEach tagArray, (tag) =>
+        @addTag(result, tag)
+    
+  move: ->
+  update: ->
+  remove: ->
+
+  # ------------------------------------------------------------
+  # Bookmark operation end
+  # ------------------------------------------------------------
+
+
+
+
