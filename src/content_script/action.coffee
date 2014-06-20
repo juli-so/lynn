@@ -22,16 +22,15 @@ CommonAction =
   # ------------------------------------------------------------
 
   hide: ->
-    console.log 'hide'
-    @callAction('reset')
     @setState { animation: 'fadeOutUp' }
 
     timeOutFunc = =>
       @setState { visible: no }
+      @callAction('reset')
+
     setTimeout(timeOutFunc, 200)
 
   show: ->
-    console.log 'show'
     @setState
       visible: yes
       animation: 'fadeInDown'
@@ -117,9 +116,6 @@ CommonAction =
   # ------------------------------------------------------------
 
   test: ->
-    timeOutFunc = =>
-      @callAction('hide')
-    setTimeout(timeOutFunc, 1000)
 
 
 # --------------------------------------------------------------
@@ -224,15 +220,9 @@ FastAction =
   # ------------------------------------------------------------
 
   tag: ->
-    if _.isEmpty(@getCurrentNode().tagArray)
-      input = ''
-    else
-      input = @getCurrentNode().tagArray.join(' ') + ' '
-
     @setState
       specialMode: 'tag'
-      input: input
-
+      input: ''
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------
@@ -281,7 +271,6 @@ CommandAction =
       input: ''
 
     Listener.setListener 'a_queryTab', (message) =>
-      console.log 'here'
       tab = message.tabArray[0]
       node =
         title: tab.title
@@ -310,8 +299,7 @@ CommandAction =
 SpecialAction =
   confirm: ->
     @callAction('s_' + @state.specialMode)
-    @setState { input: '' }
-    @setState { specialMode: 'no' }
+    @callAction('reset')
 
   abort: ->
     @setState { specialMode: 'no' }
@@ -319,15 +307,20 @@ SpecialAction =
   # ------------------------------------------------------------
 
   tag: ->
-    tokenArray = @state.input.split(' ')
-    tagArray = _.filter tokenArray, (token) ->
-      token[0] is '#' or token[0] is '@'
-
-    Message.postMessage
-      request: 'addTag'
-      node: @getCurrentNode()
-      tagArray: tagArray
-
+    if _.isEmpty(@state.selectedArray)
+      Message.postMessage
+        request: 'addTag'
+        node: @getCurrentNode()
+        tagArray: @state.pendingTagArray
+    else
+      Message.postMessage
+        request: 'addTag'
+        nodeArray: _.at(@state.nodeArray, @state.selectedArray)
+        tagArray: @state.pendingTagArray
+    @setState
+      input: ''
+      pendingTagArray: []
+    
   addBookmark: ->
     node = @state.nodeArray[0]
     Message.postMessage
@@ -336,6 +329,8 @@ SpecialAction =
         title: node.title
         url: node.url
       tagArray: node.tagArray
+
+    @callAction('c_storeTag')
 
 
 

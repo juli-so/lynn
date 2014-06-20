@@ -34,7 +34,7 @@ Top = React.createClass
     else
       inputPlaceHolder = 'Search for...'
 
-    div className: 'lynn_top',
+    div { id: 'lynn_top' },
       input
         className: 'lynn_console'
         type: 'text'
@@ -57,26 +57,49 @@ Mid = React.createClass
   render: ->
     start = @props.currentPageIndex * @props.MAX_SUGGESTION_NUM
     end = Math.min(@props.nodeArray.length, start + @props.MAX_SUGGESTION_NUM)
-    className = 'lynn_mid'
 
     if @props.mode is 'query'
-      div {className},
+      div { id: 'lynn_mid' },
         _.map @props.nodeArray[start...end], (node, index) =>
+          # live tagging when adding tags
+          pendingTagArray = []
+          if @props.specialMode is 'tag'
+            if _.isEmpty(@props.selectedArray)
+              if index is @props.currentNodeIndex
+                pendingTagArray = @props.pendingTagArray
+            else
+              if _.contains(@props.selectedArray, start + index)
+                pendingTagArray = @props.pendingTagArray
+
           Suggestion
             key: node.id
 
             node: node
             isCurrent: index is @props.currentNodeIndex
             isSelected: false
+
+            pendingTagArray: pendingTagArray
     else
-      div {className},
+      div { id: 'lynn_mid' },
         _.map @props.nodeArray[start...end], (node, index) =>
+          # live tagging when adding tags
+          pendingTagArray = []
+          if @props.specialMode is 'tag'
+            if _.isEmpty(@props.selectedArray)
+              if index is @props.currentNodeIndex
+                pendingTagArray = @props.pendingTagArray
+            else
+              if _.contains(@props.selectedArray, start + index)
+                pendingTagArray = @props.pendingTagArray
+
           Suggestion
             key: node.id
 
             node: node
             isCurrent: index is @props.currentNodeIndex
             isSelected: _.contains(@props.selectedArray, start + index)
+
+            pendingTagArray: pendingTagArray
 
 
 Suggestion = React.createClass
@@ -85,13 +108,15 @@ Suggestion = React.createClass
     className += ' lynn_suggestion_current' if @props.isCurrent
     className += ' lynn_suggestion_selected' if @props.isSelected
 
-    div {className},
+    div { className },
       div className: 'lynn_mainline',
         span className: 'lynn_title',
           @props.node.title
       div className: 'lynn_tagline',
         _.map @props.node.tagArray, (tag) ->
-          span {className: 'lynn_tag'}, tag
+          span { className: 'lynn_tag' }, tag
+        _.map @props.pendingTagArray, (tag) ->
+          span { className: 'lynn_pending_tag' }, tag
 
 # lynn_bot
 
@@ -104,12 +129,10 @@ Bot = React.createClass
       'tag': 'Tag'
       'addBookmark': 'Add Bookmark'
 
-    className = 'lynn_bot'
-
     infoString = @props.nodeArray.length + ' result'
     infoString += 's' if @props.nodeArray.length > 1
       
-    div {className},
+    div { id: 'lynn_bot' },
       span className: 'lynn_bot_left',
         infoString
       span className: 'lynn_bot_mid',
@@ -146,6 +169,8 @@ Lynn = React.createClass
     currentNodeIndex: 0
     currentPageIndex: 0
 
+    pendingTagArray: []
+
   componentWillMount: ->
     # listen to search callback
     Message.addListener (message) =>
@@ -173,12 +198,13 @@ Lynn = React.createClass
   # ------------------------------------------------------------
 
   render: ->
-    className = 'lynn'
+    id = 'lynn'
+    className = ''
     if @state.animation isnt 'no'
-      className += ' animated ' + @state.animation
+      className += 'animated ' + @state.animation
     className += ' hidden' unless @state.visible
 
-    div {className},
+    div { id, className },
       Top
         input: @state.input
         mode: @state.mode
@@ -189,12 +215,15 @@ Lynn = React.createClass
         MAX_SUGGESTION_NUM: @state.MAX_SUGGESTION_NUM
 
         mode: @state.mode
+        specialMode: @state.specialMode
 
         nodeArray: @state.nodeArray
         selectedArray: @state.selectedArray
 
         currentNodeIndex: @state.currentNodeIndex
         currentPageIndex: @state.currentPageIndex
+
+        pendingTagArray: @state.pendingTagArray
 
       Bot
         mode: @state.mode

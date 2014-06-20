@@ -37,13 +37,9 @@ InputHandler =
     tagArray = _.filter input.split(' '), (token) ->
       Util.isTag(token)
 
-    # make the current tags in input field show on node
-    nodeArray = @state.nodeArray
-    currentNode = @getCurrentNode()
-    currentNode.tagArray = tagArray
-    nodeArray[@getCurrentNodeIndex] = currentNode
-
-    @setState { nodeArray, input }
+    @setState
+      pendingTagArray: tagArray
+      input: input
 
   s_addBookmark: (event) ->
     input = event.target.value

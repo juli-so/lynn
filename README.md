@@ -6,7 +6,7 @@ It happens to be a bookmark app.
 
 ### Development
 lynn is still in alpha and being heavily developed.
-Feature-complete release is planned for 0.3.0 release.
+Feature-complete release is planned for v0.3.0 release.
 
 ### Try it
 If you want to try it anyway:  

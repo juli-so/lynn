@@ -49,17 +49,28 @@ Action =
   # ------------------------------------------------------------
 
   addTag: (message) ->
-    if message.tag
-      Bookmark.addTag(message.node, message.tag)
-    else
+    if message.node
       _.forEach message.tagArray, (tag) ->
         Bookmark.addTag(message.node, tag)
+        true # do not exit early
+    else
+      _.forEach message.nodeArray, (node) ->
+        _.forEach message.tagArray, (tag) ->
+          Bookmark.addTag(node, tag)
+          true # do not exit early
+
+    Bookmark.storeTag()
 
     { response: 'addTag' }
 
 
   storeTag: (message) ->
     Bookmark.storeTag()
+
+    Message.postMessage
+      response: 'a_storeTag'
+
+    { response: 'storeTag' }
 
   # ------------------------------------------------------------
 
@@ -77,4 +88,6 @@ Action =
 
   addBookmark: (message) ->
     Bookmark.create(message.bookmark, message.tagArray)
+
+    { response: 'addBookmark' }
 
