@@ -36,6 +36,8 @@ Top = React.createClass
 
     div { id: 'lynn_top' },
       input
+        ref: 'lynn_console'
+      
         className: 'lynn_console'
         type: 'text'
         size: '80'
@@ -50,6 +52,11 @@ Top = React.createClass
             when 'query'   then 'fa-search'
             when 'fast'    then 'fa-bolt'
             when 'command' then 'fa-terminal'
+
+  componentDidUpdate: (prevProps, prevState) ->
+    # focus input when toggled from invisible to visible
+    if not prevProps.visible and @props.visible
+      @refs.lynn_console.getDOMNode().focus()
 
 # lynn_mid
 
@@ -153,8 +160,7 @@ Lynn = React.createClass
   getInitialState: ->
     visible: no
     input: ''
-    # Used between mode switching to save search query
-    cachedInput: ''
+
     mode: 'query' # query | fast | command
     # in special mode, mode and nodeArray change won't be triggered
     # when 'no' it is disabled
@@ -170,6 +176,10 @@ Lynn = React.createClass
     currentPageIndex: 0
 
     pendingTagArray: []
+
+    cache:
+      input: ''
+      selectedArray: []
 
   componentWillMount: ->
     # listen to search callback
@@ -206,6 +216,8 @@ Lynn = React.createClass
 
     div { id, className },
       Top
+        visible: @state.visible
+
         input: @state.input
         mode: @state.mode
 
@@ -253,3 +265,10 @@ Lynn = React.createClass
 
   callAction: (actionName) ->
     Action.matchAction(actionName).call(@)
+
+  setDeepState: (state) ->
+    _.forEach state, (val, key) =>
+      if _.isPlainObject(val)
+        state[key] = _.assign(@state[key], val)
+
+    @setState(state)

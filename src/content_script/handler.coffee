@@ -11,16 +11,18 @@ InputHandler =
   query: (event) ->
     input = event.target.value
     if input[-1..] is ':'
-      @setState
+      @setDeepState
         input: ':'
-        cachedInput: @state.input
         mode: 'command'
+        cache:
+          input: @state.input
       return
 
     @setState
       input: input
       currentNodeIndex: 0
       currentPageIndex: 0
+      selectedArray: []
 
     Message.postMessage
       request: 'search'

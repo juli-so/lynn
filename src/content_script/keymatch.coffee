@@ -154,6 +154,9 @@ KeyMatch =
       when 'rightArrow'  then 'f_unselect'
       when 'l'           then 'f_unselect'
 
+      when 'a'           then 'f_selectAllInCurrentPage'
+      when 's-a'         then 'f_selectAll'
+
       when 't'           then 'f_tag'
 
       else 'noop'

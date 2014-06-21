@@ -34,7 +34,6 @@ CommonAction =
     @setState
       visible: yes
       animation: 'fadeInDown'
-    $('.lynn_console').focus()
 
   toggle: ->
     if @state.visible
@@ -43,9 +42,9 @@ CommonAction =
       @callAction('show')
 
   reset: ->
-    @setState
+    @setDeepState
       input: ''
-      cachedInput: ''
+
       mode: 'query'
       specialMode: 'no'
 
@@ -54,6 +53,10 @@ CommonAction =
 
       currentNodeIndex: 0
       currentPageIndex: 0
+
+      cache:
+        input: ''
+        pendingTagArray: []
 
   # ------------------------------------------------------------
 
@@ -89,15 +92,17 @@ CommonAction =
     if @state.mode is 'query'
       @setState { mode: 'fast' }
     else if @state.mode is 'fast'
-      @setState
+      @setDeepState
         mode: 'command'
         input: ':'
-        cachedInput: @state.input
+        cache:
+          input: @state.input
     else
       @setState
         mode: 'query'
-        input: @state.cachedInput
-        cachedInput: ''
+        input: @state.cache.input
+        cache:
+          input: ''
 
   prevMode: ->
     if @state.mode is 'fast'
@@ -105,18 +110,22 @@ CommonAction =
     else if @state.mode is 'command'
       @setState
         mode: 'fast'
-        input: @state.cachedInput
-        cachedInput: ''
+        input: @state.cache.input
+        cache:
+          input: ''
     else
       @setState
         mode: 'command'
         input: ':'
-        cachedInput: @state.input
+        cache:
+          input: @state.input
 
   # ------------------------------------------------------------
 
   test: ->
-
+    @setDeepState
+      cache:
+        input: 'ha'
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------
@@ -216,6 +225,11 @@ FastAction =
     if _.contains(@state.selectedArray, @getCurrentNodeIndex())
       selectedArray = _.without(@state.selectedArray, @getCurrentNodeIndex())
       @setState { selectedArray }
+
+  selectAllInCurrentPage: ->
+
+  selectAll: ->
+    @setState { selectedArray: [0...@state.nodeArray.length] }
 
   # ------------------------------------------------------------
 
