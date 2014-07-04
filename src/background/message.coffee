@@ -4,25 +4,5 @@
 Message =
   init: ->
     chrome.runtime.onConnect.addListener (port) =>
-      @port = port
-      @addListener()
-
-  # Listen to message from front
-  # Messages are expected to be in this form
-  # message =
-  #   request: Action[request]
-  #   --
-  #   |
-  #   custom objects needed to be carried over for action
-  #   differs from action to action
-  #   |
-  #   --
-  #   option:
-  #     optionA: yes
-  #     optionB: no
-  addListener: ->
-    @port.onMessage.addListener (message) =>
-      @port.postMessage(Action[message.request](message))
-
-  postMessage: (message) ->
-    @port.postMessage message
+      port.onMessage.addListener (message) =>
+        port.postMessage(Action[message.request](message, port))

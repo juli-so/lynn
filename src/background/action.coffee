@@ -1,7 +1,9 @@
 # Defines Actions requested to be performed by front-end
 #
 # All methods 
-#   - take a single argument 'message'
+#   - take an argument 'message'
+#   - take an optional argument 'port', used to post message back to front
+#     if needed
 #   - returns a message object that'll be posted after its execution
 #
 # Sometimes async operations can't return result immediately
@@ -64,19 +66,19 @@ Action =
     { response: 'addTag' }
 
 
-  storeTag: (message) ->
+  storeTag: (message, port) ->
     Bookmark.storeTag()
 
-    Message.postMessage
+    port.postMessage
       response: 'a_storeTag'
 
     { response: 'storeTag' }
 
   # ------------------------------------------------------------
 
-  queryTab: (message) ->
+  queryTab: (message, port) ->
     chrome.tabs.query message.queryInfo, (tabArray) ->
-      Message.postMessage
+      port.postMessage
         response: 'a_queryTab'
         tabArray: tabArray
 
