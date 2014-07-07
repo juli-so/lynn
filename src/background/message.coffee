@@ -5,4 +5,8 @@ Message =
   init: ->
     chrome.runtime.onConnect.addListener (port) =>
       port.onMessage.addListener (message) =>
-        port.postMessage(Action[message.request](message, port))
+        # pass port to it in case it needs to send additional responses
+        responseMessage = Action[message.request](message, port)
+
+        if responseMessage and responseMessage.response
+          port.postMessage(responseMessage)

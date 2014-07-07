@@ -11,5 +11,10 @@ Listener =
   setListener: (response, callback) ->
     @callbackMap[response] = callback
 
+  setOneTimeListener: (response, callback) ->
+    @setListener response, (message) =>
+      callback(message)
+      @removeListener(response)
+
   removeListener: (response) ->
     delete @callbackMap[response]

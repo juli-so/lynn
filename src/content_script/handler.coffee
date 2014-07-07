@@ -48,7 +48,7 @@ InputHandler =
     tagArray = _.filter input.split(' '), (token) ->
       Util.isTag(token)
 
-    # make the current tags in input field show on node
+    # make the current tags in input field shown on node
     nodeArray = @state.nodeArray
     nodeArray[0].tagArray = tagArray
 

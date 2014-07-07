@@ -54,6 +54,8 @@ CommonAction =
       currentNodeIndex: 0
       currentPageIndex: 0
 
+      pendingTagArray: []
+
       cache:
         input: ''
         pendingTagArray: []
@@ -121,6 +123,33 @@ CommonAction =
           input: @state.input
 
   # ------------------------------------------------------------
+  
+  _openHelper: (option, newWindow, needHide) ->
+    message =
+      request: if newWindow then 'openInNewWindow' else 'open'
+      option: option
+
+    if _.isEmpty(@state.selectedArray)
+      message['node'] = @getCurrentNode()
+    else
+      message['nodeArray'] = _.at(@state.nodeArray, @state.selectedArray)
+
+    Message.postMessage(message)
+    if needHide then @callAction('hide')
+
+  open: ->
+    @callAction('_openHelper', [{ active:    yes }, no , yes])
+
+  openInBackground: ->
+    @callAction('_openHelper', [{ active:    no  }, no , no ])
+
+  openInNewWindow: ->
+    @callAction('_openHelper', [{ incognito: no  }, yes, yes])
+
+  openInNewIncognitoWindow: ->
+    @callAction('_openHelper', [{ incognito: yes }, yes, yes])
+
+  # ------------------------------------------------------------
 
   test: ->
     @setDeepState
@@ -131,91 +160,11 @@ CommonAction =
 # --------------------------------------------------------------
 
 QueryAction =
-  open: ->
-    Message.postMessage
-      request: 'open'
-      node: @getCurrentNode()
-      option:
-        active: yes
-
-    @callAction('hide')
-
-  openInBackground: ->
-    Message.postMessage
-      request: 'open'
-      node: @getCurrentNode()
-      option:
-        active: no
-
-  openInNewWindow: ->
-    Message.postMessage
-      request: 'openInNewWindow'
-      node: @getCurrentNode()
-      option:
-        incognito: no
-
-    @callAction('hide')
-
-  openInNewIncognitoWindow: ->
-    Message.postMessage
-      request: 'openInNewWindow'
-      node: @getCurrentNode()
-      option:
-        incognito: yes
-
-    @callAction('hide')
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------
 
 FastAction =
-  open: ->
-    if _.isEmpty(@state.selectedArray)
-      @callAction('q_open')
-    else
-      Message.postMessage
-        request: 'open'
-        nodeArray: _.at(@state.nodeArray, @state.selectedArray)
-        option:
-          active: yes
-      @callAction('hide')
-
-  openInBackground: ->
-    if _.isEmpty(@state.selectedArray)
-      @callAction('q_openInBackground')
-    else
-      Message.postMessage
-        request: 'open'
-        nodeArray: _.at(@state.nodeArray, @state.selectedArray)
-        option:
-          active: no
-
-  openInNewWindow: ->
-    if _.isEmpty(@state.selectedArray)
-      @callAction('q_openInNewWindow')
-    else
-      Message.postMessage
-        request: 'openInNewWindow'
-        nodeArray: _.at(@state.nodeArray, @state.selectedArray)
-        option:
-          incognito: no
-
-        @callAction('hide')
-
-  openInNewIncognitoWindow: ->
-    if _.isEmpty(@state.selectedArray)
-      @callAction('q_openInNewIncognitoWindow')
-    else
-      Message.postMessage
-        request: 'openInNewWindow'
-        nodeArray: _.at(@state.nodeArray, @state.selectedArray)
-        option:
-          incognito: yes
-
-        @callAction('hide')
-
-  # ------------------------------------------------------------
-
   select: ->
     unless _.contains(@state.selectedArray, @getCurrentNodeIndex())
       selectedArray = _.union(@state.selectedArray, [@getCurrentNodeIndex()])
@@ -227,9 +176,20 @@ FastAction =
       @setState { selectedArray }
 
   selectAllInCurrentPage: ->
+    newlySelected = [@getNodeIndexStart()...@getNodeIndexEnd()]
+    selectedArray = _.union(@state.selectedArray, newlySelected)
+    @setState { selectedArray }
 
   selectAll: ->
     @setState { selectedArray: [0...@state.nodeArray.length] }
+
+  unselectAllInCurrentPage: ->
+    newlyUnselected = [@getNodeIndexStart()...@getNodeIndexEnd()]
+    selectedArray = _.difference(@state.selectedArray, newlyUnselected)
+    @setState { selectedArray }
+
+  unselectAll: ->
+    @setState { selectedArray: [] }
 
   # ------------------------------------------------------------
 
@@ -243,15 +203,21 @@ FastAction =
 
 # Map command to command actions
 CommandMap =
-  '1'         : 'c_one'
+  '1'             : 'c_one'
 
-  'tag'       : 'c_tag'
+  'tag'           : 'c_tag'
 
-  'a'         : 'c_addBookmark'
-  'add'       : 'c_addBookmark'
+  'a'             : 'c_addBookmark'
+  'add'           : 'c_addBookmark'
 
-  's'         : 'c_storeTag'
-  'sTag'      : 'c_storeTag'
+  'am'            : 'c_addMultipleBookmark'
+  'addMultiple'   : 'c_addMultipleBookmark'
+
+  'aa'            : 'c_addAllBookmark'
+  'addAll'        : 'c_addAllBookmark'
+
+  's'             : 'c_storeTag'
+  'sTag'          : 'c_storeTag'
 
 # Command is entered and then executed
 # If additional user-input is needed, enter specialMode
@@ -284,24 +250,55 @@ CommandAction =
       specialMode: 'addBookmark'
       input: ''
 
-    Listener.setListener 'a_queryTab', (message) =>
-      tab = message.tabArray[0]
-      node =
+    Listener.setOneTimeListener 'a_queryTab', (message) =>
+      nodeArray = _.map message.tabArray, (tab) ->
         title: tab.title
-        # This property is specifically added for this operation
-        # Doesn't exist in normal nodes
         url: tab.url
 
-      @setState
-        nodeArray: [node]
-
-      Listener.removeListener('a_queryTab')
+      @setState { nodeArray }
 
     Message.postMessage
       request: 'queryTab'
       queryInfo:
         active: yes
         currentWindow: yes
+
+  addMultipleBookmark: ->
+    @setState
+      specialMode: 'addMultipleBookmark'
+      input: ''
+
+    Listener.setOneTimeListener 'a_queryTab', (message) =>
+      # check whether url startsWith 'chrome'
+      # if so, discard those tabs since users won't bookmark them
+      filteredTabArray = _.filter message.tabArray, (tab) ->
+        tab.url.lastIndexOf('chrome', 0) isnt 0
+
+      console.log filteredTabArray
+      groupResult = _.indexBy(filteredTabArray, 'currentWindow')
+      currentWindowGroup = groupResult.true
+      otherWindowGroup = groupResult.false
+
+      console.log currentWindowGroup
+      console.log otherWindowGroup
+
+      nodeArray = _.map tabArray, (tab) ->
+        title: tab.title
+        url: tab.url
+
+      _.forEach nodeArray, (node) ->
+        console.log node.url
+
+      @setState { nodeArray }
+
+    Message.postMessage
+      request: 'queryTab'
+      queryInfo: {}
+
+  addAllBookmark: ->
+    @setState
+      specialMode: 'addAllBookmark'
+      input: ''
 
   storeTag: ->
     Message.postMessage
@@ -316,7 +313,12 @@ SpecialAction =
     @callAction('reset')
 
   abort: ->
-    @setState { specialMode: 'no' }
+    @setState
+      input: ''
+
+      specialMode: 'no'
+
+      pendingTagArray: []
 
   # ------------------------------------------------------------
 
@@ -345,7 +347,3 @@ SpecialAction =
       tagArray: node.tagArray
 
     @callAction('c_storeTag')
-
-
-
-

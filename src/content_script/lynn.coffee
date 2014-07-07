@@ -65,48 +65,26 @@ Mid = React.createClass
     start = @props.currentPageIndex * @props.MAX_SUGGESTION_NUM
     end = Math.min(@props.nodeArray.length, start + @props.MAX_SUGGESTION_NUM)
 
-    if @props.mode is 'query'
-      div { id: 'lynn_mid' },
-        _.map @props.nodeArray[start...end], (node, index) =>
-          # live tagging when adding tags
-          pendingTagArray = []
-          if @props.specialMode is 'tag'
-            if _.isEmpty(@props.selectedArray)
-              if index is @props.currentNodeIndex
-                pendingTagArray = @props.pendingTagArray
-            else
-              if _.contains(@props.selectedArray, start + index)
-                pendingTagArray = @props.pendingTagArray
+    div { id: 'lynn_mid' },
+      _.map @props.nodeArray[start...end], (node, index) =>
+        # live tagging when adding tags
+        pendingTagArray = []
+        if @props.specialMode is 'tag'
+          if _.isEmpty(@props.selectedArray)
+            if index is @props.currentNodeIndex
+              pendingTagArray = @props.pendingTagArray
+          else
+            if _.contains(@props.selectedArray, start + index)
+              pendingTagArray = @props.pendingTagArray
 
-          Suggestion
-            key: node.id
+        Suggestion
+          key: node.id
 
-            node: node
-            isCurrent: index is @props.currentNodeIndex
-            isSelected: false
+          node: node
+          isCurrent: index is @props.currentNodeIndex
+          isSelected: _.contains(@props.selectedArray, start + index)
 
-            pendingTagArray: pendingTagArray
-    else
-      div { id: 'lynn_mid' },
-        _.map @props.nodeArray[start...end], (node, index) =>
-          # live tagging when adding tags
-          pendingTagArray = []
-          if @props.specialMode is 'tag'
-            if _.isEmpty(@props.selectedArray)
-              if index is @props.currentNodeIndex
-                pendingTagArray = @props.pendingTagArray
-            else
-              if _.contains(@props.selectedArray, start + index)
-                pendingTagArray = @props.pendingTagArray
-
-          Suggestion
-            key: node.id
-
-            node: node
-            isCurrent: index is @props.currentNodeIndex
-            isSelected: _.contains(@props.selectedArray, start + index)
-
-            pendingTagArray: pendingTagArray
+          pendingTagArray: pendingTagArray
 
 
 Suggestion = React.createClass
@@ -135,6 +113,8 @@ Bot = React.createClass
     specialModeStringMap =
       'tag': 'Tag'
       'addBookmark': 'Add Bookmark'
+      'addMultipleBookmark': 'Add multiple Bookmark'
+      'addAllBookmark': 'Add all bookmark'
 
     infoString = @props.nodeArray.length + ' result'
     infoString += 's' if @props.nodeArray.length > 1
@@ -182,9 +162,8 @@ Lynn = React.createClass
       selectedArray: []
 
   componentWillMount: ->
-    # listen to search callback
-    Message.addListener (message) =>
-      if message.response and message.response is 'search'
+    Listener.setListener 'search', (message) =>
+      if message.response is 'search'
         @setState nodeArray: message.result
 
     # keydown events
@@ -252,9 +231,11 @@ Lynn = React.createClass
     input = event.target.value
 
     handler = Handler.matchHandler(@state.mode, @state.specialMode)
-    handler.call(@, event)
+    if handler
+      handler.call(@, event)
 
   # ------------------------------------------------------------
+  # helper functions for getting data
 
   getCurrentNodeIndex: ->
     @state.currentPageIndex * @state.MAX_SUGGESTION_NUM +
@@ -263,8 +244,18 @@ Lynn = React.createClass
   getCurrentNode: ->
     @state.nodeArray[@getCurrentNodeIndex()]
 
-  callAction: (actionName) ->
-    Action.matchAction(actionName).call(@)
+  getNodeIndexStart: ->
+    @state.currentPageIndex * @state.MAX_SUGGESTION_NUM
+
+  getNodeIndexEnd: ->
+    start = @getNodeIndexStart()
+    Math.min(@state.nodeArray.length, start + @state.MAX_SUGGESTION_NUM)
+
+  # ------------------------------------------------------------
+  # helping functions for setting states
+
+  callAction: (actionName, params) ->
+    Action.matchAction(actionName).apply(@, params)
 
   setDeepState: (state) ->
     _.forEach state, (val, key) =>

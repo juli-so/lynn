@@ -34,8 +34,6 @@ Action =
           url: node.url
           active: message.option.active
 
-    { response: 'open' }
-
   openInNewWindow: (message) ->
     if message.node
       url = message.node.url
@@ -45,8 +43,6 @@ Action =
     chrome.windows.create
       url: url
       incognito: message.option.incognito
-
-    { response: 'openInNewWindow' }
 
   # ------------------------------------------------------------
 
@@ -63,16 +59,8 @@ Action =
 
     Bookmark.storeTag()
 
-    { response: 'addTag' }
-
-
-  storeTag: (message, port) ->
+  storeTag: (message) ->
     Bookmark.storeTag()
-
-    port.postMessage
-      response: 'a_storeTag'
-
-    { response: 'storeTag' }
 
   # ------------------------------------------------------------
 
@@ -82,14 +70,9 @@ Action =
         response: 'a_queryTab'
         tabArray: tabArray
 
-    { response: 'queryTab' }
-
   # ------------------------------------------------------------
   # Bookmark Operation
   # ------------------------------------------------------------
 
   addBookmark: (message) ->
     Bookmark.create(message.bookmark, message.tagArray)
-
-    { response: 'addBookmark' }
-

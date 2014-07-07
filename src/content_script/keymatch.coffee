@@ -112,6 +112,9 @@ KeyMatch =
       when 'downArrow'   then 'down'
       when 'c-j'         then 'down'
 
+      when 'c-h'         then 'f_select'
+      when 'c-l'         then 'f_unselect'
+
       when 'pageUp'      then 'pageUp'
       when 'c-u'         then 'pageUp'
       when 'pageDown'    then 'pageDown'
@@ -128,23 +131,23 @@ KeyMatch =
 
   matchInQueryMode: (keyString) ->
     switch keyString
-      when 'enter'       then 'q_open'
-      when 'c-enter'     then 'q_openInBackground'
-      when 's-enter'     then 'q_openInNewWindow'
-      when 'c-s-enter'   then 'q_openInNewIncognitoWindow'
+      when 'enter'       then 'open'
+      when 'c-enter'     then 'openInBackground'
+      when 's-enter'     then 'openInNewWindow'
+      when 'c-s-enter'   then 'openInNewIncognitoWindow'
 
       else 'noop'
 
   matchInFastMode: (keyString) ->
     switch keyString
-      when 'enter'       then 'f_open'
-      when 'o'           then 'f_open'
-      when 'c-enter'     then 'f_openInBackground'
-      when 'c-o'         then 'f_openInBackground'
-      when 's-enter'     then 'f_openInNewWindow'
-      when 's-o'         then 'f_openInNewWindow'
-      when 'c-s-enter'   then 'f_openInNewIncognitoWindow'
-      when 'c-s-o'       then 'f_openInNewIncognitoWindow'
+      when 'enter'       then 'open'
+      when 'o'           then 'open'
+      when 'c-enter'     then 'openInBackground'
+      when 'c-o'         then 'openInBackground'
+      when 's-enter'     then 'openInNewWindow'
+      when 's-o'         then 'openInNewWindow'
+      when 'c-s-enter'   then 'openInNewIncognitoWindow'
+      when 'c-s-o'       then 'openInNewIncognitoWindow'
 
       when 'k'           then 'up'
       when 'j'           then 'down'
@@ -155,7 +158,9 @@ KeyMatch =
       when 'l'           then 'f_unselect'
 
       when 'a'           then 'f_selectAllInCurrentPage'
-      when 's-a'         then 'f_selectAll'
+      when 'c-a'         then 'f_selectAll'
+      when 's-a'         then 'f_unselectAllInCurrentPage'
+      when 'c-s-a'       then 'f_unselectAll'
 
       when 't'           then 'f_tag'
 

@@ -1,8 +1,8 @@
 /* lynn */
 
-#lynn p, 
-#lynn div, 
-#lynn span, 
+#lynn p,
+#lynn div,
+#lynn span,
 #lynn input {
   box-sizing: border-box;
 }
@@ -63,7 +63,7 @@
 #lynn_top .lynn_console_status_icon {
   display: inline-block;
   text-align: center;
-  
+
   width: 60px;
   height: 50px;
 
