@@ -254,6 +254,9 @@ Lynn = React.createClass
     start = @getNodeIndexStart()
     Math.min(@state.nodeArray.length, start + @state.MAX_SUGGESTION_NUM)
 
+  getCurrentPageNodeArray: ->
+    @state.nodeArray[@getNodeIndexStart()...@getNodeIndexEnd()]
+
   # ------------------------------------------------------------
   # helping functions for setting states
 

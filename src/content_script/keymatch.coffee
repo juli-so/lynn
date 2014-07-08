@@ -157,10 +157,11 @@ KeyMatch =
       when 'rightArrow'  then 'f_unselect'
       when 'l'           then 'f_unselect'
 
-      when 'a'           then 'f_selectAllInCurrentPage'
-      when 'c-a'         then 'f_selectAll'
-      when 's-a'         then 'f_unselectAllInCurrentPage'
-      when 'c-s-a'       then 'f_unselectAll'
+      when 'a'           then 'f_toggleAllSelectionInCurrentPage'
+      when 's-a'         then 'f_toggleAll'
+
+      when 'u'           then 'pageUp'
+      when 'd'           then 'pageDown'
 
       when 't'           then 'f_tag'
 

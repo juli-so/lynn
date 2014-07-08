@@ -152,9 +152,7 @@ CommonAction =
   # ------------------------------------------------------------
 
   test: ->
-    @setDeepState
-      cache:
-        input: 'ha'
+    console.log @getCurrentPageNodeArray()
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------
@@ -175,6 +173,8 @@ FastAction =
       selectedArray = _.without(@state.selectedArray, @getCurrentNodeIndex())
       @setState { selectedArray }
 
+  # ------------------------------------------------------------
+
   selectAllInCurrentPage: ->
     newlySelected = [@getNodeIndexStart()...@getNodeIndexEnd()]
     selectedArray = _.union(@state.selectedArray, newlySelected)
@@ -190,6 +190,20 @@ FastAction =
 
   unselectAll: ->
     @setState { selectedArray: [] }
+
+  toggleAllSelectionInCurrentPage: ->
+    currentPageNodeIndexArray = []
+    if _.every([@getNodeIndexStart()...@getNodeIndexEnd()],
+        (index) => _.contains(@state.selectedArray, index))
+      @callAction('f_unselectAllInCurrentPage')
+    else
+      @callAction('f_selectAllInCurrentPage')
+
+  toggleAll: ->
+    if @state.selectedArray.length is @state.nodeArray.length
+      @callAction('f_unselectAll')
+    else
+      @callAction('f_selectAll')
 
   # ------------------------------------------------------------
 
