@@ -65,10 +65,9 @@ Action =
   # ------------------------------------------------------------
 
   queryTab: (message, port) ->
-    chrome.tabs.query message.queryInfo, (tabArray) ->
-      port.postMessage
-        response: 'a_queryTab'
-        tabArray: tabArray
+    response: 'queryTab'
+    tabArray: Tab.tabArray
+    current: Tab.current
 
   # ------------------------------------------------------------
   # Bookmark Operation

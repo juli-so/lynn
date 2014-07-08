@@ -1,13 +1,14 @@
-Handler =
-  matchHandler: (mode, specialMode) ->
-    if specialMode is 'no'
-      InputHandler[mode]
-    else
-      InputHandler['s_' + specialMode]
-
 # For all following methods
 # When they get called, their @ refer to Lynn
 InputHandler =
+  matchHandler: (mode, specialMode) ->
+    if specialMode is 'no'
+      @[mode]
+    else
+      @['s_' + specialMode]
+
+  # ------------------------------------------------------------
+
   query: (event) ->
     input = event.target.value
     if input[-1..] is ':'
@@ -34,6 +35,8 @@ InputHandler =
     input = event.target.value
     @setState { input: input }
 
+  # ------------------------------------------------------------
+
   s_tag: (event) ->
     input = event.target.value
     tagArray = _.filter input.split(' '), (token) ->
@@ -51,5 +54,20 @@ InputHandler =
     # make the current tags in input field shown on node
     nodeArray = @state.nodeArray
     nodeArray[0].tagArray = tagArray
+
+    @setState { nodeArray, input }
+
+  s_addMultipleBookmark: ->
+    input = event.target.value
+    tagArray = _.filter input.split(' '), (token) ->
+      Util.isTag(token)
+
+    # make the current tags in input field shown on node
+    nodeArray = @state.nodeArray
+    if _.isEmpty(@state.selectedArray)
+      nodeArray[@getCurrentNodeIndex()].tagArray = tagArray
+    else
+      _.forEach @state.selectedArray, (selectedIndex) ->
+        nodeArray[selectedIndex].tagArray = tagArray
 
     @setState { nodeArray, input }

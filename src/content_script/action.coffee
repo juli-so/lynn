@@ -132,7 +132,7 @@ CommonAction =
     if _.isEmpty(@state.selectedArray)
       message['node'] = @getCurrentNode()
     else
-      message['nodeArray'] = _.at(@state.nodeArray, @state.selectedArray)
+      message['nodeArray'] = @getSelectedNodeArray()
 
     Message.postMessage(message)
     if needHide then @callAction('hide')
@@ -229,7 +229,7 @@ CommandAction =
     command = @state.input.split(' ')[0][1..]
     actionName = CommandMap[command]
 
-    @callAction(actionName)
+    @callAction(actionName) if actionName
 
   # ------------------------------------------------------------
 
@@ -245,17 +245,20 @@ CommandAction =
 
     @callAction('hide')
 
+  # ------------------------------------------------------------
+
   addBookmark: ->
     @setState
       specialMode: 'addBookmark'
       input: ''
 
-    Listener.setOneTimeListener 'a_queryTab', (message) =>
-      nodeArray = _.map message.tabArray, (tab) ->
-        title: tab.title
-        url: tab.url
+    Listener.setOneTimeListener 'queryTab', (message) =>
+      node =
+        title: message.current.title
+        url: message.current.url
+        tagArray: []
 
-      @setState { nodeArray }
+      @setState { nodeArray: [node] }
 
     Message.postMessage
       request: 'queryTab'
@@ -268,26 +271,11 @@ CommandAction =
       specialMode: 'addMultipleBookmark'
       input: ''
 
-    Listener.setOneTimeListener 'a_queryTab', (message) =>
-      # check whether url startsWith 'chrome'
-      # if so, discard those tabs since users won't bookmark them
-      filteredTabArray = _.filter message.tabArray, (tab) ->
-        tab.url.lastIndexOf('chrome', 0) isnt 0
-
-      console.log filteredTabArray
-      groupResult = _.indexBy(filteredTabArray, 'currentWindow')
-      currentWindowGroup = groupResult.true
-      otherWindowGroup = groupResult.false
-
-      console.log currentWindowGroup
-      console.log otherWindowGroup
-
-      nodeArray = _.map tabArray, (tab) ->
+    Listener.setOneTimeListener 'queryTab', (message) =>
+      nodeArray = _.map message.tabArray, (tab) ->
         title: tab.title
         url: tab.url
-
-      _.forEach nodeArray, (node) ->
-        console.log node.url
+        tagArray: []
 
       @setState { nodeArray }
 
@@ -299,6 +287,8 @@ CommandAction =
     @setState
       specialMode: 'addAllBookmark'
       input: ''
+
+  # ------------------------------------------------------------
 
   storeTag: ->
     Message.postMessage
@@ -318,6 +308,9 @@ SpecialAction =
 
       specialMode: 'no'
 
+      nodeArray: []
+      selectedArray: []
+      
       pendingTagArray: []
 
   # ------------------------------------------------------------
@@ -331,7 +324,7 @@ SpecialAction =
     else
       Message.postMessage
         request: 'addTag'
-        nodeArray: _.at(@state.nodeArray, @state.selectedArray)
+        nodeArray: @getSelectedNodeArray()
         tagArray: @state.pendingTagArray
     @setState
       input: ''
@@ -345,5 +338,26 @@ SpecialAction =
         title: node.title
         url: node.url
       tagArray: node.tagArray
+
+    @callAction('c_storeTag')
+
+  addMultipleBookmark: ->
+    if _.isEmpty(@state.selectedArray)
+      node = @getCurrentNode()
+      Message.postMessage
+        request: 'addBookmark'
+        bookmark:
+          title: node.title
+          url: node.url
+        tagArray: node.tagArray
+    else
+      _.forEach @getSelectedNodeArray(), (node) ->
+        console.log node
+        Message.postMessage
+          request: 'addBookmark'
+          bookmark:
+            title: node.title
+            url: node.url
+          tagArray: node.tagArray
 
     @callAction('c_storeTag')

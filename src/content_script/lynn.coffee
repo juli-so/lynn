@@ -230,7 +230,7 @@ Lynn = React.createClass
   onConsoleChange: (event) ->
     input = event.target.value
 
-    handler = Handler.matchHandler(@state.mode, @state.specialMode)
+    handler = InputHandler.matchHandler(@state.mode, @state.specialMode)
     if handler
       handler.call(@, event)
 
@@ -243,6 +243,9 @@ Lynn = React.createClass
 
   getCurrentNode: ->
     @state.nodeArray[@getCurrentNodeIndex()]
+
+  getSelectedNodeArray: ->
+    _.at(@state.nodeArray, @state.selectedArray)
 
   getNodeIndexStart: ->
     @state.currentPageIndex * @state.MAX_SUGGESTION_NUM
