@@ -218,6 +218,7 @@ FastAction =
 # Map command to command actions
 CommandMap =
   '1'             : 'c_one'
+  'news'          : 'c_news'
 
   'a'             : 'c_addBookmark'
   'am'            : 'c_addMultipleBookmark'
@@ -246,6 +247,18 @@ CommandAction =
       nodeArray: [
         { url: 'http://www.google.com' },
         { url: 'http://lodash.com/docs' }
+      ]
+      option:
+        active: no
+
+    @callAction('hide')
+
+  news: ->
+    Message.postMessage
+      request: 'open'
+      nodeArray: [
+        { url: 'http://news.ycombinator.com' },
+        { url: 'http://news.layervault.com' }
       ]
       option:
         active: no

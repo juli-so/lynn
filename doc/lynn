@@ -1,0 +1,67 @@
+Top
+- props
+    * input
+
+    * mode
+
+    * onConsoleChange
+
+Mid
+- props
+    # Options
+    * MAX_SUGGESTION_NUM
+
+    * mode
+
+    * nodeArray
+    * selectedArray
+
+    * currentPageIndex
+    * currentNodeIndex
+
+    * pendingTagArray
+
+Suggestion
+- props
+    * node
+
+    * isCurrent
+    * isSelected
+
+    * pendingTagArray
+
+Bot
+- props
+    * mode
+    * specialMode
+
+    * nodeArray
+    * selectedArray
+
+    * currentPageIndex
+
+
+Lynn
+- state
+    # Options
+    * MAX_SUGGESTION_NUM
+
+    * visible
+    * input
+
+    * mode
+    * specialMode
+
+    * nodeArray
+    * selectedArray
+
+    * currentPageIndex
+    * currentNodeIndex
+
+    * onConsoleChange
+
+    * pendingTagArray
+
+    * cache
+        - input
+        - selectedArray
