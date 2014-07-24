@@ -219,19 +219,12 @@ FastAction =
 CommandMap =
   '1'             : 'c_one'
 
-  'tag'           : 'c_tag'
-
   'a'             : 'c_addBookmark'
-  'add'           : 'c_addBookmark'
-
   'am'            : 'c_addMultipleBookmark'
-  'addMultiple'   : 'c_addMultipleBookmark'
-
-  'aa'            : 'c_addAllBookmark'
-  'addAll'        : 'c_addAllBookmark'
+  'aa'            : 'c_addAllCurrentPageBookmark'
+  'aA'            : 'c_addAllBookmark'
 
   's'             : 'c_storeTag'
-  'sTag'          : 'c_storeTag'
 
 # Command is entered and then executed
 # If additional user-input is needed, enter specialMode
@@ -297,10 +290,16 @@ CommandAction =
       request: 'queryTab'
       queryInfo: {}
 
+  addAllCurrentPageBookmark: ->
+    @setState
+      specialMode: 'addAllCurrentPageBookmark'
+      input: ''
+
   addAllBookmark: ->
     @setState
       specialMode: 'addAllBookmark'
       input: ''
+
 
   # ------------------------------------------------------------
 

@@ -138,6 +138,9 @@
   border-top: none;
   margin: 0;
   background-color: #fff;
+
+  font-family: 'Arial';
+  color: #222;
 }
 
 #lynn_bot .lynn_bot_left {

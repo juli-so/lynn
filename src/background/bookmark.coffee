@@ -118,10 +118,15 @@ Bookmark =
   # ------------------------------------------------------------
 
   findByTag: (tag, pool = @allNode) ->
-    matchedTag = _.find Object.keys(@tagNodeArray), (t) ->
+    matchedTagArray = _.filter Object.keys(@tagNodeArray), (t) ->
       t.toLowerCase() is tag.toLowerCase()
 
-    idList = @tagNodeArray[matchedTag]
+    idList = _(matchedTagArray)
+               .map((matchedTag) => @tagNodeArray[matchedTag])
+               .flatten()
+               .uniq()
+               .value()
+
     _.compact(_.at(pool, idList))
 
   # find node that has ALL the tags in tagArray
@@ -242,6 +247,8 @@ Bookmark =
       result.tagArray = @nodeTagArray[result.id] = []
       _.forEach tagArray, (tag) =>
         @addTag(result, tag)
+
+      @storeTag()
     
   move: ->
   update: ->
