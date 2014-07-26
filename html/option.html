@@ -1,19 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Marniak Options</title>
+  <meta charset="utf-8" />
+  <title>Chrome Bootstrap</title>
+  <link rel="stylesheet" type="text/css" href="chrome-bootstrap.css" />
+  <script src="../vendor/js/jquery.min.js" type="text/javascript"></script>
+  <script src="../lib/option/option.js" type="text/javascript"></script>
 </head>
-<body>
-  <label>Maximum Suggestion Number
-    <br />
-    <input type="text" id="MAX_SUGGESTION_NUM" />
-  </label>
-  <button id="save">Save</button>
-  <div id="status"></div>
+<body class="chrome-bootstrap">
+  <div class="frame">
+
+    <div class="navigation">
+      <h1><a href="#">Lynn</a></h1>
+      <ul class="menu">
+        <li class="selected">
+          <a href="#ui">UI</a>
+        </li>
+        <li>
+          <a href="#searching">Searching</a>
+        </li>
+        <li>
+          <a href="#fast">Fast Action</a>
+        </li>
+        <li>
+          <a href="#commands">Commands</a>
+        </li>
+      </ul>
+      <ul class="menu">
+        <li>
+          <a href="#tutorial">Tutorial</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="mainview view">
+      <div id="ui" class="selected">
+        <header>
+          <h1>UI</h1>
+        </header>
+        <div class="content">
+          <div style="margin: 20px 0;">
+            <p>How many suggestions are shown in each page</p>
+            <input id="MAX_SUGGESTION_NUM" type="text" placeholder="0-10" />
+          </div>
+          <button id="save">Save</button>
+        </div>
+      </div>
+
+      <div id="searching">
+        <header>
+          <h1>Searching</h1>
+        </header>
+        <div class="content">
+          <div style="margin-top: 10px;">
+            <label>
+              <input type="checkbox">
+              <span>Ignore case</span>
+            </label>
+          </div>
+          <div style="margin-top: 10px;">
+            <button>Perform</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="fast">
+        <header>
+          <h1>Fast Action</h1>
+        </header>
+        <div class="content">
+
+        </div>
+      </div>
+      
+      <div id="commands">
+        <header>
+          <h1>Commands</h1>
+        </header>
+      </div>
+    </div>
 
 
-  <script src="../vendor/js/jquery.min.js"></script>
-  <script src="../lib/option/option.js"></script>
+  </div>
+
+
 </body>
+
 </html>
