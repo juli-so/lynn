@@ -22,6 +22,14 @@ Action =
   
   # ------------------------------------------------------------
 
+  getOption: (message, port) ->
+    chrome.storage.sync.get null, (storageObject) ->
+      port.postMessage
+        response: 'getOption'
+        storageObject: storageObject
+
+  # ------------------------------------------------------------
+
   # Opening bookmarks
   open: (message) ->
     if message.node
@@ -64,7 +72,7 @@ Action =
 
   # ------------------------------------------------------------
 
-  queryTab: (message, port) ->
+  queryTab: (message) ->
     response: 'queryTab'
     tabArray: Tab.tabArray
     current: Tab.current

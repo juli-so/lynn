@@ -1,5 +1,3 @@
-MAX_SUGGESTION_NUM = 8
-
 { div, span } = React.DOM
 
 ###
@@ -182,7 +180,7 @@ Lynn = React.createClass
 
     # ~ 
     # load options
-    @setState { MAX_SUGGESTION_NUM }
+    @setState { MAX_SUGGESTION_NUM: @props.storageObject['MAX_SUGGESTION_NUM'] }
 
   # ------------------------------------------------------------
 
