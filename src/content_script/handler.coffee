@@ -11,29 +11,36 @@ InputHandler =
 
   query: (event) ->
     input = event.target.value
+    @callAction('resetSearchResult')
+
     if input[-1..] is ':'
       @setDeepState
         input: ':'
         mode: 'command'
         cache:
           input: @state.input
-      return
+    else
+      @setState { input }
 
-    @setState
-      input: input
-      currentNodeIndex: 0
-      currentPageIndex: 0
-      selectedArray: []
-
-    Message.postMessage
-      request: 'search'
-      input: event.target.value
+      Message.postMessage
+        request: 'search'
+        input: input
 
   fast: (event) ->
 
   command: (event) ->
     input = event.target.value
-    @setState { input: input }
+    if input is '' or input[0] isnt ':'
+      @callAction('resetSearchResult')
+      @setState
+        input: input
+        mode: 'query'
+
+      Message.postMessage
+        request: 'search'
+        input: input
+    else
+      @setState { input }
 
   # ------------------------------------------------------------
 

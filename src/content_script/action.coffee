@@ -60,6 +60,14 @@ CommonAction =
         input: ''
         pendingTagArray: []
 
+  resetSearchResult: ->
+    @setState
+      nodeArray: []
+      selectedArray: []
+
+      currentNodeIndex: 0
+      currentPageIndex: 0
+
   # ------------------------------------------------------------
 
   up: ->
@@ -101,7 +109,7 @@ CommonAction =
         cache:
           input: @state.input
     else
-      @setState
+      @setDeepState
         mode: 'query'
         input: @state.cache.input
         cache:
@@ -117,7 +125,7 @@ CommonAction =
         cache:
           input: ''
     else
-      @setState
+      @setDeepState
         mode: 'command'
         input: ':'
         cache:
