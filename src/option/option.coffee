@@ -1,6 +1,5 @@
 save = ->
-  MAX_SUGGESTION_NUM = $('#MAX_SUGGESTION_NUM').val()
-  console.log MAX_SUGGESTION_NUM
+  MAX_SUGGESTION_NUM = parseInt($('#MAX_SUGGESTION_NUM').val(), 10)
   chrome.storage.sync.set {MAX_SUGGESTION_NUM}
 
 $(->

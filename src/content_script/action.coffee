@@ -66,6 +66,7 @@ CommonAction =
     currentNodeIndex = \
       (@state.currentNodeIndex + @state.MAX_SUGGESTION_NUM - 1) %
         @state.MAX_SUGGESTION_NUM
+    console.log @state.currentNodeIndex, currentNodeIndex, @state.MAX_SUGGESTION_NUM
     @setState { currentNodeIndex }
 
   down: ->
