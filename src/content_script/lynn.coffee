@@ -25,12 +25,20 @@ Top = React.createClass
   render: ->
     { input } = React.DOM
 
-    if @props.mode is 'command'
-      inputPlaceHolder = 'Your command...'
-    else if @props.mode is 'fast'
-      inputPlaceHolder = 'Invoke fast command!'
+    if @props.specialMode
+      inputPlaceHolderMap =
+        'tag'                        : 'Enter your tag here'
+        'addBookmark'                : 'Enter your tag here'
+        'addMultipleBookmark'        : 'Enter your tag here'
+        'addAllCurrentWindowBookmark': 'Enter your tag here'
+        'addAllWindowBookmark'       : 'Enter your tag here'
+
+      inputPlaceHolder = inputPlaceHolderMap[@props.specialMode]
     else
-      inputPlaceHolder = 'Search for...'
+      inputPlaceHolder = switch @props.mode
+        when 'query' then 'Search for...'
+        when 'fast' then 'Invoke fast command!'
+        when 'command' then 'Your command...'
 
     div { id: 'lynn_top' },
       input
@@ -109,10 +117,12 @@ Bot = React.createClass
       'Six', 'Seven', 'Eight', 'Nine', 'Ten']
 
     specialModeStringMap =
-      'tag': 'Tag'
-      'addBookmark': 'Add Bookmark'
-      'addMultipleBookmark': 'Add multiple Bookmark'
-      'addAllBookmark': 'Add all bookmark'
+      'tag'                        : 'Tag'
+      'addBookmark'                : 'Add Bookmark'
+      'addMultipleBookmark'        : 'Add multiple Bookmark'
+      'addAllCurrentWindowBookmark': 'Add all tabs in current window 
+                                      as Bookmark'
+      'addAllWindowBookmark'       : 'Add all open tabs as Bookmark'
 
     infoString = @props.nodeArray.length + ' result'
     infoString += 's' if @props.nodeArray.length > 1
@@ -196,7 +206,9 @@ Lynn = React.createClass
         visible: @state.visible
 
         input: @state.input
+
         mode: @state.mode
+        specialMode: @state.specialMode
 
         onConsoleChange: @onConsoleChange
 
@@ -260,6 +272,9 @@ Lynn = React.createClass
 
   callAction: (actionName, params) ->
     Action.matchAction(actionName).apply(@, params)
+
+  callHandlerHelper: (helperName, event) ->
+    InputHandler[helperName].call(@, event)
 
   setDeepState: (state) ->
     _.forEach state, (val, key) =>

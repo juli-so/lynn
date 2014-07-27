@@ -133,7 +133,7 @@ CommonAction =
 
   # ------------------------------------------------------------
   
-  _openHelper: (option, newWindow, needHide) ->
+  openHelper: (option, newWindow, needHide) ->
     message =
       request: if newWindow then 'openInNewWindow' else 'open'
       option: option
@@ -147,16 +147,16 @@ CommonAction =
     if needHide then @callAction('hide')
 
   open: ->
-    @callAction('_openHelper', [{ active:    yes }, no , yes])
+    @callAction('openHelper', [{ active:    yes }, no , yes])
 
   openInBackground: ->
-    @callAction('_openHelper', [{ active:    no  }, no , no ])
+    @callAction('openHelper', [{ active:    no  }, no , no ])
 
   openInNewWindow: ->
-    @callAction('_openHelper', [{ incognito: no  }, yes, yes])
+    @callAction('openHelper', [{ incognito: no  }, yes, yes])
 
   openInNewIncognitoWindow: ->
-    @callAction('_openHelper', [{ incognito: yes }, yes, yes])
+    @callAction('openHelper', [{ incognito: yes }, yes, yes])
 
   # ------------------------------------------------------------
 
@@ -231,8 +231,8 @@ CommandMap =
 
   'a'             : 'c_addBookmark'
   'am'            : 'c_addMultipleBookmark'
-  'aa'            : 'c_addAllCurrentPageBookmark'
-  'aA'            : 'c_addAllBookmark'
+  'aa'            : 'c_addAllCurrentWindowBookmark'
+  'aA'            : 'c_addAllWindowBookmark'
 
   's'             : 'c_storeTag'
 
@@ -289,11 +289,7 @@ CommandAction =
 
       @setState { nodeArray: [node] }
 
-    Message.postMessage
-      request: 'queryTab'
-      queryInfo:
-        active: yes
-        currentWindow: yes
+    Message.postMessage { request: 'queryTab' }
 
   addMultipleBookmark: ->
     @setState
@@ -308,20 +304,39 @@ CommandAction =
 
       @setState { nodeArray }
 
-    Message.postMessage
-      request: 'queryTab'
-      queryInfo: {}
+    Message.postMessage { request: 'queryTab' }
 
-  addAllCurrentPageBookmark: ->
+  addAllCurrentWindowBookmark: ->
     @setState
-      specialMode: 'addAllCurrentPageBookmark'
+      specialMode: 'addAllCurrentWindowBookmark'
       input: ''
 
-  addAllBookmark: ->
+    Listener.setOneTimeListener 'queryTab', (message) =>
+      currentWindowTabArray = _.filter message.tabArray, (tab) ->
+        tab.windowId is message.current.windowId
+      nodeArray = _.map currentWindowTabArray, (tab) ->
+        title: tab.title
+        url: tab.url
+        tagArray: []
+
+      @setState { nodeArray }
+
+    Message.postMessage { request: 'queryTab' }
+
+  addAllWindowBookmark: ->
     @setState
-      specialMode: 'addAllBookmark'
+      specialMode: 'addAllWindowBookmark'
       input: ''
 
+    Listener.setOneTimeListener 'queryTab', (message) =>
+      nodeArray = _.map message.tabArray, (tab) ->
+        title: tab.title
+        url: tab.url
+        tagArray: []
+
+      @setState { nodeArray }
+
+    Message.postMessage { request: 'queryTab' }
 
   # ------------------------------------------------------------
 
@@ -365,18 +380,9 @@ SpecialAction =
       input: ''
       pendingTagArray: []
     
-  addBookmark: ->
-    node = @state.nodeArray[0]
-    Message.postMessage
-      request: 'addBookmark'
-      bookmark:
-        title: node.title
-        url: node.url
-      tagArray: node.tagArray
+  # ------------------------------------------------------------
 
-    @callAction('c_storeTag')
-
-  addMultipleBookmark: ->
+  addBookmarkHelper: ->
     if _.isEmpty(@state.selectedArray)
       node = @getCurrentNode()
       Message.postMessage
@@ -387,7 +393,6 @@ SpecialAction =
         tagArray: node.tagArray
     else
       _.forEach @getSelectedNodeArray(), (node) ->
-        console.log node
         Message.postMessage
           request: 'addBookmark'
           bookmark:
@@ -396,3 +401,15 @@ SpecialAction =
           tagArray: node.tagArray
 
     @callAction('c_storeTag')
+
+  addBookmark: ->
+    @callAction('s_addBookmarkHelper')
+
+  addMultipleBookmark: ->
+    @callAction('s_addBookmarkHelper')
+
+  addAllCurrentWindowBookmark: ->
+    @callAction('s_addBookmarkHelper')
+
+  addAllWindowBookmark: ->
+    @callAction('s_addBookmarkHelper')

@@ -53,18 +53,9 @@ InputHandler =
       pendingTagArray: tagArray
       input: input
 
-  s_addBookmark: (event) ->
-    input = event.target.value
-    tagArray = _.filter input.split(' '), (token) ->
-      Util.isTag(token)
+  # ------------------------------------------------------------
 
-    # make the current tags in input field shown on node
-    nodeArray = @state.nodeArray
-    nodeArray[0].tagArray = tagArray
-
-    @setState { nodeArray, input }
-
-  s_addMultipleBookmark: ->
+  addBookmarkHelper: (event) ->
     input = event.target.value
     tagArray = _.filter input.split(' '), (token) ->
       Util.isTag(token)
@@ -78,3 +69,19 @@ InputHandler =
         nodeArray[selectedIndex].tagArray = tagArray
 
     @setState { nodeArray, input }
+
+  s_addBookmark: (event) ->
+    @callHandlerHelper('addBookmarkHelper', event)
+
+  s_addMultipleBookmark: (event) ->
+    @callHandlerHelper('addBookmarkHelper', event)
+
+  s_addAllCurrentWindowBookmark: ->
+    @setState { selectedArray: [0...@state.nodeArray.length] }
+    @callHandlerHelper('addBookmarkHelper', event)
+
+  s_addAllWindowBookmark: ->
+    @setState { selectedArray: [0...@state.nodeArray.length] }
+    @callHandlerHelper('addBookmarkHelper', event)
+
+  # ------------------------------------------------------------
