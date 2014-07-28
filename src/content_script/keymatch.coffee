@@ -86,7 +86,7 @@ KeyMatch =
   match: (event, mode, specialMode) ->
     keyString = @getKeyString(event)
     # for debugging
-    if keyString is 'c-l'
+    if keyString is 'c-p'
       return 'print'
 
     if specialMode isnt 'no'
