@@ -68,11 +68,11 @@ Top = React.createClass
 
 Mid = React.createClass
   render: ->
-    start = @props.currentPageIndex * @props.MAX_SUGGESTION_NUM
-    end = Math.min(@props.nodeArray.length, start + @props.MAX_SUGGESTION_NUM)
+    #start = @props.currentPageIndex * @props.MAX_SUGGESTION_NUM
+    #end = Math.min(@props.nodeArray.length, start + @props.MAX_SUGGESTION_NUM)
 
     div { id: 'lynn_mid' },
-      _.map @props.nodeArray[start...end], (node, index) =>
+      _.map @props.nodeArray[@props.start...@props.end], (node, index) =>
         # live tagging when adding tags
         pendingTagArray = []
         if @props.specialMode is 'tag'
@@ -80,7 +80,7 @@ Mid = React.createClass
             if index is @props.currentNodeIndex
               pendingTagArray = @props.pendingTagArray
           else
-            if _.contains(@props.selectedArray, start + index)
+            if _.contains(@props.selectedArray, @props.start + index)
               pendingTagArray = @props.pendingTagArray
 
         Suggestion
@@ -88,7 +88,7 @@ Mid = React.createClass
 
           node: node
           isCurrent: index is @props.currentNodeIndex
-          isSelected: _.contains(@props.selectedArray, start + index)
+          isSelected: _.contains(@props.selectedArray, @props.start + index)
 
           pendingTagArray: pendingTagArray
 
@@ -169,10 +169,22 @@ Lynn = React.createClass
       input: ''
       selectedArray: []
 
+    # loaded from storage
+    option:
+      MAX_SUGGESTION_NUM: 8
+
+    groupMap: {}
+
   componentWillMount: ->
     Listener.setListener 'search', (message) =>
-      if message.response is 'search'
-        @setState nodeArray: message.result
+      @setState nodeArray: message.result
+
+    Listener.setListener 'getSyncStorage', (message) =>
+      @setState
+        option: message.storageObject.option
+        groupMap: message.storageObject.groupMap
+
+    Message.postMessage { request: 'getSyncStorage' }
 
     # keydown events
     $(document).keydown (event) =>
@@ -187,10 +199,6 @@ Lynn = React.createClass
           event.preventDefault() if actionName isnt 'noop'
 
           @callAction(actionName)
-
-    # ~ 
-    # load options
-    @setState { MAX_SUGGESTION_NUM: @props.storageObject['MAX_SUGGESTION_NUM'] }
 
   # ------------------------------------------------------------
 
@@ -213,7 +221,8 @@ Lynn = React.createClass
         onConsoleChange: @onConsoleChange
 
       Mid
-        MAX_SUGGESTION_NUM: @state.MAX_SUGGESTION_NUM
+        start: @getNodeIndexStart()
+        end: @getNodeIndexEnd()
 
         mode: @state.mode
         specialMode: @state.specialMode
@@ -241,14 +250,13 @@ Lynn = React.createClass
     input = event.target.value
 
     handler = InputHandler.matchHandler(@state.mode, @state.specialMode)
-    if handler
-      handler.call(@, event)
+    handler.call(@, event) if handler
 
   # ------------------------------------------------------------
   # helper functions for getting data
 
   getCurrentNodeIndex: ->
-    @state.currentPageIndex * @state.MAX_SUGGESTION_NUM +
+    @state.currentPageIndex * @state.option.MAX_SUGGESTION_NUM +
       @state.currentNodeIndex
 
   getCurrentNode: ->
@@ -258,11 +266,11 @@ Lynn = React.createClass
     _.at(@state.nodeArray, @state.selectedArray)
 
   getNodeIndexStart: ->
-    @state.currentPageIndex * @state.MAX_SUGGESTION_NUM
+    @state.currentPageIndex * @state.option.MAX_SUGGESTION_NUM
 
   getNodeIndexEnd: ->
     start = @getNodeIndexStart()
-    Math.min(@state.nodeArray.length, start + @state.MAX_SUGGESTION_NUM)
+    Math.min(@state.nodeArray.length, start + @state.option.MAX_SUGGESTION_NUM)
 
   getCurrentPageNodeArray: ->
     @state.nodeArray[@getNodeIndexStart()...@getNodeIndexEnd()]

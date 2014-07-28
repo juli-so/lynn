@@ -22,10 +22,10 @@ Action =
   
   # ------------------------------------------------------------
 
-  getOption: (message, port) ->
+  getSyncStorage: (message, port) ->
     chrome.storage.sync.get null, (storageObject) ->
       port.postMessage
-        response: 'getOption'
+        response: 'getSyncStorage'
         storageObject: storageObject
 
   # ------------------------------------------------------------
@@ -76,6 +76,31 @@ Action =
     response: 'queryTab'
     tabArray: Tab.tabArray
     current: Tab.current
+
+  # ------------------------------------------------------------
+
+  addGroup: (message, port) ->
+    chrome.storage.sync.get 'groupMap', (storageObject) ->
+      groupMap = storageObject.groupMap
+      tabArray = _.filter Tab.tabArray, (tab) ->
+        tab.windowId is Tab.current.windowId
+      simplifiedTabArray = _.map tabArray, (tab) ->
+        title: tab.title
+        url: tab.url
+
+      groupMap[message.groupName] = simplifiedTabArray
+
+      chrome.storage.sync.set { groupMap }, ->
+        port.postMessage { response: 'addGroup' }
+
+  removeGroup: (message, port) ->
+    chrome.storage.sync.get 'groupMap', (storageObject) ->
+      groupMap = storageObject.groupMap
+      delete groupMap[message.groupName]
+      chrome.storage.sync.set { groupMap }, ->
+        port.postMessage { response: 'removeGroup' }
+  
+  # ------------------------------------------------------------
 
   # ------------------------------------------------------------
   # Bookmark Operation

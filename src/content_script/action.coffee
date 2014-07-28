@@ -18,6 +18,7 @@ CommonAction =
 
   print: ->
     console.log @state
+    console.log @props
   
   # ------------------------------------------------------------
 
@@ -72,13 +73,13 @@ CommonAction =
 
   up: ->
     currentNodeIndex = \
-      (@state.currentNodeIndex + @state.MAX_SUGGESTION_NUM - 1) %
-        @state.MAX_SUGGESTION_NUM
-    console.log @state.currentNodeIndex, currentNodeIndex, @state.MAX_SUGGESTION_NUM
+      (@state.currentNodeIndex + @state.option.MAX_SUGGESTION_NUM - 1) %
+        @state.option.MAX_SUGGESTION_NUM
     @setState { currentNodeIndex }
 
   down: ->
-    currentNodeIndex = (@state.currentNodeIndex + 1) % @state.MAX_SUGGESTION_NUM
+    currentNodeIndex = (@state.currentNodeIndex + 1) %
+      @state.option.MAX_SUGGESTION_NUM
     @setState { currentNodeIndex }
 
   # ------------------------------------------------------------
@@ -91,7 +92,7 @@ CommonAction =
 
   pageDown: ->
     currentPageLastNodeIndex =
-      (@state.currentPageIndex + 1) * @state.MAX_SUGGESTION_NUM
+      (@state.currentPageIndex + 1) * @state.option.MAX_SUGGESTION_NUM
     if currentPageLastNodeIndex < @state.nodeArray.length
       @setState
         currentPageIndex: @state.currentPageIndex + 1
@@ -234,6 +235,9 @@ CommandMap =
   'aa'            : 'c_addAllCurrentWindowBookmark'
   'aA'            : 'c_addAllWindowBookmark'
 
+  'g'             : 'c_addGroup'
+  'ug'            : 'c_removeGroup'
+
   's'             : 'c_storeTag'
 
 # Command is entered and then executed
@@ -244,9 +248,21 @@ CommandAction =
       return
 
     command = @state.input.split(' ')[0][1..]
-    actionName = CommandMap[command]
+    args = @state.input.split(' ')[1..]
 
-    @callAction(actionName) if actionName
+    if CommandMap[command]
+      @callAction(CommandMap[command], args)
+    else if @state.groupMap[command]
+      # Custom group actions
+      nodeArray = @state.groupMap[command]
+
+      Message.postMessage
+        request: 'open'
+        option:
+          active: no
+        nodeArray: nodeArray
+
+      @callAction('hide')
 
   # ------------------------------------------------------------
 
@@ -338,6 +354,28 @@ CommandAction =
 
     Message.postMessage { request: 'queryTab' }
 
+  # ------------------------------------------------------------
+
+  addGroup: (groupName) ->
+    Listener.setOneTimeListener 'addGroup', (message) ->
+      Message.postMessage { request: 'getSyncStorage' }
+
+    Message.postMessage
+      request: 'addGroup'
+      groupName: groupName
+
+    @callAction('hide')
+
+  removeGroup: (groupName) ->
+    Listener.setOneTimeListener 'removeGroup', (message) ->
+      Message.postMessage { request: 'getSyncStorage' }
+
+    Message.postMessage
+      request: 'removeGroup'
+      groupName: groupName
+
+    @callAction('hide')
+  
   # ------------------------------------------------------------
 
   storeTag: ->

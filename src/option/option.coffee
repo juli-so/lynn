@@ -1,6 +1,10 @@
 save = ->
   MAX_SUGGESTION_NUM = parseInt($('#MAX_SUGGESTION_NUM').val(), 10)
-  chrome.storage.sync.set {MAX_SUGGESTION_NUM}
+
+  chrome.storage.sync.get 'option', (storageObject) ->
+    option = storageObject.option || {}
+    option.MAX_SUGGESTION_NUM = MAX_SUGGESTION_NUM
+    chrome.storage.sync.set { option }
 
 $(->
   # UI Tab
@@ -16,8 +20,8 @@ $(->
     currentView.css('display', 'block')
     setTimeout (-> currentView.addClass('selected')), 0
 
-  chrome.storage.sync.get 'MAX_SUGGESTION_NUM', (storageObject) ->
-    $('#MAX_SUGGESTION_NUM').val(storageObject['MAX_SUGGESTION_NUM'])
+  chrome.storage.sync.get 'option', (storageObject) ->
+    $('#MAX_SUGGESTION_NUM').val(storageObject.option['MAX_SUGGESTION_NUM'])
 
   $('#save').click ->
     save()
