@@ -108,3 +108,6 @@ Action =
 
   addBookmark: (message) ->
     Bookmark.create(message.bookmark, message.tagArray)
+
+  removeBookmark: (message) ->
+    Bookmark.remove(message.id)

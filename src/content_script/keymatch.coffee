@@ -123,7 +123,9 @@ KeyMatch =
       when 'tab'         then 'nextMode'
       when 's-tab'       then 'prevMode'
 
-      when 'c-r'         then 'test'
+      when 'c-r'         then 'f_remove'
+
+      when 'c-q'         then 'test'
 
       else 'noop'
 
@@ -164,6 +166,8 @@ KeyMatch =
       when 'd'           then 'pageDown'
 
       when 't'           then 'f_tag'
+
+      when 'r'           then 'f_remove'
 
       else 'noop'
 

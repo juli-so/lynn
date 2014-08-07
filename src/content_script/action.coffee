@@ -18,7 +18,6 @@ CommonAction =
 
   print: ->
     console.log @state
-    console.log @props
   
   # ------------------------------------------------------------
 
@@ -162,7 +161,7 @@ CommonAction =
   # ------------------------------------------------------------
 
   test: ->
-    console.log @getCurrentPageNodeArray()
+    console.log @getCurrentNodeIndex()
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------
@@ -221,6 +220,38 @@ FastAction =
     @setState
       specialMode: 'tag'
       input: ''
+
+  # ------------------------------------------------------------
+
+  remove: ->
+    if @state.nodeArray.length isnt 0
+      currentNodeIndex = @getCurrentNodeIndex()
+      nodeAnimation = {}
+      nodeAnimation[currentNodeIndex] = 'fadeOutRight'
+      @setState { nodeAnimation }
+
+      timeOutFunc = =>
+        nodeArray = @state.nodeArray
+        nodeArray = _.without(nodeArray, nodeArray[currentNodeIndex])
+
+        # if the current selected node is the last one
+        # let it still point to the last node after one node is removed
+        if currentNodeIndex is nodeArray.length
+          if currentNodeIndex is 0
+            currentPageIndex = @state.currentPageIndex - 1
+            currentNodeIndex = @state.option.MAX_SUGGESTION_NUM - 1
+          else
+            currentPageIndex = @state.currentPageIndex
+            currentNodeIndex = @state.currentNodeIndex - 1
+
+        @setState
+          nodeArray: nodeArray
+          nodeAnimation: {}
+
+          currentNodeIndex: currentNodeIndex
+          currentPageIndex: currentPageIndex
+
+      setTimeout(timeOutFunc, 350)
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------
@@ -388,7 +419,7 @@ CommandAction =
 SpecialAction =
   confirm: ->
     @callAction('s_' + @state.specialMode)
-    @callAction('reset')
+    @callAction('hide')
 
   abort: ->
     @setState

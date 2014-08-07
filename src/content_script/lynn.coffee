@@ -73,6 +73,8 @@ Mid = React.createClass
 
     div { id: 'lynn_mid' },
       _.map @props.nodeArray[@props.start...@props.end], (node, index) =>
+        animation = @props.nodeAnimation[index] || 'fadeInDown'
+
         # live tagging when adding tags
         pendingTagArray = []
         if @props.specialMode is 'tag'
@@ -90,12 +92,15 @@ Mid = React.createClass
           isCurrent: index is @props.currentNodeIndex
           isSelected: _.contains(@props.selectedArray, @props.start + index)
 
+          animation: animation
+
           pendingTagArray: pendingTagArray
 
 
 Suggestion = React.createClass
   render: ->
-    className = 'lynn_suggestion animated fadeInDown'
+    className = 'lynn_suggestion animated '
+    className += @props.animation
     className += ' lynn_suggestion_current' if @props.isCurrent
     className += ' lynn_suggestion_selected' if @props.isSelected
 
@@ -156,6 +161,8 @@ Lynn = React.createClass
 
     # when 'no' animation is disabled
     animation: 'fadeInDown'
+    # nodeIndex -> animation string
+    nodeAnimation: {}
 
     nodeArray: []
     selectedArray: []
@@ -226,6 +233,8 @@ Lynn = React.createClass
 
         mode: @state.mode
         specialMode: @state.specialMode
+
+        nodeAnimation: @state.nodeAnimation
 
         nodeArray: @state.nodeArray
         selectedArray: @state.selectedArray

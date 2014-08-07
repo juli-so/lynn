@@ -242,17 +242,20 @@ Bookmark =
   create: (bookmark, tagArray) ->
     bookmark = _.assign(bookmark, { parentId: '232' })
     chrome.bookmarks.create bookmark, (result) =>
-      @allNode[result.id] = result
-
+      result.isBookmark = yes
       result.tagArray = @nodeTagArray[result.id] = []
       _.forEach tagArray, (tag) =>
         @addTag(result, tag)
 
+      @allNode[result.id] = result
       @storeTag()
     
   move: ->
   update: ->
-  remove: ->
+
+  remove: (id) ->
+    chrome.bookmarks.remove id, =>
+      delete @allNode[id]
 
   # ------------------------------------------------------------
   # Bookmark operation end

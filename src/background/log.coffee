@@ -36,14 +36,9 @@ logNodeArray = (nodeArray, property = 'all') ->
     when 'all'
       c.group('###Log all###')
       _.forEach(nodeArray, (node) ->
-        if node.isBookmark
-          c.group('Bookmark : ' + makeUniform(node.id, 4) + ' | ' + node.title)
-          c.log("%c  " + node.url, "color: darkblue")
-          logNodeTag(node, 2)
-        else
-          c.group('Directory: ' + makeUniform(node.id, 4) + ' | ' + node.title)
-          log('  ' + node.children.length + ' children')
-          logNodeTag(node, 2)
+        c.group('Bookmark : ' + makeUniform(node.id, 4) + ' | ' + node.title)
+        c.log("%c  " + node.url, "color: darkblue")
+        logNodeTag(node, 2)
         c.groupEnd()
       )
       c.groupEnd()
