@@ -89,12 +89,34 @@ Bookmark =
     else
       false
 
+  # when removing a bookmark
+  # all its tags should also be removed
+  delAssociatedTag: (node) ->
+    # in case the node is sent from front end
+    node = @allNode[node.id]
+
+    _.forEach node.tagArray, (tag) =>
+      _.pull(@tagNodeArray[tag], node.id)
+    _.remove(node.tagArray)
+
+  # remove meaningless entries in nodeTagArray and tagNodeArray
+  cleanTag: ->
+    nodeTagArrayKey = Object.keys(@nodeTagArray)
+    _.forEach nodeTagArrayKey, (key) =>
+      if not @allNode[key]
+        delete @nodeTagArray[key]
+
+    tagNodeArrayKey = Object.keys(@tagNodeArray)
+    _.forEach tagNodeArrayKey, (key) =>
+      if _.isEmpty(@tagNodeArray[key])
+        delete @tagNodeArray[key]
+
   storeTag: ->
     chrome.storage.local.set
       'nodeTagArray': @nodeTagArray
       'tagNodeArray': @tagNodeArray
 
-  cleanTag: ->
+  resetTag: ->
     chrome.storage.local.set
       'nodeTagArray': []
       'tagNodeArray': []
@@ -245,10 +267,10 @@ Bookmark =
     chrome.bookmarks.create bookmark, (result) =>
       result.isBookmark = yes
       result.tagArray = @nodeTagArray[result.id] = []
+      @allNode[result.id] = result
+
       _.forEach tagArray, (tag) =>
         @addTag(result, tag)
-
-      @allNode[result.id] = result
       @storeTag()
     
   move: ->
@@ -256,7 +278,11 @@ Bookmark =
 
   remove: (id) ->
     chrome.bookmarks.remove id, =>
+      @delAssociatedTag({ id })
       delete @allNode[id]
+
+      @cleanTag()
+      @storeTag()
 
   # ------------------------------------------------------------
   # Bookmark operation end

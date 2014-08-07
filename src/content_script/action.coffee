@@ -225,33 +225,42 @@ FastAction =
 
   remove: ->
     if @state.nodeArray.length isnt 0
-      currentNodeIndex = @getCurrentNodeIndex()
+      # index within all nodeArray, not within current page nodes
+      currentNodeFullIndex = @getCurrentNodeIndex()
       nodeAnimation = {}
-      nodeAnimation[currentNodeIndex] = 'fadeOutRight'
+      nodeAnimation[currentNodeFullIndex] = 'fadeOutRight'
       @setState { nodeAnimation }
 
       timeOutFunc = =>
         nodeArray = @state.nodeArray
-        nodeArray = _.without(nodeArray, nodeArray[currentNodeIndex])
+        nodeArray = _.without(nodeArray, nodeArray[currentNodeFullIndex])
 
         # if the current selected node is the last one
         # let it still point to the last node after one node is removed
-        if currentNodeIndex is nodeArray.length
-          if currentNodeIndex is 0
-            currentPageIndex = @state.currentPageIndex - 1
+        if currentNodeFullIndex is nodeArray.length
+          if @state.currentNodeIndex is 0
             currentNodeIndex = @state.option.MAX_SUGGESTION_NUM - 1
+            currentPageIndex = @state.currentPageIndex - 1
           else
-            currentPageIndex = @state.currentPageIndex
             currentNodeIndex = @state.currentNodeIndex - 1
+            currentPageIndex = @state.currentPageIndex
 
-        @setState
-          nodeArray: nodeArray
-          nodeAnimation: {}
+          @setState
+            nodeArray: nodeArray
+            nodeAnimation: {}
 
-          currentNodeIndex: currentNodeIndex
-          currentPageIndex: currentPageIndex
+            currentNodeIndex: currentNodeIndex
+            currentPageIndex: currentPageIndex
+        else
+          @setState
+            nodeArray: nodeArray
+            nodeAnimation: {}
 
       setTimeout(timeOutFunc, 350)
+
+      Message.postMessage
+        request: 'removeBookmark'
+        id: @getCurrentNode().id
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------
