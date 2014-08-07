@@ -205,7 +205,7 @@ Bookmark =
     # Special cases
     return [] if _.isEmpty(query)
 
-    if query is '#'
+    if query is '#' or query is '@'
       return @findByTagRange(Object.keys(@tagNodeArray))
 
     # process query and tokenize tag and keyword
@@ -225,8 +225,9 @@ Bookmark =
                             .flatten()
                             .uniq()
                             .value()
-      pool = @_toNO(@findByTagRange(suggestedTagArray))
+      return [] if _.isEmpty(suggestedTagArray)
 
+      pool = @_toNO(@findByTagRange(suggestedTagArray))
       return [] if _.isEmpty(pool)
 
     @findByTitleArray(keywordArray, no, pool)
