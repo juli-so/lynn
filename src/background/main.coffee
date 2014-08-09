@@ -6,6 +6,7 @@
 
 Tab.init()
 Message.init()
+Tag.init()
 
 Bookmark.init()
 

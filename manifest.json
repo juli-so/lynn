@@ -43,6 +43,7 @@
         "vendor/js/lodash.min.js",
 
         "lib/background/tab.js",
+        "lib/background/tag.js",
         "lib/background/action.js",
         "lib/background/message.js",
         "lib/background/bookmark.js",

@@ -105,9 +105,16 @@ Action =
   # ------------------------------------------------------------
   # Bookmark Operation
   # ------------------------------------------------------------
+  _getHostname: (url) ->
+    a = document.createElement('a')
+    a.href = url
+    a.hostname
 
   addBookmark: (message) ->
-    Bookmark.create(message.bookmark, message.tagArray)
+    hostname = @_getHostname(message.bookmark.url)
+    tagArray = Tag.autoTag(message.bookmark.title, hostname)
+    tagArray = _.uniq(tagArray.concat(message.tagArray))
+    Bookmark.create(message.bookmark, tagArray)
 
   removeBookmark: (message) ->
     Bookmark.remove(message.id)

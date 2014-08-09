@@ -20,6 +20,8 @@ Tab =
 
       if changeInfo.status or changeInfo.url
         @updateTabArray()
+      if tabId is @current.id
+        @updateCurrentTab()
 
     chrome.tabs.onRemoved.addListener (tabId) =>
       @updateCurrentTab() if tabId is @current.id
