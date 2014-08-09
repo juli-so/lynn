@@ -5,7 +5,7 @@
 ################################################################
 
 Tab.init()
+Message.init()
 
 Bookmark.init()
 
-Message.init()
