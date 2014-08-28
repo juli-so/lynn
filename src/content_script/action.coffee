@@ -306,32 +306,6 @@ CommandAction =
 
   # ------------------------------------------------------------
 
-  one: ->
-    Message.postMessage
-      request: 'open'
-      nodeArray: [
-        { url: 'http://www.google.com' },
-        { url: 'http://lodash.com/docs' }
-      ]
-      option:
-        active: no
-
-    @callAction('hide')
-
-  news: ->
-    Message.postMessage
-      request: 'open'
-      nodeArray: [
-        { url: 'http://news.ycombinator.com' },
-        { url: 'http://news.layervault.com' }
-      ]
-      option:
-        active: no
-
-    @callAction('hide')
-
-  # ------------------------------------------------------------
-
   addBookmark: ->
     @setState
       specialMode: 'addBookmark'

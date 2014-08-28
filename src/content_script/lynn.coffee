@@ -188,8 +188,8 @@ Lynn = React.createClass
 
     Listener.setListener 'getSyncStorage', (message) =>
       @setState
-        option: message.storageObject.option
-        groupMap: message.storageObject.groupMap
+        option: message.storageObject.option || @state.option
+        groupMap: message.storageObject.groupMap || @state.groupMap
 
     Message.postMessage { request: 'getSyncStorage' }
 
