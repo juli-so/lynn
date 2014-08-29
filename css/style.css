@@ -44,6 +44,9 @@
   font-family: 'Helvetica Neue';
 
   box-shadow: none;
+
+  /* input box remove blue border in windows */
+  outline: 0;
 }
 
 #lynn_top input.lynn_console:focus {
@@ -82,7 +85,7 @@
 #lynn #lynn_mid .lynn_suggestion {
   width: 700px;
 
-  font-family: 'Open Sans';
+  font-family: 'Open Sans', Georgia;
   color: #777777;
 
   padding: 12px 20px;
