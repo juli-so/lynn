@@ -21,8 +21,8 @@ Tag =
     chrome.storage.sync.get 'autoTaggingMap', (storageObject) =>
       autoTaggingMap = storageObject.autoTaggingMap
       @titleContainsMap = {}
-      @hostnameExactSuggestMap = {}
-      @hostnameContainsSuggestMap = {}
+      @hostnameExactMap = {}
+      @hostnameContainsMap = {}
 
       _.forEach autoTaggingMap, (taggingRule, tag) =>
         { matchProp, matchType, matchString } = taggingRule
@@ -30,18 +30,18 @@ Tag =
           @titleContainsMap[matchString] = tag
         else # match against hostname
           if matchType is 'exact'
-            @hostnameExactSuggestMap[matchString] = tag
-            @hostnameExactSuggestMap['www.' + matchString] = tag
+            @hostnameExactMap[matchString] = tag
+            @hostnameExactMap['www.' + matchString] = tag
           else
-            @hostnameContainsSuggestMap[matchString] = tag
+            @hostnameContainsMap[matchString] = tag
 
   _ciContains: (str, fragment) ->
     str.toLowerCase().indexOf(fragment.toLowerCase()) isnt -1
 
   _log: ->
     console.log @titleContainsMap
-    console.log @hostnameExactSuggestMap
-    console.log @hostnameContainsSuggestMap
+    console.log @hostnameExactMap
+    console.log @hostnameContainsMap
 
   autoTag: (title, hostname) ->
     tagArray = []
@@ -50,11 +50,11 @@ Tag =
       if @_ciContains(title, matchString)
         tagArray.push(tag)
 
-    _.forEach @hostnameExactSuggestMap, (tag, matchString) =>
+    _.forEach @hostnameExactMap, (tag, matchString) =>
       if matchString is hostname
         tagArray.push(tag)
 
-    _.forEach @hostnameContainsSuggestMap, (tag, matchString) =>
+    _.forEach @hostnameContainsMap, (tag, matchString) =>
       if @_ciContains(hostname, matchString)
         tagArray.push(tag)
 

@@ -113,7 +113,9 @@ KeyMatch =
       when 'c-j'         then 'down'
 
       when 'c-h'         then 'f_select'
+      when 'leftArrow'   then 'f_select'
       when 'c-l'         then 'f_unselect'
+      when 'rightArrow'  then 'f_unselect'
 
       when 'pageUp'      then 'pageUp'
       when 'c-u'         then 'pageUp'
