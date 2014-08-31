@@ -101,20 +101,34 @@ Action =
         port.postMessage { response: 'removeGroup' }
   
   # ------------------------------------------------------------
+  # Adding / Removing Bookmark
+  # ------------------------------------------------------------
 
-  # ------------------------------------------------------------
-  # Bookmark Operation
-  # ------------------------------------------------------------
   _getHostname: (url) ->
     a = document.createElement('a')
     a.href = url
     a.hostname
 
+  suggestTag: (message) ->
+    if message.bookmark
+      hostname = @_getHostname(message.bookmark.url)
+      tagArray = Tag.autoTag(message.bookmark.title, hostname)
+
+      response: 'suggestTag'
+      tagArray: tagArray
+    else
+      tagArrayArray = []
+
+      _.forEach message.bookmarkArray, (bookmark) =>
+        hostname = @_getHostname(bookmark.url)
+        tagArray = Tag.autoTag(bookmark.title, hostname)
+        tagArrayArray.push(tagArray)
+
+      response: 'suggestTag'
+      tagArrayArray: tagArrayArray
+
   addBookmark: (message) ->
-    hostname = @_getHostname(message.bookmark.url)
-    tagArray = Tag.autoTag(message.bookmark.title, hostname)
-    tagArray = _.uniq(tagArray.concat(message.tagArray))
-    Bookmark.create(message.bookmark, tagArray)
+    Bookmark.create(message.bookmark, message.tagArray)
 
   removeBookmark: (message) ->
     Bookmark.remove(message.id)

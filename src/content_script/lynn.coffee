@@ -96,7 +96,6 @@ Mid = React.createClass
 
           pendingTagArray: pendingTagArray
 
-
 Suggestion = React.createClass
   render: ->
     className = 'lynn_suggestion animated '
@@ -109,6 +108,8 @@ Suggestion = React.createClass
         span className: 'lynn_title',
           @props.node.title
       div className: 'lynn_tagline',
+        _.map @props.node.suggestedTagArray, (tag) ->
+          span { className: 'lynn_suggested_tag' }, tag
         _.map @props.node.tagArray, (tag) ->
           span { className: 'lynn_tag' }, tag
         _.map @props.pendingTagArray, (tag) ->

@@ -127,6 +127,9 @@ KeyMatch =
 
       when 'c-r'         then 'f_remove'
 
+      when 'c-a'         then 'f_toggleAllSelectionInCurrentPage'
+      when 'c-s-a'       then 'f_toggleAll'
+
       when 'c-q'         then 'test'
 
       else 'noop'

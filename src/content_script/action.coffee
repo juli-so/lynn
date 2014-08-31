@@ -319,6 +319,14 @@ CommandAction =
 
       @setState { nodeArray: [node] }
 
+      Listener.setOneTimeListener 'suggestTag', (message) =>
+        node = _.assign(node, { suggestedTagArray: message.tagArray })
+        @setState { nodeArray: [node] }
+
+      Message.postMessage
+        request: 'suggestTag'
+        bookmark: node
+
     Message.postMessage { request: 'queryTab' }
 
   addMultipleBookmark: ->
@@ -333,6 +341,16 @@ CommandAction =
         tagArray: []
 
       @setState { nodeArray }
+
+      Listener.setOneTimeListener 'suggestTag', (message) =>
+        _.forEach nodeArray, (node, index) =>
+          node.suggestedTagArray = message.tagArrayArray[index]
+
+        @setState { nodeArray }
+
+      Message.postMessage
+        request: 'suggestTag'
+        bookmarkArray: nodeArray
 
     Message.postMessage { request: 'queryTab' }
 
@@ -351,6 +369,16 @@ CommandAction =
 
       @setState { nodeArray }
 
+      Listener.setOneTimeListener 'suggestTag', (message) =>
+        _.forEach nodeArray, (node, index) =>
+          node.suggestedTagArray = message.tagArrayArray[index]
+
+        @setState { nodeArray }
+
+      Message.postMessage
+        request: 'suggestTag'
+        bookmarkArray: nodeArray
+
     Message.postMessage { request: 'queryTab' }
 
   addAllWindowBookmark: ->
@@ -365,6 +393,16 @@ CommandAction =
         tagArray: []
 
       @setState { nodeArray }
+
+      Listener.setOneTimeListener 'suggestTag', (message) =>
+        _.forEach nodeArray, (node, index) =>
+          node.suggestedTagArray = message.tagArrayArray[index]
+
+        @setState { nodeArray }
+
+      Message.postMessage
+        request: 'suggestTag'
+        bookmarkArray: nodeArray
 
     Message.postMessage { request: 'queryTab' }
 
@@ -428,6 +466,7 @@ SpecialAction =
         request: 'addTag'
         nodeArray: @getSelectedNodeArray()
         tagArray: @state.pendingTagArray
+
     @setState
       input: ''
       pendingTagArray: []
@@ -437,14 +476,16 @@ SpecialAction =
   addBookmarkHelper: ->
     if _.isEmpty(@state.selectedArray)
       node = @getCurrentNode()
+      tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
       Message.postMessage
         request: 'addBookmark'
         bookmark:
           title: node.title
           url: node.url
-        tagArray: node.tagArray
+        tagArray: tagArray
     else
       _.forEach @getSelectedNodeArray(), (node) ->
+        tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
         Message.postMessage
           request: 'addBookmark'
           bookmark:

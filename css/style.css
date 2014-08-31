@@ -130,6 +130,11 @@
   color: green;
 }
 
+#lynn_mid .lynn_suggested_tag {
+  padding-left: 5px;
+  color: gray;
+}
+
 #lynn_mid .lynn_pending_tag {
   padding-left: 5px;
   color: red;
