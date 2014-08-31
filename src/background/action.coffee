@@ -56,12 +56,12 @@ Action =
 
   addTag: (message) ->
     if message.node
-      _.forEach message.tagArray, (tag) ->
+      _.forEach message.node.pendingTagArray, (tag) ->
         Bookmark.addTag(message.node, tag)
         true # do not exit early
     else
       _.forEach message.nodeArray, (node) ->
-        _.forEach message.tagArray, (tag) ->
+        _.forEach message.node.pendingTagArray, (tag) ->
           Bookmark.addTag(node, tag)
           true # do not exit early
 

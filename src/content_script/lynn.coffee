@@ -68,22 +68,9 @@ Top = React.createClass
 
 Mid = React.createClass
   render: ->
-    #start = @props.currentPageIndex * @props.MAX_SUGGESTION_NUM
-    #end = Math.min(@props.nodeArray.length, start + @props.MAX_SUGGESTION_NUM)
-
     div { id: 'lynn_mid' },
       _.map @props.nodeArray[@props.start...@props.end], (node, index) =>
         animation = @props.nodeAnimation[index] || 'fadeInDown'
-
-        # live tagging when adding tags
-        pendingTagArray = []
-        if @props.specialMode is 'tag'
-          if _.isEmpty(@props.selectedArray)
-            if index is @props.currentNodeIndex
-              pendingTagArray = @props.pendingTagArray
-          else
-            if _.contains(@props.selectedArray, @props.start + index)
-              pendingTagArray = @props.pendingTagArray
 
         Suggestion
           key: node.id
@@ -93,8 +80,6 @@ Mid = React.createClass
           isSelected: _.contains(@props.selectedArray, @props.start + index)
 
           animation: animation
-
-          pendingTagArray: pendingTagArray
 
 Suggestion = React.createClass
   render: ->
@@ -112,7 +97,7 @@ Suggestion = React.createClass
           span { className: 'lynn_suggested_tag' }, tag
         _.map @props.node.tagArray, (tag) ->
           span { className: 'lynn_tag' }, tag
-        _.map @props.pendingTagArray, (tag) ->
+        _.map @props.node.pendingTagArray, (tag) ->
           span { className: 'lynn_pending_tag' }, tag
 
 # lynn_bot
@@ -170,8 +155,6 @@ Lynn = React.createClass
 
     currentNodeIndex: 0
     currentPageIndex: 0
-
-    pendingTagArray: []
 
     cache:
       input: ''
@@ -242,8 +225,6 @@ Lynn = React.createClass
 
         currentNodeIndex: @state.currentNodeIndex
         currentPageIndex: @state.currentPageIndex
-
-        pendingTagArray: @state.pendingTagArray
 
       Bot
         mode: @state.mode

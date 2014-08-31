@@ -49,8 +49,13 @@ InputHandler =
     tagArray = _.filter input.split(' '), (token) ->
       Util.isTag(token)
 
+    node = @getCurrentNode()
+    node.pendingTagArray = tagArray
+    nodeArray = @state.nodeArray
+    nodeArray[@getCurrentNodeIndex()] = node
+
     @setState
-      pendingTagArray: tagArray
+      nodeArray: nodeArray
       input: input
 
   # ------------------------------------------------------------

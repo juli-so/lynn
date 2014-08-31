@@ -54,11 +54,8 @@ CommonAction =
       currentNodeIndex: 0
       currentPageIndex: 0
 
-      pendingTagArray: []
-
       cache:
         input: ''
-        pendingTagArray: []
 
   resetSearchResult: ->
     @setState
@@ -450,8 +447,6 @@ SpecialAction =
 
       nodeArray: []
       selectedArray: []
-      
-      pendingTagArray: []
 
   # ------------------------------------------------------------
 
@@ -460,16 +455,13 @@ SpecialAction =
       Message.postMessage
         request: 'addTag'
         node: @getCurrentNode()
-        tagArray: @state.pendingTagArray
     else
       Message.postMessage
         request: 'addTag'
         nodeArray: @getSelectedNodeArray()
-        tagArray: @state.pendingTagArray
 
     @setState
       input: ''
-      pendingTagArray: []
     
   # ------------------------------------------------------------
 
