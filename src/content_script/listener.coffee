@@ -1,4 +1,4 @@
-# Processes async responses from backend
+# Process async responses from backend
 
 Listener =
   callbackMap: {} # response -> callback
@@ -8,13 +8,18 @@ Listener =
       if @callbackMap[message.response]
         @callbackMap[message.response](message)
 
-  setListener: (response, callback) ->
+  listen: (response, callback) ->
     @callbackMap[response] = callback
 
-  setOneTimeListener: (response, callback) ->
-    @setListener response, (message) =>
+  # Also make the request after the listener is set 
+  listenOnce: (response, requestObject, callback) ->
+    @listen response, (message) =>
       callback(message)
-      @removeListener(response)
+      @stopListen(response)
 
-  removeListener: (response) ->
+    defaultRequestObject = { request: response }
+    Message.postMessage(_.assign(defaultRequestObject, requestObject))
+    console.log _.assign(defaultRequestObject, requestObject)
+
+  stopListen: (response) ->
     delete @callbackMap[response]

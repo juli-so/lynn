@@ -325,7 +325,7 @@ CommandAction =
       specialMode: 'addBookmark'
       input: ''
 
-    Listener.setOneTimeListener 'queryTab', (message) =>
+    Listener.listenOnce 'queryTab', {}, (message) =>
       node =
         title: message.current.title
         url: message.current.url
@@ -333,22 +333,16 @@ CommandAction =
 
       @setState { nodeArray: [node] }
 
-      Listener.setOneTimeListener 'suggestTag', (message) =>
+      Listener.listenOnce 'suggestTag',{ bookmark: node } , (message) =>
         node = _.assign(node, { suggestedTagArray: message.tagArray })
         @setState { nodeArray: [node] }
-
-      Message.postMessage
-        request: 'suggestTag'
-        bookmark: node
-
-    Message.postMessage { request: 'queryTab' }
 
   addMultipleBookmark: ->
     @setState
       specialMode: 'addMultipleBookmark'
       input: ''
 
-    Listener.setOneTimeListener 'queryTab', (message) =>
+    Listener.listenOnce 'queryTab', {}, (message) =>
       nodeArray = _.map message.tabArray, (tab) ->
         title: tab.title
         url: tab.url
@@ -356,24 +350,19 @@ CommandAction =
 
       @setState { nodeArray }
 
-      Listener.setOneTimeListener 'suggestTag', (message) =>
+      requestObject = { bookmarkArray: nodeArray }
+      Listener.listenOnce 'suggestTag', requestObject, (message) =>
         _.forEach nodeArray, (node, index) =>
           node.suggestedTagArray = message.tagArrayArray[index]
 
         @setState { nodeArray }
-
-      Message.postMessage
-        request: 'suggestTag'
-        bookmarkArray: nodeArray
-
-    Message.postMessage { request: 'queryTab' }
 
   addAllCurrentWindowBookmark: ->
     @setState
       specialMode: 'addAllCurrentWindowBookmark'
       input: ''
 
-    Listener.setOneTimeListener 'queryTab', (message) =>
+    Listener.listenOnce 'queryTab', {}, (message) =>
       currentWindowTabArray = message.currentWindowTabArray
       nodeArray = _.map currentWindowTabArray, (tab) ->
         title: tab.title
@@ -382,24 +371,19 @@ CommandAction =
 
       @setState { nodeArray }
 
-      Listener.setOneTimeListener 'suggestTag', (message) =>
+      requestObject = { bookmarkArray: nodeArray }
+      Listener.listenOnce 'suggestTag', requestObject, (message) =>
         _.forEach nodeArray, (node, index) =>
           node.suggestedTagArray = message.tagArrayArray[index]
 
         @setState { nodeArray }
-
-      Message.postMessage
-        request: 'suggestTag'
-        bookmarkArray: nodeArray
-
-    Message.postMessage { request: 'queryTab' }
 
   addAllWindowBookmark: ->
     @setState
       specialMode: 'addAllWindowBookmark'
       input: ''
 
-    Listener.setOneTimeListener 'queryTab', (message) =>
+    Listener.listenOnce 'queryTab', {}, (message) =>
       nodeArray = _.map message.tabArray, (tab) ->
         title: tab.title
         url: tab.url
@@ -407,17 +391,13 @@ CommandAction =
 
       @setState { nodeArray }
 
-      Listener.setOneTimeListener 'suggestTag', (message) =>
+      requestObject = { bookmarkArray: nodeArray }
+      Listener.listenOnce 'suggestTag', requestObject, (message) =>
         _.forEach nodeArray, (node, index) =>
           node.suggestedTagArray = message.tagArrayArray[index]
 
         @setState { nodeArray }
 
-      Message.postMessage
-        request: 'suggestTag'
-        bookmarkArray: nodeArray
-
-    Message.postMessage { request: 'queryTab' }
 
   # ------------------------------------------------------------
 
@@ -426,7 +406,7 @@ CommandAction =
       specialMode: 'addGroup'
       input: ''
 
-    Listener.setOneTimeListener 'queryTab', (message) =>
+    Listener.listenOnce 'queryTab', {}, (message) =>
       currentWindowTabArray = message.currentWindowTabArray
       nodeArray = _.map currentWindowTabArray, (tab) ->
         title: tab.title
@@ -435,12 +415,10 @@ CommandAction =
 
       @setState { nodeArray }
 
-    Message.postMessage { request: 'queryTab' }
-
   removeGroup: (groupName) ->
     if not _.isEmpty(groupName)
-      Listener.setOneTimeListener 'removeGroup', (message) ->
-        Message.postMessage { request: 'getSyncStorage' },
+      Listener.listenOnce 'removeGroup', { groupName }, (message) ->
+        Message.listenOnce { request: 'getSyncStorage' },
           request: 'removeGroup'
           groupName: groupName
 
@@ -531,9 +509,5 @@ SpecialAction =
     groupName = @state.input.split(' ')[0]
 
     if not _.isEmpty(groupName)
-      Listener.setOneTimeListener 'addGroup', (message) ->
+      Listener.listenOnce 'addGroup', { groupName }, (message) ->
         Message.postMessage { request: 'getSyncStorage' }
-
-      Message.postMessage
-        request: 'addGroup'
-        groupName: groupName

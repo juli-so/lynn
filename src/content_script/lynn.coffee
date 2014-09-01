@@ -178,10 +178,10 @@ Lynn = React.createClass
     groupMap: {}
 
   componentWillMount: ->
-    Listener.setListener 'search', (message) =>
+    Listener.listen 'search', (message) =>
       @setState nodeArray: message.result
 
-    Listener.setListener 'getSyncStorage', (message) =>
+    Listener.listen 'getSyncStorage', (message) =>
       @setState
         option: message.storageObject.option || @state.option
         groupMap: message.storageObject.groupMap || @state.groupMap
