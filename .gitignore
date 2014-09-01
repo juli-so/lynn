@@ -4,4 +4,4 @@ bower_components/*
 node_modules/*
 .*
 
-option/*.html
+optionPage/*.html

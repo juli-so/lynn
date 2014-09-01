@@ -271,9 +271,6 @@ FastAction =
 
 # Map command to command actions
 CommandMap =
-  '1'             : 'c_one'
-  'news'          : 'c_news'
-
   'a'             : 'c_addBookmark'
   'am'            : 'c_addMultipleBookmark'
   'aa'            : 'c_addAllCurrentWindowBookmark'

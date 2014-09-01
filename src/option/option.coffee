@@ -23,8 +23,10 @@ $(->
   # Initiation
   initTab()
 
-
   chrome.storage.sync.get null, (storageObject) ->
+    React.renderComponent Dashboard({ storageObject }),
+      $('#dashboard_container')[0]
+
     $('#MAX_SUGGESTION_NUM').val(storageObject.option['MAX_SUGGESTION_NUM'])
     console.log storageObject
 
