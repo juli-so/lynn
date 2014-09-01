@@ -13,7 +13,7 @@ task 'watch', 'watching src/ and build to lib/', ->
   coffeeProc.stdout.on 'data', (data) -> process.stdout.write data
   coffeeProc.on 'exit', (returnCode) -> process.exit returnCode
 
-  jadeProc = spawn 'jade', '-Pw'.split(' ')
+  jadeProc = spawn 'jade', '-Pw option'.split(' ')
   jadeProc.stdout.on 'data', (data) -> process.stdout.write data
   jadeProc.on 'exit', (returnCode) -> process.exit returnCode
 
@@ -25,6 +25,5 @@ task 'clean', 'clean lib folder', ->
     option/option.html 
     option/jade_includes/*.html',
     (err, stdout, stderr) ->
-    throw err if err
-    console.log 'finished cleaning'
-
+      throw err if err
+      console.log 'finished cleaning'
