@@ -4,5 +4,4 @@ bower_components/*
 node_modules/*
 .*
 
-option/option.html
-option/jade_includes/*.html
+option/*.html

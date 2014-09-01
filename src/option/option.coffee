@@ -6,8 +6,7 @@ save = ->
     option.MAX_SUGGESTION_NUM = MAX_SUGGESTION_NUM
     chrome.storage.sync.set { option }
 
-$(->
-  # UI Tab
+initTab = ->
   $('.menu a').click (ev) ->
     ev.preventDefault()
 
@@ -20,8 +19,14 @@ $(->
     currentView.css('display', 'block')
     setTimeout (-> currentView.addClass('selected')), 0
 
-  chrome.storage.sync.get 'option', (storageObject) ->
+$(->
+  # Initiation
+  initTab()
+
+
+  chrome.storage.sync.get null, (storageObject) ->
     $('#MAX_SUGGESTION_NUM').val(storageObject.option['MAX_SUGGESTION_NUM'])
+    console.log storageObject
 
   $('#save').click ->
     save()
