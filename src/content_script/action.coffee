@@ -51,11 +51,14 @@ CommonAction =
       nodeArray: []
       selectedArray: []
 
+      useSuggestedTag: yes
+
       currentNodeIndex: 0
       currentPageIndex: 0
 
       cache:
         input: ''
+        selectedArray: []
 
   resetSearchResult: ->
     @setState
@@ -440,13 +443,8 @@ SpecialAction =
     @callAction('hide')
 
   abort: ->
-    @setState
-      input: ''
-
-      specialMode: 'no'
-
-      nodeArray: []
-      selectedArray: []
+    @callAction('reset')
+    @setState { mode: 'command' }
 
   # ------------------------------------------------------------
 
@@ -468,7 +466,10 @@ SpecialAction =
   addBookmarkHelper: ->
     if _.isEmpty(@state.selectedArray)
       node = @getCurrentNode()
-      tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
+      if @state.useSuggestedTag
+        tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
+      else
+        tagArray = node.tagArray
       Message.postMessage
         request: 'addBookmark'
         bookmark:
@@ -477,7 +478,10 @@ SpecialAction =
         tagArray: tagArray
     else
       _.forEach @getSelectedNodeArray(), (node) ->
-        tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
+        if @state.useSuggestedTag
+          tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
+        else
+          tagArrayArray = node.tagArray
         Message.postMessage
           request: 'addBookmark'
           bookmark:

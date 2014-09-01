@@ -62,6 +62,9 @@ InputHandler =
 
   addBookmarkHelper: (event) ->
     input = event.target.value
+    useSuggestedTag = input[0] isnt '!'
+
+    # the '!' is also filtered if not using suggested tag
     tagArray = _.filter input.split(' '), (token) ->
       Util.isTag(token)
 
@@ -73,7 +76,7 @@ InputHandler =
       _.forEach @state.selectedArray, (selectedIndex) ->
         nodeArray[selectedIndex].tagArray = tagArray
 
-    @setState { nodeArray, input }
+    @setState { nodeArray, input, useSuggestedTag }
 
   s_addBookmark: (event) ->
     @callHandlerHelper('addBookmarkHelper', event)

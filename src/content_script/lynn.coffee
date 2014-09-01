@@ -81,6 +81,8 @@ Mid = React.createClass
 
           animation: animation
 
+          useSuggestedTag: @props.useSuggestedTag
+
 Suggestion = React.createClass
   render: ->
     className = 'lynn_suggestion animated '
@@ -93,8 +95,10 @@ Suggestion = React.createClass
         span className: 'lynn_title',
           @props.node.title
       div className: 'lynn_tagline',
-        _.map @props.node.suggestedTagArray, (tag) ->
-          span { className: 'lynn_suggested_tag' }, tag
+        if @props.useSuggestedTag
+          _.map @props.node.suggestedTagArray, (tag) ->
+            span { className: 'lynn_suggested_tag' }, tag
+
         _.map @props.node.tagArray, (tag) ->
           span { className: 'lynn_tag' }, tag
         _.map @props.node.pendingTagArray, (tag) ->
@@ -152,6 +156,8 @@ Lynn = React.createClass
 
     nodeArray: []
     selectedArray: []
+
+    useSuggestedTag: yes
 
     currentNodeIndex: 0
     currentPageIndex: 0
@@ -222,6 +228,8 @@ Lynn = React.createClass
 
         nodeArray: @state.nodeArray
         selectedArray: @state.selectedArray
+
+        useSuggestedTag: @state.useSuggestedTag
 
         currentNodeIndex: @state.currentNodeIndex
         currentPageIndex: @state.currentPageIndex
