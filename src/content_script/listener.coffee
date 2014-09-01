@@ -19,7 +19,6 @@ Listener =
 
     defaultRequestObject = { request: response }
     Message.postMessage(_.assign(defaultRequestObject, requestObject))
-    console.log _.assign(defaultRequestObject, requestObject)
 
   stopListen: (response) ->
     delete @callbackMap[response]

@@ -31,6 +31,10 @@ Tab =
     chrome.tabs.onActivated.addListener =>
       @updateCurrentTab()
 
+    chrome.windows.onRemoved.addListener =>
+      @updateCurrentTab()
+      @updateTabArray()
+
     chrome.windows.onFocusChanged.addListener (newWindowId) =>
       @updateCurrentTab()
       @currentWindowId = newWindowId
