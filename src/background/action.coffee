@@ -74,17 +74,17 @@ Action =
 
   queryTab: (message) ->
     response: 'queryTab'
-    tabArray: Tab.tabArray
     current: Tab.current
+    tabArray: Tab.tabArray
+    currentWindowTabArray: Tab.getCurrentWindowTabArray()
 
   # ------------------------------------------------------------
 
   addGroup: (message, port) ->
     chrome.storage.sync.get 'groupMap', (storageObject) ->
       groupMap = storageObject.groupMap
-      tabArray = _.filter Tab.tabArray, (tab) ->
-        tab.windowId is Tab.current.windowId
-      simplifiedTabArray = _.map tabArray, (tab) ->
+      currentWindowTabArray = Tab.getCurrentWindowTabArray()
+      simplifiedTabArray = _.map currentWindowTabArray, (tab) ->
         title: tab.title
         url: tab.url
 

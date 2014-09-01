@@ -32,6 +32,7 @@ Top = React.createClass
         'addMultipleBookmark'        : 'Enter your tag here'
         'addAllCurrentWindowBookmark': 'Enter your tag here'
         'addAllWindowBookmark'       : 'Enter your tag here'
+        'addGroup'                   : 'Enter name of your group here'
 
       inputPlaceHolder = inputPlaceHolderMap[@props.specialMode]
     else
@@ -111,6 +112,8 @@ Bot = React.createClass
     numToString = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five',
       'Six', 'Seven', 'Eight', 'Nine', 'Ten']
 
+    groupName = @props.input.split(' ')[0]
+
     specialModeStringMap =
       'tag'                        : 'Tag'
       'addBookmark'                : 'Add Bookmark'
@@ -118,6 +121,8 @@ Bot = React.createClass
       'addAllCurrentWindowBookmark': 'Add all tabs in current window 
                                       as Bookmark'
       'addAllWindowBookmark'       : 'Add all open tabs as Bookmark'
+      'addGroup'                   : 'Add these bookmarks to group: ' +
+                                      groupName
 
     infoString = @props.nodeArray.length + ' result'
     infoString += 's' if @props.nodeArray.length > 1
@@ -208,6 +213,8 @@ Lynn = React.createClass
 
     div { id, className },
       Top
+        ref: 'top'
+
         visible: @state.visible
 
         input: @state.input
@@ -218,6 +225,8 @@ Lynn = React.createClass
         onConsoleChange: @onConsoleChange
 
       Mid
+        ref: 'mid'
+
         start: @getNodeIndexStart()
         end: @getNodeIndexEnd()
 
@@ -235,6 +244,10 @@ Lynn = React.createClass
         currentPageIndex: @state.currentPageIndex
 
       Bot
+        ref: 'bot'
+
+        input: @state.input
+
         mode: @state.mode
         specialMode: @state.specialMode
 

@@ -2,7 +2,7 @@ Tab =
   # ordered
   tabArray: []
 
-  # this can be a chrome tab
+  # a chrome tab
   current: {}
 
   currentWindowId: 0
@@ -58,6 +58,10 @@ Tab =
   updateCurrentTab: ->
     chrome.tabs.query { active: yes, currentWindow: yes }, (tabArray) =>
       @current = tabArray[0]
+
+  getCurrentWindowTabArray: ->
+    _.filter @tabArray, (tab) =>
+      tab.windowId is @current.windowId
 
   _log: ->
     console.log 'current window id', @currentWindowId

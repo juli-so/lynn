@@ -307,6 +307,19 @@ CommandAction =
 
   # ------------------------------------------------------------
 
+  _tabToNode: (tabOrTabArray) ->
+    if _.isArray(tabOrTabArray)
+      tabArray = tabOrTabArray
+      _.map tabOrTabArray, (tab) ->
+        title: tab.title
+        url: tab.url
+        tagArray: []
+    else
+      tab = tabOrTabArray
+      title: tab.title
+      url: tab.url
+      tagArray: []
+
   addBookmark: ->
     @setState
       specialMode: 'addBookmark'
@@ -361,8 +374,7 @@ CommandAction =
       input: ''
 
     Listener.setOneTimeListener 'queryTab', (message) =>
-      currentWindowTabArray = _.filter message.tabArray, (tab) ->
-        tab.windowId is message.current.windowId
+      currentWindowTabArray = message.currentWindowTabArray
       nodeArray = _.map currentWindowTabArray, (tab) ->
         title: tab.title
         url: tab.url
@@ -410,25 +422,34 @@ CommandAction =
   # ------------------------------------------------------------
 
   addGroup: (groupName) ->
-    Listener.setOneTimeListener 'addGroup', (message) ->
-      Message.postMessage { request: 'getSyncStorage' }
+    @setState
+      specialMode: 'addGroup'
+      input: ''
 
-    Message.postMessage
-      request: 'addGroup'
-      groupName: groupName
+    Listener.setOneTimeListener 'queryTab', (message) =>
+      currentWindowTabArray = message.currentWindowTabArray
+      nodeArray = _.map currentWindowTabArray, (tab) ->
+        title: tab.title
+        url: tab.url
+        tagArray: []
 
-    @callAction('hide')
+      @setState { nodeArray }
+
+    Message.postMessage { request: 'queryTab' }
 
   removeGroup: (groupName) ->
-    Listener.setOneTimeListener 'removeGroup', (message) ->
-      Message.postMessage { request: 'getSyncStorage' }
+    if not _.isEmpty(groupName)
+      Listener.setOneTimeListener 'removeGroup', (message) ->
+        Message.postMessage { request: 'getSyncStorage' },
+          request: 'removeGroup'
+          groupName: groupName
 
-    Message.postMessage
-      request: 'removeGroup'
-      groupName: groupName
+      Message.postMessage
+        request: 'removeGroup'
+        groupName: groupName
 
-    @callAction('hide')
-  
+      @callAction('hide')
+    
   # ------------------------------------------------------------
 
   storeTag: ->
@@ -503,3 +524,16 @@ SpecialAction =
 
   addAllWindowBookmark: ->
     @callAction('s_addBookmarkHelper')
+
+  # ------------------------------------------------------------
+
+  addGroup: ->
+    groupName = @state.input.split(' ')[0]
+
+    if not _.isEmpty(groupName)
+      Listener.setOneTimeListener 'addGroup', (message) ->
+        Message.postMessage { request: 'getSyncStorage' }
+
+      Message.postMessage
+        request: 'addGroup'
+        groupName: groupName
