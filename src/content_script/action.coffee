@@ -369,7 +369,8 @@ CommandAction =
         url: tab.url
         tagArray: []
 
-      @setState { nodeArray }
+      selectedArray = [0...nodeArray.length]
+      @setState { nodeArray, selectedArray }
 
       requestObject = { bookmarkArray: nodeArray }
       Listener.listenOnce 'suggestTag', requestObject, (message) =>
@@ -389,7 +390,8 @@ CommandAction =
         url: tab.url
         tagArray: []
 
-      @setState { nodeArray }
+      selectedArray = [0...nodeArray.length]
+      @setState { nodeArray, selectedArray }
 
       requestObject = { bookmarkArray: nodeArray }
       Listener.listenOnce 'suggestTag', requestObject, (message) =>

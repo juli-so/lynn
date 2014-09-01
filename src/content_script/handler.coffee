@@ -85,12 +85,9 @@ InputHandler =
     @callHandlerHelper('addBookmarkHelper', event)
 
   s_addAllCurrentWindowBookmark: ->
-    # bug here selected array
-    @setState { selectedArray: [0...@state.nodeArray.length] }
     @callHandlerHelper('addBookmarkHelper', event)
 
   s_addAllWindowBookmark: ->
-    @setState { selectedArray: [0...@state.nodeArray.length] }
     @callHandlerHelper('addBookmarkHelper', event)
 
   # ------------------------------------------------------------
