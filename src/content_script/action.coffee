@@ -231,6 +231,7 @@ FastAction =
       nodeAnimation[currentNodeFullIndex] = 'fadeOutRight'
       @setState { nodeAnimation }
 
+      # remove bookmark from screen using animation
       timeOutFunc = =>
         nodeArray = @state.nodeArray
         nodeArray = _.without(nodeArray, nodeArray[currentNodeFullIndex])
@@ -256,8 +257,11 @@ FastAction =
             nodeArray: nodeArray
             nodeAnimation: {}
 
+        @callAction('reset') if _.isEmpty(@state.nodeArray)
+
       setTimeout(timeOutFunc, 350)
 
+      # really remove the bookmark in DB
       Message.postMessage
         request: 'removeBookmark'
         id: @getCurrentNode().id
@@ -477,7 +481,7 @@ SpecialAction =
           url: node.url
         tagArray: tagArray
     else
-      _.forEach @getSelectedNodeArray(), (node) ->
+      _.forEach @getSelectedNodeArray(), (node) =>
         if @state.useSuggestedTag
           tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
         else
