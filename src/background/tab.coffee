@@ -1,7 +1,6 @@
 Tab =
-  # ordered
+  # ordered, current window's tabs are first
   tabArray: []
-
   # a chrome tab
   current: {}
 
@@ -68,9 +67,9 @@ Tab =
       tab.windowId is @current.windowId
 
   _log: ->
-    console.log 'current window id', @currentWindowId
-    console.log 'current'
-    console.log 'title: ', @current.title
-    console.log 'all'
+    console.log 'Current window id: ', @currentWindowId
+    console.log 'Current tab:'
+    console.log 'Title: ', @current.title
+    console.log 'All tabs:'
     _.forEach @tabArray, (tab) ->
-      console.log 'title: ', tab.title
+      console.log 'Title: ', tab.title

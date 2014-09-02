@@ -281,6 +281,8 @@ CommandMap =
 
   's'             : 'c_storeTag'
 
+  'l'             : 'c_lastWindow'
+
 # Command is entered and then executed
 # If additional user-input is needed, enter specialMode
 CommandAction =
@@ -435,6 +437,14 @@ CommandAction =
   storeTag: ->
     Message.postMessage
       request: 'storeTag'
+    @callAction('hide')
+
+  # ------------------------------------------------------------
+
+  lastWindow: ->
+    Message.postMessage
+      request: 'lastWindow'
+    @callAction('hide')
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------

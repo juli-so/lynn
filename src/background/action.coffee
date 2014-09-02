@@ -54,6 +54,14 @@ Action =
 
   # ------------------------------------------------------------
 
+  lastWindow: (message) ->
+    _.forEach Window.lastWindowTabArray, (tab) ->
+      chrome.tabs.create
+        url: tab.url
+        active: no
+  
+  # ------------------------------------------------------------
+
   addTag: (message) ->
     if message.node
       _.forEach message.node.pendingTagArray, (tag) ->
