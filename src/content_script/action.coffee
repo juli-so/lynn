@@ -309,29 +309,13 @@ CommandAction =
 
   # ------------------------------------------------------------
 
-  _tabToNode: (tabOrTabArray) ->
-    if _.isArray(tabOrTabArray)
-      tabArray = tabOrTabArray
-      _.map tabOrTabArray, (tab) ->
-        title: tab.title
-        url: tab.url
-        tagArray: []
-    else
-      tab = tabOrTabArray
-      title: tab.title
-      url: tab.url
-      tagArray: []
-
   addBookmark: ->
     @setState
       specialMode: 'addBookmark'
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
-      node =
-        title: message.current.title
-        url: message.current.url
-        tagArray: []
+      node = Util.tabToNode(message.current)
 
       @setState { nodeArray: [node] }
 
@@ -345,10 +329,7 @@ CommandAction =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
-      nodeArray = _.map message.tabArray, (tab) ->
-        title: tab.title
-        url: tab.url
-        tagArray: []
+      nodeArray = Util.tabToNode(message.tabArray)
 
       @setState { nodeArray }
 
@@ -366,12 +347,9 @@ CommandAction =
 
     Listener.listenOnce 'queryTab', {}, (message) =>
       currentWindowTabArray = message.currentWindowTabArray
-      nodeArray = _.map currentWindowTabArray, (tab) ->
-        title: tab.title
-        url: tab.url
-        tagArray: []
-
+      nodeArray = Util.tabToNode(currentWindowTabArray)
       selectedArray = [0...nodeArray.length]
+
       @setState { nodeArray, selectedArray }
 
       requestObject = { bookmarkArray: nodeArray }
@@ -387,12 +365,9 @@ CommandAction =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
-      nodeArray = _.map message.tabArray, (tab) ->
-        title: tab.title
-        url: tab.url
-        tagArray: []
-
+      nodeArray = Util.tabToNode(message.tabArray)
       selectedArray = [0...nodeArray.length]
+
       @setState { nodeArray, selectedArray }
 
       requestObject = { bookmarkArray: nodeArray }
@@ -401,7 +376,6 @@ CommandAction =
           node.suggestedTagArray = message.tagArrayArray[index]
 
         @setState { nodeArray }
-
 
   # ------------------------------------------------------------
 

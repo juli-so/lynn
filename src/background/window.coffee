@@ -22,19 +22,16 @@ Window =
       _.forEach @nonChromeWindowArray, (window) =>
         if windowId is window.id
           lastWindowTabArray = _.filter window.tabs, (tab) =>
-            not @_startsWith(tab.url, 'chrome')
+            not Util.startsWith(tab.url, 'chrome')
 
           chrome.storage.sync.set { lastWindowTabArray }
           @lastWindowTabArray = lastWindowTabArray
 
       @updateWindowArray()
 
-  _startsWith: (str, start) ->
-    str.lastIndexOf(start, 0) is 0
-
   _isNonChromeWindow: (window) ->
     _.some window.tabs, (tab) =>
-      not @_startsWith(tab.url, 'chrome')
+      not Util.startsWith(tab.url, 'chrome')
 
   updateWindowArray: ->
     chrome.windows.getAll { populate: yes }, (windowArray) =>

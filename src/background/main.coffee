@@ -10,4 +10,3 @@ Message.init()
 Tag.init()
 
 Bookmark.init()
-

@@ -42,6 +42,7 @@
       "scripts": [
         "vendor/js/lodash.min.js",
 
+        "lib/background/util.js",
         "lib/background/tab.js",
         "lib/background/window.js",
         "lib/background/tag.js",

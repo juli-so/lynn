@@ -213,8 +213,6 @@ Lynn = React.createClass
 
     div { id, className },
       Top
-        ref: 'top'
-
         visible: @state.visible
 
         input: @state.input
@@ -225,8 +223,6 @@ Lynn = React.createClass
         onConsoleChange: @onConsoleChange
 
       Mid
-        ref: 'mid'
-
         start: @getNodeIndexStart()
         end: @getNodeIndexEnd()
 
@@ -244,8 +240,6 @@ Lynn = React.createClass
         currentPageIndex: @state.currentPageIndex
 
       Bot
-        ref: 'bot'
-
         input: @state.input
 
         mode: @state.mode

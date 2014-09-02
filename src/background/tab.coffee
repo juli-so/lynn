@@ -15,7 +15,7 @@ Tab =
       @updateCurrentTab()
 
     chrome.tabs.onUpdated.addListener (tabId, changeInfo, tab) =>
-      return if @_startsWith(tab.url, 'chrome')
+      return if Util.startsWith(tab.url, 'chrome')
 
       if changeInfo.status or changeInfo.url
         @updateTabArray()
@@ -39,12 +39,9 @@ Tab =
       @currentWindowId = newWindowId
       @updateTabArray()
 
-  _startsWith: (str, start) ->
-    str.lastIndexOf(start, 0) is 0
-
   _filterChromeTab: (allTabArray) ->
     _.filter allTabArray, (tab) =>
-      not @_startsWith(tab.url, 'chrome')
+      not Util.startsWith(tab.url, 'chrome')
 
   updateTabArray: ->
     orderedWindowArray = []

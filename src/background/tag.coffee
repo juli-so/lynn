@@ -35,19 +35,11 @@ Tag =
           else
             @hostnameContainsMap[matchString] = tag
 
-  _ciContains: (str, fragment) ->
-    str.toLowerCase().indexOf(fragment.toLowerCase()) isnt -1
-
-  _log: ->
-    console.log @titleContainsMap
-    console.log @hostnameExactMap
-    console.log @hostnameContainsMap
-
   autoTag: (title, hostname) ->
     tagArray = []
 
     _.forEach @titleContainsMap, (tag, matchString) =>
-      if @_ciContains(title, matchString)
+      if Util.ciContains(title, matchString)
         tagArray.push(tag)
 
     _.forEach @hostnameExactMap, (tag, matchString) =>
@@ -55,8 +47,13 @@ Tag =
         tagArray.push(tag)
 
     _.forEach @hostnameContainsMap, (tag, matchString) =>
-      if @_ciContains(hostname, matchString)
+      if Util.ciContains(hostname, matchString)
         tagArray.push(tag)
 
     tagArray
       
+  _log: ->
+    console.log @titleContainsMap
+    console.log @hostnameExactMap
+    console.log @hostnameContainsMap
+
