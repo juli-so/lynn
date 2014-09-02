@@ -29,6 +29,9 @@ Window =
 
       @updateWindowArray()
 
+    chrome.tabs.onUpdated.addListener =>
+      @updateWindowArray()
+
   _isNonChromeWindow: (window) ->
     _.some window.tabs, (tab) =>
       not Util.startsWith(tab.url, 'chrome')
@@ -43,6 +46,17 @@ Window =
       @_isNonChromeWindow(window)
 
   _log: ->
-    console.log 'windowArray: ', @windowArray
-    console.log 'nonChromeWindowArray: ', @nonChromeWindowArray
-    console.log 'lastWindowTabArray: ', @lastWindowTabArray
+    console.log '### windowArray: '
+    _.forEach @windowArray, (window) ->
+      console.log "Window id #{window.id}"
+      _.forEach window.tabs, (tab) ->
+        console.log "  #{tab.title}"
+    console.log '### nonChromeWindowArray: '
+    _.forEach @nonChromeWindowArray, (window) ->
+      console.log "Window id #{window.id}"
+      _.forEach window.tabs, (tab) ->
+        console.log "  #{tab.title}"
+    console.log '### lastWindowTabArray: '
+    _.forEach @lastWindowTabArray, (tab) ->
+      console.log "Tab id is #{tab.id}"
+      console.log "  #{tab.title}"
