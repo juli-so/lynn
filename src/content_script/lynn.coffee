@@ -189,16 +189,17 @@ Lynn = React.createClass
     Message.postMessage { request: 'getSyncStorage' }
 
     # keydown events
-    $(document).keydown (event) =>
+    $(window).keydown (event) =>
       # Global invoke
       if KeyMatch.isInvoked(event)
-        CommonAction.toggle.call(@)
+        @callAction('toggle')
 
       else
         # Shortcut when lynn is shown
         if @state.visible
+          console.log KeyMatch.getKeyString(event)
           actionName = KeyMatch.match(event, @state.mode, @state.specialMode)
-          event.preventDefault() if actionName isnt 'noop'
+          event.preventDefault()
 
           @callAction(actionName)
 

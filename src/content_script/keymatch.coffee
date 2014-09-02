@@ -1,4 +1,8 @@
-# Keycode
+# Note: Some chrome shortcuts, namely 
+#   c/c-s + t/n/w
+#   will not be sent to keydown handlers
+# See http://src.chromium.org/viewvc/chrome?revision=127787&view=revision
+
 Key =
   '8'  : 'backspace'
   '9'  : 'tab'
