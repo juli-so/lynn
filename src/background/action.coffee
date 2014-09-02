@@ -69,7 +69,7 @@ Action =
         true # do not exit early
     else
       _.forEach message.nodeArray, (node) ->
-        _.forEach message.node.pendingTagArray, (tag) ->
+        _.forEach node.pendingTagArray, (tag) ->
           Bookmark.addTag(node, tag)
           true # do not exit early
 
