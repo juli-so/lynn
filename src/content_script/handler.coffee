@@ -48,11 +48,13 @@ InputHandler =
     input = event.target.value
     tagArray = _.filter input.split(' '), (token) ->
       Util.isTag(token)
-
-    node = @getCurrentNode()
-    node.pendingTagArray = tagArray
     nodeArray = @state.nodeArray
-    nodeArray[@getCurrentNodeFullIndex()] = node
+
+    if _.isEmpty(@state.selectedArray) # No selection
+      nodeArray[@getCurrentNodeFullIndex()].pendingTagArray = tagArray
+    else
+      _.forEach @state.selectedArray, (selectedIndex) =>
+        nodeArray[selectedIndex].pendingTagArray = tagArray
 
     @setState
       nodeArray: nodeArray
