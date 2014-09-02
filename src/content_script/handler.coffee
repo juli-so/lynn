@@ -52,7 +52,7 @@ InputHandler =
     node = @getCurrentNode()
     node.pendingTagArray = tagArray
     nodeArray = @state.nodeArray
-    nodeArray[@getCurrentNodeIndex()] = node
+    nodeArray[@getCurrentNodeFullIndex()] = node
 
     @setState
       nodeArray: nodeArray
@@ -71,7 +71,7 @@ InputHandler =
     # make the current tags in input field shown on node
     nodeArray = @state.nodeArray
     if _.isEmpty(@state.selectedArray)
-      nodeArray[@getCurrentNodeIndex()].tagArray = tagArray
+      nodeArray[@getCurrentNodeFullIndex()].tagArray = tagArray
     else
       _.forEach @state.selectedArray, (selectedIndex) ->
         nodeArray[selectedIndex].tagArray = tagArray

@@ -71,15 +71,41 @@ CommonAction =
   # ------------------------------------------------------------
 
   up: ->
-    currentNodeIndex = \
-      (@state.currentNodeIndex + @state.option.MAX_SUGGESTION_NUM - 1) %
-        @state.option.MAX_SUGGESTION_NUM
-    @setState { currentNodeIndex }
+    if @state.nodeArray.length is 0
+      return
+
+    MAX = @state.option.MAX_SUGGESTION_NUM
+    if @state.currentNodeIndex is 0
+      if @state.currentPageIndex is 0
+        currentNodeFullIndex = @state.nodeArray.length - 1
+        @setState
+          currentNodeIndex:
+            currentNodeFullIndex % MAX
+          currentPageIndex:
+            Math.floor( currentNodeFullIndex / MAX)
+      else
+        @callAction('pageUp')
+        @setState { currentNodeIndex: MAX - 1 }
+    else
+      currentNodeIndex = @state.currentNodeIndex - 1
+      @setState { currentNodeIndex }
 
   down: ->
-    currentNodeIndex = (@state.currentNodeIndex + 1) %
-      @state.option.MAX_SUGGESTION_NUM
-    @setState { currentNodeIndex }
+    if @state.nodeArray.length is 0
+      return
+
+    MAX = @state.option.MAX_SUGGESTION_NUM
+    if @getCurrentNodeFullIndex() is @state.nodeArray.length - 1
+      @setState
+        currentNodeIndex: 0
+        currentPageIndex: 0
+    else
+      if @state.currentNodeIndex isnt MAX - 1
+        @setState { currentNodeIndex: @state.currentNodeIndex + 1 }
+      else
+        @setState
+          currentNodeIndex: 0
+          currentPageIndex: @state.currentPageIndex + 1
 
   # ------------------------------------------------------------
 
@@ -161,7 +187,7 @@ CommonAction =
   # ------------------------------------------------------------
 
   test: ->
-    console.log @getCurrentNodeIndex()
+    console.log @getCurrentNodeFullIndex()
 
 # --------------------------------------------------------------
 # --------------------------------------------------------------
@@ -173,13 +199,15 @@ QueryAction =
 
 FastAction =
   select: ->
-    unless _.contains(@state.selectedArray, @getCurrentNodeIndex())
-      selectedArray = _.union(@state.selectedArray, [@getCurrentNodeIndex()])
+    unless _.contains(@state.selectedArray, @getCurrentNodeFullIndex())
+      selectedArray =
+        _.union(@state.selectedArray, [@getCurrentNodeFullIndex()])
       @setState { selectedArray }
 
   unselect: ->
-    if _.contains(@state.selectedArray, @getCurrentNodeIndex())
-      selectedArray = _.without(@state.selectedArray, @getCurrentNodeIndex())
+    if _.contains(@state.selectedArray, @getCurrentNodeFullIndex())
+      selectedArray =
+        _.without(@state.selectedArray, @getCurrentNodeFullIndex())
       @setState { selectedArray }
 
   # ------------------------------------------------------------
@@ -226,7 +254,7 @@ FastAction =
   remove: ->
     if @state.nodeArray.length isnt 0
       # index within all nodeArray, not within current page nodes
-      currentNodeFullIndex = @getCurrentNodeIndex()
+      currentNodeFullIndex = @getCurrentNodeFullIndex()
       nodeAnimation = {}
       nodeAnimation[currentNodeFullIndex] = 'fadeOutRight'
       @setState { nodeAnimation }

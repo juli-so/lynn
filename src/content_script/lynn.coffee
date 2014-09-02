@@ -261,12 +261,12 @@ Lynn = React.createClass
   # ------------------------------------------------------------
   # helper functions for getting data
 
-  getCurrentNodeIndex: ->
+  getCurrentNodeFullIndex: ->
     @state.currentPageIndex * @state.option.MAX_SUGGESTION_NUM +
       @state.currentNodeIndex
 
   getCurrentNode: ->
-    @state.nodeArray[@getCurrentNodeIndex()]
+    @state.nodeArray[@getCurrentNodeFullIndex()]
 
   getSelectedNodeArray: ->
     _.at(@state.nodeArray, @state.selectedArray)
