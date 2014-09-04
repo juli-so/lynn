@@ -1,6 +1,10 @@
 # Intereactive actions, mostly confirmed by Special actions
 
 I_Action =
+  # ------------------------------------------------------------
+  # Add bookmarks
+  # ------------------------------------------------------------
+
   addBookmark: ->
     @setState
       specialMode: 'addBookmark'
@@ -69,6 +73,8 @@ I_Action =
 
         @setState { nodeArray }
 
+  # ------------------------------------------------------------
+  # Other actions
   # ------------------------------------------------------------
 
   addGroup: (groupName) ->

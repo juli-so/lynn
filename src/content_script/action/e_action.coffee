@@ -12,12 +12,15 @@ CommandMap =
   'ug'            : 'i_removeGroup'
 
   'l'             : 'n_lastWindow'
+  's-l'           : 'n_lastWindowInBackground'
+  'c-l'           : 'n_lastWindowInNewWindow'
+  'c-s-l'         : 'n_lastWindowInNewIncognitoWindow'
 
 E_Action =
   esc: ->
     @callAction('n_hide')
 
-  enter: ->
+  enter: (modifierString = '') ->
     if @state.mode is 'query' or @state.mode is 'fast'
       @callAction('n_open')
     else
@@ -35,21 +38,17 @@ E_Action =
         command = tokenArray[0][1..]
         args    = tokenArray[1..]
 
-        if CommandMap[command]
-          @callAction(CommandMap[command], args)
+        @callAction(CommandMap[modifierString + command], args)
 
         @callAction('hide')
         # groupMap here
 
   s_enter: ->
-    if @state.mode is 'query' or @state.mode is 'fast'
-      @callAction('n_openInBackground')
+    @callAction('e_enter', ['s-'  ])
 
   c_enter: ->
-    if @state.mode is 'query' or @state.mode is 'fast'
-      @callAction('n_openInNewWindow')
+    @callAction('e_enter', ['c-'  ])
 
   c_s_enter: ->
-    if @state.mode is 'query' or @state.mode is 'fast'
-      @callAction('n_openInNewIncognitoWindow')
+    @callAction('e_enter', ['c-s-'])
 

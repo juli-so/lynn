@@ -58,8 +58,26 @@ Action =
     _.forEach Window.lastWindowTabArray, (tab) ->
       chrome.tabs.create
         url: tab.url
+        active: yes
+  
+  lastWindowInBackground: (message) ->
+    _.forEach Window.lastWindowTabArray, (tab) ->
+      chrome.tabs.create
+        url: tab.url
         active: no
   
+  lastWindowInNewWindow: (message) ->
+    urlArray = _.pluck(Window.lastWindowTabArray, 'url')
+    chrome.windows.create
+      url: urlArray
+      incognito: no
+  
+  lastWindowInNewIncognitoWindow: (message) ->
+    urlArray = _.pluck(Window.lastWindowTabArray, 'url')
+    chrome.windows.create
+      url: urlArray
+      incognito: yes
+
   # ------------------------------------------------------------
 
   addTag: (message) ->
