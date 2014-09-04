@@ -11,7 +11,7 @@ InputHandler =
 
   query: (event) ->
     input = event.target.value
-    @callAction('clearSearchResult')
+    @callAction('n_clearInput')
 
     if input[-1..] is ':'
       @setDeepState
@@ -31,7 +31,7 @@ InputHandler =
   command: (event) ->
     input = event.target.value
     if input is '' or input[0] isnt ':'
-      @callAction('clearSearchResult')
+      @callAction('n_clearInput')
       @setState
         input: input
         mode: 'query'
