@@ -50,7 +50,7 @@ InputHandler =
       Util.isTag(token)
     nodeArray = @state.nodeArray
 
-    if _.isEmpty(@state.selectedArray) # No selection
+    if @hasNoSelection()
       nodeArray[@getCurrentNodeFullIndex()].pendingTagArray = tagArray
     else
       _.forEach @state.selectedArray, (selectedIndex) =>
@@ -72,7 +72,7 @@ InputHandler =
 
     # make the current tags in input field shown on node
     nodeArray = @state.nodeArray
-    if _.isEmpty(@state.selectedArray)
+    if @hasNoSelection()
       nodeArray[@getCurrentNodeFullIndex()].tagArray = tagArray
     else
       _.forEach @state.selectedArray, (selectedIndex) ->

@@ -213,7 +213,7 @@ N_Action =
       request: if newWindow then 'openInNewWindow' else 'open'
       option: option
 
-    if _.isEmpty(@state.selectedArray)
+    if @hasNoSelection()
       message['node'] = @getCurrentNode()
     else
       message['nodeArray'] = @getSelectedNodeArray()

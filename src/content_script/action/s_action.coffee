@@ -5,7 +5,7 @@ S_Action =
   # Adding bookmarks
   # ------------------------------------------------------------
   addBookmarkHelper: ->
-    if _.isEmpty(@state.selectedArray)
+    if @hasNoSelection()
       node = @getCurrentNode()
       if @state.useSuggestedTag
         tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
@@ -47,7 +47,7 @@ S_Action =
   # ------------------------------------------------------------
 
   tag: ->
-    if _.isEmpty(@state.selectedArray)
+    if @hasNoSelection()
       Message.postMessage
         request: 'addTag'
         node: @getCurrentNode()

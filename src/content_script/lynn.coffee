@@ -198,6 +198,7 @@ Lynn = React.createClass
         # Shortcut when lynn is shown
         if @state.visible
           actionName = ActionMatch.findActionName(event, @state.mode, @state.specialMode)
+          console.log actionName
           event.preventDefault() if actionName isnt 'noop'
 
           @callAction(actionName)
@@ -281,8 +282,11 @@ Lynn = React.createClass
   getCurrentPageNodeArray: ->
     @state.nodeArray[@getNodeIndexStart()...@getNodeIndexEnd()]
 
-  hasSelection: ->
+  hasNoSelection: ->
     _.isEmpty(@state.selectedArray)
+
+  hasSelection: ->
+    not @hasNoSelection()
 
   # ------------------------------------------------------------
   # helping functions for setting states

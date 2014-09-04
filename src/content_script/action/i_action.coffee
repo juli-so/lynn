@@ -103,3 +103,8 @@ I_Action =
         groupName: groupName
 
       @callAction('hide')
+
+  tag: ->
+    @setState
+      specialMode: 'tag'
+      input: ''

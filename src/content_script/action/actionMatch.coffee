@@ -96,17 +96,19 @@ ActionMatch =
     return 'e_s_enter'   if keyString is 's-enter'
     return 'e_c_s_enter' if keyString is 'c-s-enter'
 
-    action = switch mode
-      when 'query'   then @matchInQueryMode(keyString)
-      when 'fast'    then @matchInFastMode(keyString)
-      # Only for shortcuts
-      # Actions made when using Enter are processed in E_Action
-      when 'command' then @matchInCommandMode(keyString)
-      else 'noop'
+    if specialMode isnt 'no'
+      return 'noop'
+    else
+      action = switch mode
+        when 'query'   then @matchInQueryMode(keyString)
+        when 'fast'    then @matchInFastMode(keyString)
+        # Only for shortcuts
+        # Actions made when using Enter are processed in E_Action
+        when 'command' then @matchInCommandMode(keyString)
+        else 'noop'
 
-    action = @matchCommon(keyString) if action is 'noop'
-
-    return action
+      action = @matchCommon(keyString) if action is 'noop'
+      return action
 
   # Find the real action function
   findAction: (actionName) ->
@@ -123,8 +125,6 @@ ActionMatch =
   # Can be overridden by actions defined specifically for other modes
   matchCommon: (keyString) ->
     switch keyString
-      #when 'esc'         then 'hide'
-      #when 'c-backspace' then 'reset'
       when 'tab'          then 'n_nextMode'
       when 's-tab'        then 'n_prevMode'
 
@@ -149,6 +149,7 @@ ActionMatch =
       when 'c-s-a'        then 'n_toggleAll'
 
       # Other N_Action
+      when 'c-p'          then 'n_log'
 
       else 'noop'
 
@@ -168,8 +169,8 @@ ActionMatch =
     switch keyString
       # Opening bookmarks
       when 'o'            then 'n_open'
-      when 'c-o'          then 'n_openInBackground'
-      when 's-o'          then 'n_openInNewWindow'
+      when 's-o'          then 'n_openInBackground'
+      when 'c-o'          then 'n_openInNewWindow'
       when 'c-s-o'        then 'n_openInNewIncognitoWindow'
 
       # Movment

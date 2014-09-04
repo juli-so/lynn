@@ -21,14 +21,14 @@ E_Action =
     @callAction('n_hide')
 
   enter: (modifierString = '') ->
-    if @state.mode is 'query' or @state.mode is 'fast'
-      @callAction('n_open')
+    # Special mode
+    if @state.specialMode isnt 'no'
+      @callAction('s_' + @state.specialMode)
+      @callAction('n_hide')
     else
-      # Special mode 
-      if @state.specialMode isnt 'no'
-        @callAction('s_' + @state.specialMode)
-        @callAction('n_hide')
-        
+      # Query | Fast mode
+      if @state.mode is 'query' or @state.mode is 'fast'
+        @callAction('n_open')
       # Command mode
       else
         if not Util.startsWith(@state.input, ':')
