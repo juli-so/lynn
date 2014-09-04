@@ -20,10 +20,8 @@ task 'watch', 'watching src/ and build to lib/', ->
   jadeProc.on 'exit', (returnCode) -> process.exit returnCode
 
 task 'clean', 'clean lib folder', ->
-  exec 'rm -f 
-    lib/background/* 
-    lib/content_script/* 
-    lib/option/* 
+  exec 'rm -rf 
+    lib/*
     optionPage/*.html',
     (err, stdout, stderr) ->
       throw err if err

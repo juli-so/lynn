@@ -191,15 +191,14 @@ Lynn = React.createClass
     # keydown events
     $(window).keydown (event) =>
       # Global invoke
-      if KeyMatch.isInvoked(event)
-        @callAction('toggle')
+      if ActionMatch.isInvoked(event)
+        @callAction('n_toggle')
 
       else
         # Shortcut when lynn is shown
         if @state.visible
-          console.log KeyMatch.getKeyString(event)
-          actionName = KeyMatch.match(event, @state.mode, @state.specialMode)
-          event.preventDefault()
+          actionName = ActionMatch.findActionName(event, @state.mode, @state.specialMode)
+          event.preventDefault() if actionName isnt 'noop'
 
           @callAction(actionName)
 
@@ -282,11 +281,14 @@ Lynn = React.createClass
   getCurrentPageNodeArray: ->
     @state.nodeArray[@getNodeIndexStart()...@getNodeIndexEnd()]
 
+  hasSelection: ->
+    _.isEmpty(@state.selectedArray)
+
   # ------------------------------------------------------------
   # helping functions for setting states
 
   callAction: (actionName, params) ->
-    Action.matchAction(actionName).apply(@, params)
+    ActionMatch.findAction(actionName).apply(@, params)
 
   callHandlerHelper: (helperName, event) ->
     InputHandler[helperName].call(@, event)
