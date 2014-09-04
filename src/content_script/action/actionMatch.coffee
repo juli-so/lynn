@@ -99,7 +99,9 @@ ActionMatch =
     action = switch mode
       when 'query'   then @matchInQueryMode(keyString)
       when 'fast'    then @matchInFastMode(keyString)
-      when 'command' then @matchInCommandMode(keyString) # change here
+      # Only for shortcuts
+      # Actions made when using Enter are processed in E_Action
+      when 'command' then @matchInCommandMode(keyString)
       else 'noop'
 
     action = @matchCommon(keyString) if action is 'noop'
@@ -112,6 +114,7 @@ ActionMatch =
       when 'n_' then N_Action[actionName[2..]]
       when 'i_' then I_Action[actionName[2..]]
       when 'e_' then E_Action[actionName[2..]]
+      when 's_' then S_Action[actionName[2..]]
       else _.noop
 
   # ------------------------------------------------------------
@@ -156,6 +159,8 @@ ActionMatch =
       # Temporarily disable this in case accidentally removed bookmarks
       #when 'c-r'          then 'n_remove'
       when 'c-backspace'  then 'n_clearInput'
+
+      when 'c-r'          then 'n_remove'
 
       else 'noop'
 

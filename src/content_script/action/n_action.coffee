@@ -1,4 +1,5 @@
 # Normal actions
+
 N_Action =
   log: ->
     console.log @state
@@ -278,3 +279,14 @@ N_Action =
       Message.postMessage
         request: 'removeBookmark'
         id: @getCurrentNode().id
+
+  # ------------------------------------------------------------
+  # Other actions
+  # ------------------------------------------------------------
+
+  lastWindow: ->
+    Message.postMessage
+      request: 'lastWindow'
+    @callAction('n_hide')
+
+  # ------------------------------------------------------------

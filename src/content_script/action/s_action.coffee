@@ -1,29 +1,9 @@
-SpecialAction =
-  confirm: ->
-    @callAction('s_' + @state.specialMode)
-    @callAction('hide')
+# Special Actions, mostly confirming Intereactive Actions
 
-  abort: ->
-    @callAction('reset')
-    @setState { mode: 'command' }
-
+S_Action =
   # ------------------------------------------------------------
-
-  tag: ->
-    if _.isEmpty(@state.selectedArray)
-      Message.postMessage
-        request: 'addTag'
-        node: @getCurrentNode()
-    else
-      Message.postMessage
-        request: 'addTag'
-        nodeArray: @getSelectedNodeArray()
-
-    @setState
-      input: ''
-    
+  # Adding bookmarks
   # ------------------------------------------------------------
-
   addBookmarkHelper: ->
     if _.isEmpty(@state.selectedArray)
       node = @getCurrentNode()
@@ -64,6 +44,21 @@ SpecialAction =
   addAllWindowBookmark: ->
     @callAction('s_addBookmarkHelper')
 
+  # ------------------------------------------------------------
+
+  tag: ->
+    if _.isEmpty(@state.selectedArray)
+      Message.postMessage
+        request: 'addTag'
+        node: @getCurrentNode()
+    else
+      Message.postMessage
+        request: 'addTag'
+        nodeArray: @getSelectedNodeArray()
+
+    @setState
+      input: ''
+    
   # ------------------------------------------------------------
 
   addGroup: ->

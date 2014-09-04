@@ -7,6 +7,9 @@ Util =
   isntTag: (tag) ->
     not @isTag(tag)
 
+  startsWith: (str, start) ->
+    str.lastIndexOf(start, 0) is 0
+
   # Empty tagArray
   tabToNode: (tabOrTabArray) ->
     if not _.isArray(tabOrTabArray)

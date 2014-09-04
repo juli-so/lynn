@@ -31,6 +31,7 @@
           "lib/content_script/action/n_action.js",
           "lib/content_script/action/i_action.js",
           "lib/content_script/action/e_action.js",
+          "lib/content_script/action/s_action.js",
           "lib/content_script/message.js",
           "lib/content_script/handler.js",
           "lib/content_script/listener.js",
