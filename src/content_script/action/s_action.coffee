@@ -7,6 +7,7 @@ S_Action =
   addBookmarkHelper: ->
     if @hasNoSelection()
       node = @getCurrentNode()
+
       if @state.useSuggestedTag
         tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
       else
@@ -17,6 +18,7 @@ S_Action =
           title: node.title
           url: node.url
         tagArray: tagArray
+
     else
       _.forEach @getSelectedNodeArray(), (node) =>
         if @state.useSuggestedTag
@@ -31,6 +33,27 @@ S_Action =
           tagArray: node.tagArray
 
     @callAction('c_storeTag')
+
+    # For multiple bookmark
+    # Don't do 'if only one tag is inputted, search for it'
+    if @state.specialMode is 'addMultipleBookmark'
+      @callAction('hide')
+    # If the inputted tag is only one
+    # Search for that tag after bookmark is added
+    else
+      inputtedTagArray = _.filter @state.input.split(' '), (token) ->
+        Util.isTag(token)
+
+      if inputtedTagArray.length is 1
+        tag = inputtedTagArray[0]
+        @callAction('n_reset')
+        @setState { input: tag }
+        Message.postMessage
+          request: 'search'
+          input: tag
+      else
+        @callAction('hide')
+
 
   addBookmark: ->
     @callAction('s_addBookmarkHelper')

@@ -24,7 +24,6 @@ E_Action =
     # Special mode
     if @state.specialMode isnt 'no'
       @callAction('s_' + @state.specialMode)
-      @callAction('n_hide')
     else
       # Query | Fast mode
       if @state.mode is 'query' or @state.mode is 'fast'
@@ -39,8 +38,6 @@ E_Action =
         args    = tokenArray[1..]
 
         @callAction(CommandMap[modifierString + command], args)
-
-        @callAction('hide')
         # groupMap here
 
   s_enter: ->

@@ -5,6 +5,7 @@ I_Action =
   # Add bookmarks
   # ------------------------------------------------------------
 
+
   addBookmark: ->
     @setState
       specialMode: 'addBookmark'
