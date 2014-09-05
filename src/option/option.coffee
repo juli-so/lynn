@@ -1,10 +1,20 @@
 save = ->
   MAX_SUGGESTION_NUM = parseInt($('#MAX_SUGGESTION_NUM').val(), 10)
 
-  chrome.storage.sync.get 'option', (storageObject) ->
-    option = storageObject.option || {}
-    option.MAX_SUGGESTION_NUM = MAX_SUGGESTION_NUM
-    chrome.storage.sync.set { option }
+  option =
+    MAX_SUGGESTION_NUM: MAX_SUGGESTION_NUM
+
+  if isValid(option)
+    chrome.storage.sync.get 'option', (storageObject) ->
+      option = _.assign(storageObject.option || {}, option)
+      chrome.storage.sync.set { option }
+
+isValid = (option) ->
+  { MAX_SUGGESTION_NUM } = option
+  isValid =
+    MAX_SUGGESTION_NUM > 0
+
+  return isValid
 
 initTab = ->
   $('.menu a').click (ev) ->
