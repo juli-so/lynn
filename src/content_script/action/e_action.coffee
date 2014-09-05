@@ -41,8 +41,31 @@ E_Action =
         command = tokenArray[0][1..]
         args    = tokenArray[1..]
 
-        @callAction(CommandMap[modifierString + command], args)
-        # groupMap here
+        if CommandMap[modifierString + command]
+          @callAction(CommandMap[modifierString + command], args)
+        else if @state.groupMap[command]
+          nodeArray = @state.groupMap[command]
+
+          openArgs = switch modifierString
+            when ''       then [{ active: yes }, no , yes, nodeArray]
+            when 's-'     then [{ active: no  }, no , no , nodeArray]
+            when 'c-'     then [{ incognito: yes }, yes, yes, nodeArray]
+            when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArray]
+          @callAction('n_openHelper', openArgs)
+
+  open: ->
+    @callAction('n_openHelper', [{ active:    yes }, no , yes])
+
+  openInBackground: ->
+    @callAction('n_openHelper', [{ active:    no  }, no , no ])
+
+  openInNewWindow: ->
+    @callAction('n_openHelper', [{ incognito: no  }, yes, yes])
+
+  openInNewIncognitoWindow: ->
+    @callAction('n_openHelper', [{ incognito: yes }, yes, yes])
+
+
 
   s_enter: ->
     @callAction('e_enter', ['s-'  ])

@@ -90,3 +90,5 @@ S_Action =
     if not _.isEmpty(groupName)
       Listener.listenOnce 'addGroup', { groupName }, (message) ->
         Message.postMessage { request: 'getSyncStorage' }
+
+    @callAction('n_hide')

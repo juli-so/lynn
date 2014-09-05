@@ -208,15 +208,18 @@ N_Action =
   # Opening bookmarks
   # ------------------------------------------------------------
   
-  openHelper: (option, newWindow, needHide) ->
+  openHelper: (option, newWindow, needHide, nodeArray = null) ->
     message =
       request: if newWindow then 'openInNewWindow' else 'open'
       option: option
 
-    if @hasNoSelection()
-      message['node'] = @getCurrentNode()
+    if _.isNull(nodeArray)
+      if @hasNoSelection()
+        message['node'] = @getCurrentNode()
+      else
+        message['nodeArray'] = @getSelectedNodeArray()
     else
-      message['nodeArray'] = @getSelectedNodeArray()
+      message['nodeArray'] = nodeArray
 
     Message.postMessage(message)
     if needHide then @callAction('n_hide')
