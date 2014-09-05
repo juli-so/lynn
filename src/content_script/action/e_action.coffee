@@ -27,7 +27,11 @@ E_Action =
     else
       # Query | Fast mode
       if @state.mode is 'query' or @state.mode is 'fast'
-        @callAction('n_open')
+        switch modifierString
+          when ''       then @callAction('n_open')
+          when 's-'     then @callAction('n_openInBackground')
+          when 'c-'     then @callAction('n_openInNewWindow')
+          when 'c-s-'   then @callAction('n_openInNewIncognitoWindow')
       # Command mode
       else
         if not Util.startsWith(@state.input, ':')
