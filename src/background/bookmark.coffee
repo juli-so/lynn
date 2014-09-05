@@ -29,19 +29,20 @@ Bookmark =
         _.forEach(node.children, initNode)
 
     initTag = =>
-      chrome.storage.local.get ['nodeTagArray', 'tagNodeArray'], (storageObject) =>
-        @nodeTagArray = storageObject['nodeTagArray'] || {}
-        @tagNodeArray = storageObject['tagNodeArray'] || {}
+      chrome.storage.local.get ['nodeTagArray', 'tagNodeArray'],
+        (storageObject) =>
+          @nodeTagArray = storageObject['nodeTagArray'] || {}
+          @tagNodeArray = storageObject['tagNodeArray'] || {}
 
-        _.forEach @allNode, (node) =>
-          if @nodeTagArray[node.id]
-            node.tagArray = @nodeTagArray[node.id]
-          else
-            node.tagArray = @nodeTagArray[node.id] = []
+          _.forEach @allNode, (node) =>
+            if @nodeTagArray[node.id]
+              node.tagArray = @nodeTagArray[node.id]
+            else
+              node.tagArray = @nodeTagArray[node.id] = []
 
-        # initNode only contains synchronous calls but initTag has async calls
-        # Put callback here to ensure it happens after all initiation
-        callback()
+          # initNode only contains synchronous calls but initTag has async calls
+          # Put callback here to ensure it happens after all initiation
+          callback()
 
     # '1' for 'Bookmarks Bar' in chrome by default
     # Later might let user specify root
@@ -277,6 +278,8 @@ Bookmark =
   update: ->
 
   remove: (id) ->
+    if _.isNumber(id)
+      id = Util.numToString(id)
     chrome.bookmarks.remove id, =>
       @delAssociatedTag({ id })
       delete @allNode[id]

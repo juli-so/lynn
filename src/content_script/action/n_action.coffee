@@ -239,46 +239,94 @@ N_Action =
     
   remove: ->
     if @state.nodeArray.length isnt 0
-      # index within all nodeArray, not within current page nodes
-      currentNodeFullIndex = @getCurrentNodeFullIndex()
-      nodeAnimation = {}
-      nodeAnimation[currentNodeFullIndex] = 'fadeOutRight'
-      @setState { nodeAnimation }
+      nodeArray = @state.nodeArray
+      selectedArray = @state.selectedArray
+      MAX = @state.option.MAX_SUGGESTION_NUM
 
-      # remove bookmark from screen using animation
-      timeOutFunc = =>
-        nodeArray = @state.nodeArray
-        nodeArray = _.without(nodeArray, nodeArray[currentNodeFullIndex])
+      if @hasNoSelection()
+        # index within all nodeArray, not within current page nodes
+        currentNodeFullIndex = @getCurrentNodeFullIndex()
+        nodeAnimation = {}
+        nodeAnimation[currentNodeFullIndex] = 'fadeOutRight'
+        @setState { nodeAnimation }
 
-        # if the current selected node is the last one
-        # let it still point to the last node after one node is removed
-        if currentNodeFullIndex is nodeArray.length
-          if @state.currentNodeIndex is 0
-            currentNodeIndex = @state.option.MAX_SUGGESTION_NUM - 1
-            currentPageIndex = @state.currentPageIndex - 1
+        # Remove the bookmark in DB
+        Message.postMessage
+          request: 'removeBookmark'
+          id: @getCurrentNode().id
+
+        # Remove bookmark from screen using animation
+        timeOutFunc = =>
+          nodeArray = _.without(nodeArray, nodeArray[currentNodeFullIndex])
+
+          # if the current selected node is the last one
+          # let it still point to the last node after one node is removed
+          if currentNodeFullIndex is nodeArray.length
+            if @state.currentNodeIndex is 0
+              currentNodeIndex = MAX - 1
+              currentPageIndex = @state.currentPageIndex - 1
+            else
+              currentNodeIndex = @state.currentNodeIndex - 1
+              currentPageIndex = @state.currentPageIndex
+
+            @setState
+              nodeArray: nodeArray
+              nodeAnimation: {}
+
+              currentNodeIndex: currentNodeIndex
+              currentPageIndex: currentPageIndex
           else
-            currentNodeIndex = @state.currentNodeIndex - 1
-            currentPageIndex = @state.currentPageIndex
+            @setState
+              nodeArray: nodeArray
+              nodeAnimation: {}
+
+          # Return to query mode if there is no search results 
+          @setState({ mode: 'query' }) if _.isEmpty(@state.nodeArray)
+
+        setTimeout(timeOutFunc, 350)
+
+      else # HasSelection
+        nodeAnimation = {}
+        _.forEach selectedArray, (nodeIndex) ->
+          nodeAnimation[nodeIndex] = 'fadeOutRight'
+        @setState { nodeAnimation }
+
+        # Remove the bookmark in DB
+        idArray = _.pluck(_.at(nodeArray, selectedArray), 'id')
+        Message.postMessage
+          request: 'removeBookmark'
+          idArray: idArray
+
+        # Remove the bookmark from screen using animation
+        timeOutFunc = =>
+          leftNodeIndexArray =
+            _.difference([0...nodeArray.length], selectedArray)
+          leftNodeArray = _.at(nodeArray, leftNodeIndexArray)
+
+          # Push node index back by the number of selected nodes before it
+          currentNodeFullIndex = @getCurrentNodeFullIndex()
+          nodeBeforeCurrent = _.filter selectedArray, (nodeIndex) ->
+            nodeIndex < currentNodeFullIndex
+
+          futureIndex = currentNodeFullIndex - nodeBeforeCurrent.length
+          futureIndex = 0 if futureIndex < 0
+
+          futureNodeIndex = futureIndex % MAX
+          futurePageIndex = Math.floor(futureIndex / MAX)
 
           @setState
-            nodeArray: nodeArray
+            nodeArray: leftNodeArray
+            selectedArray: []
+
             nodeAnimation: {}
 
-            currentNodeIndex: currentNodeIndex
-            currentPageIndex: currentPageIndex
-        else
-          @setState
-            nodeArray: nodeArray
-            nodeAnimation: {}
+            currentNodeIndex: futureNodeIndex
+            currentPageIndex: futurePageIndex
 
-        @callAction('n_reset') if _.isEmpty(@state.nodeArray)
+          # Return to query mode if there is no search results 
+          @setState({ mode: 'query' }) if _.isEmpty(@state.nodeArray)
 
-      setTimeout(timeOutFunc, 350)
-
-      # really remove the bookmark in DB
-      Message.postMessage
-        request: 'removeBookmark'
-        id: @getCurrentNode().id
+        setTimeout(timeOutFunc, 350)
 
   # ------------------------------------------------------------
   # Other actions

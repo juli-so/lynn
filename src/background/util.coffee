@@ -18,4 +18,6 @@ Util =
   ciContains: (str, fragment) ->
     str.toLowerCase().indexOf(fragment.toLowerCase()) isnt -1
 
+  numToString: (num) ->
+    '' + num
 

@@ -157,4 +157,9 @@ Action =
     Bookmark.create(message.bookmark, message.tagArray)
 
   removeBookmark: (message) ->
-    Bookmark.remove(message.id)
+    if message.id
+      Bookmark.remove(message.id)
+    else
+      _.forEach message.idArray, (id) ->
+        Bookmark.remove(id)
+
