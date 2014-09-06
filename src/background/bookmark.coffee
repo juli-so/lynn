@@ -90,6 +90,11 @@ Bookmark =
     else
       false
 
+  delAllTag: (node) ->
+    node = @allNode[node.id]
+
+    _.remove(node.tagArray, -> true)
+
   # when removing a bookmark
   # all its tags should also be removed
   delAssociatedTag: (node) ->

@@ -5,7 +5,6 @@ I_Action =
   # Add bookmarks
   # ------------------------------------------------------------
 
-
   addBookmark: ->
     @setState
       specialMode: 'addBookmark'
@@ -105,7 +104,26 @@ I_Action =
 
       @callAction('hide')
 
+  # ------------------------------------------------------------
+
   tag: ->
     @setState
-      specialMode: 'tag'
       input: ''
+      specialMode: 'tag'
+
+  editTag: ->
+    # How about multiple selections?
+    if @hasNoSelection()
+      nodeArray = @state.nodeArray
+      currentNode = @getCurrentNode()
+
+      input = @getCurrentNode().tagArray.join(' ') + ' '
+      currentNode.pendingTagArray = currentNode.tagArray
+      currentNode.tagArray = []
+
+      nodeArray[@getCurrentNodeFullIndex()] = currentNode
+
+      @setState
+        input: input
+        specialMode: 'editTag'
+        nodeArray: nodeArray

@@ -60,6 +60,21 @@ InputHandler =
       nodeArray: nodeArray
       input: input
 
+  s_editTag: (event) ->
+    input = event.target.value
+    tagArray = _.filter input.split(' '), (token) ->
+      Util.isTag(token)
+    nodeArray = @state.nodeArray
+
+    if @hasNoSelection()
+      nodeArray[@getCurrentNodeFullIndex()].pendingTagArray = tagArray
+    else
+      # What to do?
+
+    @setState
+      nodeArray: nodeArray
+      input: input
+
   # ------------------------------------------------------------
 
   addBookmarkHelper: (event) ->

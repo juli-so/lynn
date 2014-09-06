@@ -93,6 +93,24 @@ Action =
 
     Bookmark.storeTag()
 
+  editTag: (message) ->
+    if message.node
+      Bookmark.delAllTag(message.node)
+      _.forEach message.node.pendingTagArray, (tag) ->
+        Bookmark.addTag(message.node, tag)
+        true # do not exit early
+    else
+      # haven't decided what to do
+
+    Bookmark.storeTag()
+
+  delAllTag: (message) ->
+    if message.node
+      Bookmark.delAllTag(message.node)
+    else
+      _.forEach message.nodeArray, (node) ->
+        Bookmark.delAllTag(node)
+
   storeTag: (message) ->
     Bookmark.storeTag()
 

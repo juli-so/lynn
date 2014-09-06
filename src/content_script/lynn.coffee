@@ -28,6 +28,7 @@ Top = React.createClass
     if @props.specialMode
       inputPlaceHolderMap =
         'tag'                        : 'Enter your tag here'
+        'editTag'                    : 'Enter your tag here'
         'addBookmark'                : 'Enter your tag here'
         'addMultipleBookmark'        : 'Enter your tag here'
         'addAllCurrentWindowBookmark': 'Enter your tag here'
@@ -116,6 +117,7 @@ Bot = React.createClass
 
     specialModeStringMap =
       'tag'                        : 'Tag'
+      'editTag'                        : 'Edit Tag'
       'addBookmark'                : 'Add Bookmark'
       'addMultipleBookmark'        : 'Add multiple Bookmark'
       'addAllCurrentWindowBookmark': 'Add all tabs in current window 

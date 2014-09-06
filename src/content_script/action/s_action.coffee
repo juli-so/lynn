@@ -81,7 +81,27 @@ S_Action =
 
     @setState
       input: ''
-    
+      specialMode: 'no'
+
+  editTag: ->
+    if @hasNoSelection()
+      Message.postMessage
+        request: 'editTag'
+        node: @getCurrentNode()
+    else
+      # haven't decided what to do
+
+    nodeArray = @state.nodeArray
+    _.forEach nodeArray, (node) ->
+      if not _.isEmpty(node.pendingTagArray)
+        node.tagArray = node.pendingTagArray
+        node.pendingTagArray = []
+
+    @setState
+      input: ''
+      specialMode: 'no'
+      nodeArray: nodeArray
+
   # ------------------------------------------------------------
 
   addGroup: ->

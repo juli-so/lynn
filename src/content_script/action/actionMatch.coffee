@@ -192,6 +192,7 @@ ActionMatch =
 
       # I_Action
       when 't'            then 'i_tag'
+      when 's-t'          then 'i_editTag'
 
       else 'noop'
 
