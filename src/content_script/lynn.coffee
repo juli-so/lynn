@@ -171,6 +171,7 @@ Lynn = React.createClass
 
     cache:
       input: ''
+      nodeArray: []
       selectedArray: []
 
     # loaded from storage

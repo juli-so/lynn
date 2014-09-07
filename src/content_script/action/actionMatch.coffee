@@ -89,12 +89,15 @@ ActionMatch =
   findActionName: (event, mode, specialMode) ->
     keyString = @getKeyString(event)
 
+    # Log for debugging
+    return 'n_log'        if keyString is 'c-p'
+
     # E_Action
-    return 'e_esc'       if keyString is 'esc'
-    return 'e_enter'     if keyString is 'enter'
-    return 'e_c_enter'   if keyString is 'c-enter'
-    return 'e_s_enter'   if keyString is 's-enter'
-    return 'e_c_s_enter' if keyString is 'c-s-enter'
+    return 'e_esc'        if keyString is 'esc'
+    return 'e_enter'      if keyString is 'enter'
+    return 'e_c_enter'    if keyString is 'c-enter'
+    return 'e_s_enter'    if keyString is 's-enter'
+    return 'e_c_s_enter'  if keyString is 'c-s-enter'
 
     if specialMode isnt 'no'
       return 'noop'
@@ -149,7 +152,6 @@ ActionMatch =
       when 'c-s-a'        then 'n_toggleAll'
 
       # Other N_Action
-      when 'c-p'          then 'n_log'
 
       else 'noop'
 

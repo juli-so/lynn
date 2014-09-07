@@ -6,6 +6,8 @@ I_Action =
   # ------------------------------------------------------------
 
   addBookmark: ->
+    @callAction('n_storeCache')
+
     @setState
       specialMode: 'addBookmark'
       input: ''
@@ -20,6 +22,8 @@ I_Action =
         @setState { nodeArray: [node] }
 
   addMultipleBookmark: ->
+    @callAction('n_storeCache')
+
     @setState
       specialMode: 'addMultipleBookmark'
       input: ''
@@ -37,6 +41,8 @@ I_Action =
         @setState { nodeArray }
 
   addAllCurrentWindowBookmark: ->
+    @callAction('n_storeCache')
+
     @setState
       specialMode: 'addAllCurrentWindowBookmark'
       input: ''
@@ -56,6 +62,8 @@ I_Action =
         @setState { nodeArray }
 
   addAllWindowBookmark: ->
+    @callAction('n_storeCache')
+
     @setState
       specialMode: 'addAllWindowBookmark'
       input: ''
@@ -78,6 +86,8 @@ I_Action =
   # ------------------------------------------------------------
 
   addGroup: (groupName) ->
+    @callAction('n_storeCache')
+
     @setState
       specialMode: 'addGroup'
       input: ''
@@ -107,11 +117,17 @@ I_Action =
   # ------------------------------------------------------------
 
   tag: ->
-    @setState
+    @callAction('n_storeCache')
+
+    @setDeepState
       input: ''
       specialMode: 'tag'
+      cache:
+        input: @state.input
 
   editTag: ->
+    @callAction('n_storeCache')
+
     # How about multiple selections?
     if @hasNoSelection()
       nodeArray = @state.nodeArray
@@ -123,7 +139,9 @@ I_Action =
 
       nodeArray[@getCurrentNodeFullIndex()] = currentNode
 
-      @setState
+      @setDeepState
         input: input
         specialMode: 'editTag'
         nodeArray: nodeArray
+        cache:
+          input: @state.input

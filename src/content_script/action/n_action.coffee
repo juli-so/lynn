@@ -332,7 +332,7 @@ N_Action =
         setTimeout(timeOutFunc, 350)
 
   # ------------------------------------------------------------
-  # Other actions
+  # Open last opened windows
   # ------------------------------------------------------------
 
   lastWindow: (option) ->
@@ -356,3 +356,25 @@ N_Action =
     @callAction('n_hide')
 
   # ------------------------------------------------------------
+  # Other actions
+  # ------------------------------------------------------------
+
+  storeCache: ->
+    @setDeepState
+      cache:
+        input: @state.input
+        nodeArray: _.cloneDeep(@state.nodeArray)
+        selectedArray: @state.selectedArray
+
+  clearCache: ->
+    @setState
+      cache:
+        input: ''
+        nodeArray: []
+        selectedArray: []
+
+  recoverFromCache: ->
+    @setState
+      input: @state.cache.input
+      nodeArray: @state.cache.nodeArray
+      selectedArray: @state.cache.selectedArray

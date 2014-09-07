@@ -18,7 +18,17 @@ CommandMap =
 
 E_Action =
   esc: ->
-    @callAction('n_hide')
+    if @state.specialMode isnt 'no'
+      @callAction('e_escFromSpecialMode')
+    else
+      @callAction('n_hide')
+
+  escFromSpecialMode: ->
+    @setState { specialMode: 'no' }
+    @callAction('n_recoverFromCache')
+    @callAction('n_clearCache')
+
+  # ------------------------------------------------------------
 
   enter: (modifierString = '') ->
     # Special mode
@@ -43,6 +53,7 @@ E_Action =
 
         if CommandMap[modifierString + command]
           @callAction(CommandMap[modifierString + command], args)
+          @callAction('n_clearCache')
         else if @state.groupMap[command]
           nodeArray = @state.groupMap[command]
 
@@ -52,20 +63,6 @@ E_Action =
             when 'c-'     then [{ incognito: yes }, yes, yes, nodeArray]
             when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArray]
           @callAction('n_openHelper', openArgs)
-
-  open: ->
-    @callAction('n_openHelper', [{ active:    yes }, no , yes])
-
-  openInBackground: ->
-    @callAction('n_openHelper', [{ active:    no  }, no , no ])
-
-  openInNewWindow: ->
-    @callAction('n_openHelper', [{ incognito: no  }, yes, yes])
-
-  openInNewIncognitoWindow: ->
-    @callAction('n_openHelper', [{ incognito: yes }, yes, yes])
-
-
 
   s_enter: ->
     @callAction('e_enter', ['s-'  ])
