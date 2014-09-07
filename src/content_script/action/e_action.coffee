@@ -21,7 +21,10 @@ E_Action =
     if @state.specialMode isnt 'no'
       @callAction('e_escFromSpecialMode')
     else
-      @callAction('n_hide')
+      if @isResetted()
+        @callAction('n_hide')
+      else
+        @callAction('n_reset')
 
   escFromSpecialMode: ->
     @setState { specialMode: 'no' }

@@ -31,7 +31,7 @@ N_Action =
   # ------------------------------------------------------------
 
   reset: ->
-    @setDeepState
+    @setState
       input: ''
 
       mode: 'query'
@@ -48,9 +48,7 @@ N_Action =
       currentNodeIndex: 0
       currentPageIndex: 0
 
-      cache:
-        input: ''
-        selectedArray: []
+    @callAction('n_clearCache')
 
   clearInput: ->
     if @state.mode is 'query'

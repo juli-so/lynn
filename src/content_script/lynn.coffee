@@ -262,7 +262,7 @@ Lynn = React.createClass
     handler.call(@, event) if handler
 
   # ------------------------------------------------------------
-  # helper functions for getting data
+  # Helper functions for getting data
 
   getCurrentNodeFullIndex: ->
     @state.currentPageIndex * @state.option.MAX_SUGGESTION_NUM +
@@ -290,8 +290,32 @@ Lynn = React.createClass
   hasSelection: ->
     not @hasNoSelection()
 
+  isResetted: ->
+    return yes and
+      @state.input is '' and
+
+      @state.mode is 'query' and
+      @state.specialMode is 'no' and
+
+      @state.animation is 'fadeInDown' and
+      _.isEmpty(@state.nodeAnimation) and
+
+      _.isEmpty(@state.nodeArray) and
+      _.isEmpty(@state.selectedArray) and
+
+      @state.useSuggestedTag is yes and
+
+      @state.currentNodeIndex is 0 and
+      @state.currentPageIndex is 0 and
+
+      @state.cache.input is '' and
+      _.isEmpty(@state.cache.nodeArray) and
+      _.isEmpty(@state.cache.selectedArray)
+
+    @callAction('n_clearCache')
+
   # ------------------------------------------------------------
-  # helping functions for setting states
+  # Helping functions for setting states
 
   callAction: (actionName, params) ->
     ActionMatch.findAction(actionName).apply(@, params)
