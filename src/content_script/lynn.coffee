@@ -25,17 +25,9 @@ Top = React.createClass
   render: ->
     { input } = React.DOM
 
-    if @props.specialMode
-      inputPlaceHolderMap =
-        'tag'                        : 'Enter your tag here'
-        'editTag'                    : 'Enter your tag here'
-        'addBookmark'                : 'Enter your tag here'
-        'addMultipleBookmark'        : 'Enter your tag here'
-        'addAllCurrentWindowBookmark': 'Enter your tag here'
-        'addAllWindowBookmark'       : 'Enter your tag here'
-        'addGroup'                   : 'Enter name of your group here'
-
-      inputPlaceHolder = inputPlaceHolderMap[@props.specialMode]
+    if @props.specialMode isnt 'no'
+      inputPlaceHolder =
+        Hint.inputPlaceHolderSpecialModeMap[@props.specialMode]
     else
       inputPlaceHolder = switch @props.mode
         when 'query' then 'Search for...'
@@ -113,21 +105,9 @@ Bot = React.createClass
     numToString = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five',
       'Six', 'Seven', 'Eight', 'Nine', 'Ten']
 
-    groupName = @props.input.split(' ')[0]
-
-    specialModeStringMap =
-      'tag'                        : 'Tag'
-      'editTag'                        : 'Edit Tag'
-      'addBookmark'                : 'Add Bookmark'
-      'addMultipleBookmark'        : 'Add multiple Bookmark'
-      'addAllCurrentWindowBookmark': 'Add all tabs in current window 
-                                      as Bookmark'
-      'addAllWindowBookmark'       : 'Add all open tabs as Bookmark'
-      'addGroup'                   : 'Add these bookmarks to group: ' +
-                                      groupName
-
     infoString = @props.nodeArray.length + ' result'
     infoString += 's' if @props.nodeArray.length > 1
+
       
     div { id: 'lynn_bot' },
       span className: 'lynn_bot_left',
@@ -136,7 +116,12 @@ Bot = React.createClass
         if @props.specialMode is 'no'
           ''
         else
-          'Speical Mode: ' + specialModeStringMap[@props.specialMode]
+          groupName = @props.input.split(' ')[0]
+          botString = Hint.botStringSpecialModeMap[@props.specialMode]
+          if @props.specialMode is 'addGroup'
+            botString += groupName
+
+          'Speical Mode: ' + botString
       span className: 'lynn_bot_right',
         'Page ' + numToString[@props.currentPageIndex + 1]
 
