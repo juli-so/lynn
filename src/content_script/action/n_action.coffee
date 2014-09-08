@@ -68,34 +68,46 @@ N_Action =
   nextMode: ->
     if @state.mode is 'query'
       @setState { mode: 'fast' }
+
     else if @state.mode is 'fast'
-      @setDeepState
-        mode: 'command'
-        input: ':'
-        cache:
-          input: @state.input
+      @setState { mode: 'command' }
+
+      if @state.cache.input is ''
+        @callAction('n_storeCache')
+        @setState { input: ':' }
+      else
+        @callAction('n_storeAndRecoverFromCache')
+
     else
-      @setDeepState
-        mode: 'query'
-        input: @state.cache.input
-        cache:
-          input: ''
+      @setState { mode: 'query' }
+
+      if @state.input is ':'
+        @callAction('n_recoverFromCache')
+        @callAction('n_clearCache')
+      else
+        @callAction('n_storeAndRecoverFromCache')
 
   prevMode: ->
     if @state.mode is 'fast'
       @setState { mode: 'query' }
+
     else if @state.mode is 'command'
-      @setState
-        mode: 'fast'
-        input: @state.cache.input
-        cache:
-          input: ''
+      @setState { mode: 'fast' }
+
+      if @state.input is ':'
+        @callAction('n_recoverFromCache')
+        @callAction('n_clearCache')
+      else
+        @callAction('n_storeAndRecoverFromCache')
+
     else
-      @setDeepState
-        mode: 'command'
-        input: ':'
-        cache:
-          input: @state.input
+      @setState { mode: 'command' }
+
+      if @state.cache.input is ''
+        @callAction('n_storeCache')
+        @setState { input: ':' }
+      else
+        @callAction('n_storeAndRecoverFromCache')
 
   # ------------------------------------------------------------
   # Movements
@@ -357,12 +369,15 @@ N_Action =
   # Other actions
   # ------------------------------------------------------------
 
-  storeCache: ->
-    @setDeepState
-      cache:
-        input: @state.input
-        nodeArray: _.cloneDeep(@state.nodeArray)
-        selectedArray: @state.selectedArray
+  storeCache: (cache) ->
+    if cache
+      @setState { cache }
+    else
+      @setDeepState
+        cache:
+          input: @state.input
+          nodeArray: _.cloneDeep(@state.nodeArray)
+          selectedArray: @state.selectedArray
 
   clearCache: ->
     @setState
@@ -371,8 +386,21 @@ N_Action =
         nodeArray: []
         selectedArray: []
 
-  recoverFromCache: ->
-    @setState
-      input: @state.cache.input
-      nodeArray: @state.cache.nodeArray
-      selectedArray: @state.cache.selectedArray
+  recoverFromCache: (cache) ->
+    if cache
+      @setState
+        input: cache.input
+        nodeArray: cache.nodeArray
+        selectedArray: cache.selectedArray
+    else
+      @setState
+        input: @state.cache.input
+        nodeArray: @state.cache.nodeArray
+        selectedArray: @state.cache.selectedArray
+
+  # Recover from the current cache, but store current state in cache
+  # before recovering
+  storeAndRecoverFromCache: ->
+    currentCache = _.cloneDeep(@state.cache)
+    @callAction('n_storeCache')
+    @callAction('n_recoverFromCache', [currentCache])
