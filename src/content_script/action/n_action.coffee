@@ -109,6 +109,11 @@ N_Action =
       else
         @callAction('n_storeAndRecoverFromCache')
 
+  goQueryMode: ->
+    @setState
+      input: ''
+      mode: 'query'
+
   # ------------------------------------------------------------
   # Movements
   # ------------------------------------------------------------

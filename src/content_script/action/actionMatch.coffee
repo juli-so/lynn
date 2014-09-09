@@ -191,6 +191,7 @@ ActionMatch =
 
       # Other N_Action
       when 'r'            then 'n_remove'
+      when 'forwardSlash' then 'n_goQueryMode'
 
       # I_Action
       when 't'            then 'i_tag'
