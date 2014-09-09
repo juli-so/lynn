@@ -119,11 +119,9 @@ I_Action =
   tag: ->
     @callAction('n_storeCache')
 
-    @setDeepState
+    @setState
       input: ''
       specialMode: 'tag'
-      cache:
-        input: @state.input
 
   editTag: ->
     @callAction('n_storeCache')
@@ -139,9 +137,7 @@ I_Action =
 
       nodeArray[@getCurrentNodeFullIndex()] = currentNode
 
-      @setDeepState
+      @setState
         input: input
         specialMode: 'editTag'
         nodeArray: nodeArray
-        cache:
-          input: @state.input

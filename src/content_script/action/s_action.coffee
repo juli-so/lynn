@@ -80,8 +80,19 @@ S_Action =
         nodeArray: @getSelectedNodeArray()
 
     @setState
-      input: ''
+      mode: 'query'
       specialMode: 'no'
+
+    tagInput = @state.input
+
+    @callAction('n_recoverFromCache')
+    @callAction('n_clearCache')
+
+    @setState { input: tagInput }
+    Message.postMessage
+      request: 'search'
+      input: tagInput
+
 
   editTag: ->
     if @hasNoSelection()
@@ -89,18 +100,30 @@ S_Action =
         request: 'editTag'
         node: @getCurrentNode()
     else
-      # haven't decided what to do
+      # If there are common tags, operate on them ( can delete them )
+      # Else, just do add tag
 
+    ###
     nodeArray = @state.nodeArray
     _.forEach nodeArray, (node) ->
       if not _.isEmpty(node.pendingTagArray)
         node.tagArray = node.pendingTagArray
         node.pendingTagArray = []
+    ###
 
     @setState
-      input: ''
+      mode: 'query'
       specialMode: 'no'
-      nodeArray: nodeArray
+
+    tagInput = @state.input
+
+    @callAction('n_recoverFromCache')
+    @callAction('n_clearCache')
+
+    @setState { input: tagInput }
+    Message.postMessage
+      request: 'search'
+      input: tagInput
 
   # ------------------------------------------------------------
 
