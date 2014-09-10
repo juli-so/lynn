@@ -239,7 +239,10 @@ Bookmark =
     return [] if _.isEmpty(query)
 
     if query is '#' or query is '@'
-      return @findByTagRange(Object.keys(@tagNodeMap))
+      prefix = query
+      tagRange = _.filter Object.keys(@tagNodeMap), (tag) ->
+        Util.startsWith(tag, prefix)
+      return @findByTagRange(tagRange)
 
     # process query and tokenize tag and keyword
     tokenArray = query.split(' ')
@@ -322,8 +325,6 @@ Bookmark =
 
       @lastDeletedNodeArray = _.difference(@lastWindowTabArray, bmArray)
       chrome.storage.sync.set({ lastDeletedNodeArray: @lastDeletedNodeArray })
-
-        
 
   # ------------------------------------------------------------
   # Bookmark operation end
