@@ -100,10 +100,13 @@ ActionMatch =
     return 'e_c_s_enter'  if keyString is 'c-s-enter'
 
     if specialMode isnt 'no'
-      action = switch keyString
-        when 'tab'   then 'noop'
-        when 's-tab' then 'noop'
-        else @matchCommon(keyString)
+      if @matchInSpecialMode(keyString, specialMode) isnt 'noop'
+        @matchInSpecialMode(keyString, specialMode)
+      else
+        action = switch keyString
+          when 'tab'   then 'noop'
+          when 's-tab' then 'noop'
+          else @matchCommon(keyString)
     else
       action = switch mode
         when 'query'   then @matchInQueryMode(keyString)
@@ -209,3 +212,24 @@ ActionMatch =
       when 'c-backspace'  then 'n_clearInput'
 
       else 'noop'
+
+  # ------------------------------------------------------------
+
+  matchInSpecialMode: (keyString, specialMode) ->
+    switch specialMode
+      when 'recoverBookmark' then switch keyString
+        when 'k'          then 'n_up'
+        when 'j'          then 'n_down'
+
+        when 'u'          then 'n_pageUp'
+        when 'd'          then 'n_pageDown'
+        when 'h'          then 'n_select'
+        when 'l'          then 'n_unselect'
+
+        when 'a'          then 'n_toggleAllSelectionInCurrentPage'
+        when 's-a'        then 'n_toggleAll'
+
+        else 'noop'
+
+      else 'noop'
+
