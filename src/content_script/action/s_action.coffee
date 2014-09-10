@@ -1,9 +1,11 @@
 # Special Actions, mostly confirming Intereactive Actions
 
 S_Action =
+
   # ------------------------------------------------------------
-  # Adding bookmarks
+  # Bookmarks
   # ------------------------------------------------------------
+
   addBookmarkHelper: ->
     if @hasNoSelection()
       node = @getCurrentNode()
@@ -38,7 +40,7 @@ S_Action =
     # For multiple bookmark
     # Don't do 'if only one tag is inputted, search for it'
     if @state.specialMode is 'addMultipleBookmark'
-      @callAction('hide')
+      @callAction('n_hide')
     # If the inputted tag is only one
     # Search for that tag after bookmark is added
     else
@@ -53,7 +55,7 @@ S_Action =
           request: 'search'
           input: tag
       else
-        @callAction('hide')
+        @callAction('n_hide')
 
 
   addBookmark: ->
@@ -68,6 +70,26 @@ S_Action =
   addAllWindowBookmark: ->
     @callAction('s_addBookmarkHelper')
 
+  # ------------------------------------------------------------
+
+  recoverBookmark: ->
+    currentNode = @getCurrentNode()
+    @callAction('n_openHelper', [{ active: no }, no, no])
+
+    if @hasNoSelection()
+      console.log @getCurrentNodeFullIndex()
+      Message.postMessage
+        request: 'recoverBookmark'
+        index: @getCurrentNodeFullIndex()
+    else
+      Message.postMessage
+        request: 'recoverBookmark'
+        indexArray: @state.selectedArray
+
+    @callAction('n_hide')
+
+  # ------------------------------------------------------------
+  # Tag
   # ------------------------------------------------------------
 
   tag: ->

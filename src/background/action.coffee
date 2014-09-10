@@ -181,3 +181,14 @@ Action =
       _.forEach message.idArray, (id) ->
         Bookmark.remove(id)
 
+  queryDeletedBookmark: (message) ->
+    response: 'queryDeletedBookmark'
+    nodeArray: Bookmark.lastDeletedNodeArray
+
+  recoverBookmark: (message) ->
+    if message.index isnt undefined
+      Bookmark.recover(message.index)
+    else
+      _.forEach message.indexArray, (index) ->
+        Bookmark.recover(index)
+

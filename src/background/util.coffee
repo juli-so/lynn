@@ -21,3 +21,8 @@ Util =
   numToString: (num) ->
     '' + num
 
+  toSimpleBookmark: (bookmark) ->
+    title: bookmark.title
+    url: bookmark.url
+
+

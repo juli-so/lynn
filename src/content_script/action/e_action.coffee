@@ -16,6 +16,8 @@ CommandMap =
   'c-l'           : 'n_lastWindowInNewWindow'
   'c-s-l'         : 'n_lastWindowInNewIncognitoWindow'
 
+  'r'             : 'i_recoverBookmark'
+
 E_Action =
   esc: ->
     if @state.specialMode isnt 'no'

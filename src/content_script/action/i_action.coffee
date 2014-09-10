@@ -1,6 +1,7 @@
 # Intereactive actions, mostly confirmed by Special actions
 
 I_Action =
+
   # ------------------------------------------------------------
   # Add bookmarks
   # ------------------------------------------------------------
@@ -80,6 +81,20 @@ I_Action =
           node.suggestedTagArray = message.tagArrayArray[index]
 
         @setState { nodeArray }
+
+  # ------------------------------------------------------------
+  # Recover bookmarks
+  # ------------------------------------------------------------
+
+  recoverBookmark: ->
+    @callAction('n_storeCache')
+
+    @setState
+      specialMode: 'recoverBookmark'
+      input: ''
+
+    Listener.listenOnce 'queryDeletedBookmark', {}, (message) =>
+      @setState { nodeArray: message.nodeArray }
 
   # ------------------------------------------------------------
   # Other actions

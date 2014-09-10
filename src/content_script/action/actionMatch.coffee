@@ -100,7 +100,10 @@ ActionMatch =
     return 'e_c_s_enter'  if keyString is 'c-s-enter'
 
     if specialMode isnt 'no'
-      return 'noop'
+      action = switch keyString
+        when 'tab'   then 'noop'
+        when 's-tab' then 'noop'
+        else @matchCommon(keyString)
     else
       action = switch mode
         when 'query'   then @matchInQueryMode(keyString)
