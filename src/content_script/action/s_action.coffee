@@ -47,16 +47,13 @@ S_Action =
       inputtedTagArray = _.filter @state.input.split(' '), (token) ->
         Util.isTag(token)
 
-      if inputtedTagArray.length is 1
-        tag = inputtedTagArray[0]
-        @callAction('n_reset')
-        @setState { input: tag }
-        Message.postMessage
-          request: 'search'
-          input: tag
-      else
-        @callAction('n_hide')
+      @callAction('n_reset')
+      input = inputtedTagArray.join(' ')
+      @setState { input }
 
+      Message.postMessage
+        request: 'search'
+        input: input
 
   addBookmark: ->
     @callAction('s_addBookmarkHelper')
