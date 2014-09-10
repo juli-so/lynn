@@ -293,7 +293,8 @@ Bookmark =
 
     bm = _.cloneDeep(@allNode[id])
     @lastDeletedNodeArray.unshift(bm)
-    @lastDeletedNodeArray.pop() if @lastDeletedNodeArray.length > @MAX_RECOVER_NUM
+    if @lastDeletedNodeArray.length > @MAX_RECOVER_NUM
+      @lastDeletedNodeArray.pop()
     chrome.storage.sync.set({ lastDeletedNodeArray: @lastDeletedNodeArray })
 
     chrome.bookmarks.remove id, =>
@@ -303,12 +304,26 @@ Bookmark =
       @cleanTag()
       @storeTag()
 
-  recover: (index) ->
-    if @lastDeletedNodeArray[index]
+  recover: (indexOrIndexArray) ->
+    if _.isNumber(indexOrIndexArray)
+      index = indexOrIndexArray
+
       bm = @lastDeletedNodeArray[index]
       @create(Util.toSimpleBookmark(bm), bm.tagArray)
       @lastDeletedNodeArray = _.without(@lastDeletedNodeArray, bm)
       chrome.storage.sync.set({ lastDeletedNodeArray: @lastDeletedNodeArray })
+
+    else
+      indexArray = indexOrIndexArray
+
+      bmArray = _.at(@lastDeletedNodeArray, indexArray)
+      _.forEach bmArray, (bm) =>
+        @create(Util.toSimpleBookmark(bm), bm.tagArray)
+
+      @lastDeletedNodeArray = _.difference(@lastWindowTabArray, bmArray)
+      chrome.storage.sync.set({ lastDeletedNodeArray: @lastDeletedNodeArray })
+
+        
 
   # ------------------------------------------------------------
   # Bookmark operation end

@@ -189,6 +189,4 @@ Action =
     if message.index isnt undefined
       Bookmark.recover(message.index)
     else
-      _.forEach message.indexArray, (index) ->
-        Bookmark.recover(index)
-
+      Bookmark.recover(message.indexArray)
