@@ -12,6 +12,7 @@ S_Action =
         tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
       else
         tagArray = node.tagArray
+
       Message.postMessage
         request: 'addBookmark'
         bookmark:
@@ -24,13 +25,13 @@ S_Action =
         if @state.useSuggestedTag
           tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
         else
-          tagArrayArray = node.tagArray
+          tagArray = node.tagArray
         Message.postMessage
           request: 'addBookmark'
           bookmark:
             title: node.title
             url: node.url
-          tagArray: node.tagArray
+          tagArray: tagArray
 
     @callAction('c_storeTag')
 

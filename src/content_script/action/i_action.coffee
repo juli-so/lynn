@@ -17,7 +17,7 @@ I_Action =
 
       @setState { nodeArray: [node] }
 
-      Listener.listenOnce 'suggestTag',{ bookmark: node } , (message) =>
+      Listener.listenOnce 'suggestTag', { bookmark: node } , (message) =>
         node = _.assign(node, { suggestedTagArray: message.tagArray })
         @setState { nodeArray: [node] }
 
