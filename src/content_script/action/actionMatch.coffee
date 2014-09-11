@@ -1,3 +1,5 @@
+DEBUG = true
+
 # Match keys to actions
 
 # Note: Some chrome shortcuts, namely 
@@ -101,7 +103,7 @@ ActionMatch =
 
     if specialMode isnt 'no'
       if @matchInSpecialMode(keyString, specialMode) isnt 'noop'
-        @matchInSpecialMode(keyString, specialMode)
+        action = @matchInSpecialMode(keyString, specialMode)
       else
         action = switch keyString
           when 'tab'   then 'noop'
@@ -117,7 +119,10 @@ ActionMatch =
         else 'noop'
 
       action = @matchCommon(keyString) if action is 'noop'
-      return action
+
+    console.log action if DEBUG
+
+    return action
 
   # Find the real action function
   findAction: (actionName) ->
@@ -133,108 +138,108 @@ ActionMatch =
   # Actions shared in all modes
   # Can be overridden by actions defined specifically for other modes
   matchCommon: (keyString) ->
-    switch keyString
-      when 'tab'          then 'n_nextMode'
-      when 's-tab'        then 'n_prevMode'
+    actionMap =
+      'tab':              'n_nextMode'
+      's-tab':            'n_prevMode'
 
       # Movement
-      when 'upArrow'      then 'n_up'
-      when 'c-k'          then 'n_up'
-      when 'downArrow'    then 'n_down'
-      when 'c-j'          then 'n_down'
+      'upArrow':          'n_up'
+      'c-k':              'n_up'
+      'downArrow':        'n_down'
+      'c-j':              'n_down'
 
-      when 'pageUp'       then 'n_pageUp'
-      when 'c-u'          then 'n_pageUp'
-      when 'pageDown'     then 'n_pageDown'
-      when 'c-d'          then 'n_pageDown'
+      'pageUp':           'n_pageUp'
+      'c-u':              'n_pageUp'
+      'pageDown':         'n_pageDown'
+      'c-d':              'n_pageDown'
 
       # Selection
-      when 'c-h'          then 'n_select'
-      when 'leftArrow'    then 'n_select'
-      when 'c-l'          then 'n_unselect'
-      when 'rightArrow'   then 'n_unselect'
+      'c-h':              'n_select'
+      'leftArrow':        'n_select'
+      'c-l':              'n_unselect'
+      'rightArrow':       'n_unselect'
 
-      when 'c-a'          then 'n_toggleAllSelectionInCurrentPage'
-      when 'c-s-a'        then 'n_toggleAll'
+      'c-a':              'n_toggleAllSelectionInCurrentPage'
+      'c-s-a':            'n_toggleAll'
 
       # Other N_Action
 
-      else 'noop'
+    actionMap[keyString] || 'noop'
 
   # ------------------------------------------------------------
 
   matchInQueryMode: (keyString) ->
-    switch keyString
-      # Temporarily disable this in case accidentally removed bookmarks
-      #when 'c-r'          then 'n_remove'
-      when 'c-backspace'  then 'n_clearInput'
+    actionMap =
+      'c-backspace':      'n_clearInput'
 
-      when 'c-r'          then 'n_remove'
+      'c-r':              'n_remove'
 
-      else 'noop'
+    actionMap[keyString] || 'noop'
+
 
   matchInFastMode: (keyString) ->
-    switch keyString
+    actionMap =
       # Opening bookmarks
-      when 'o'            then 'n_open'
-      when 's-o'          then 'n_openInBackground'
-      when 'c-o'          then 'n_openInNewWindow'
-      when 'c-s-o'        then 'n_openInNewIncognitoWindow'
+      'o':                'n_open'
+      's-o':              'n_openInBackground'
+      'c-o':              'n_openInNewWindow'
+      'c-s-o':            'n_openInNewIncognitoWindow'
 
       # Movment
-      when 'k'            then 'n_up'
-      when 'j'            then 'n_down'
+      'k':                'n_up'
+      'j':                'n_down'
 
-      when 'u'            then 'n_pageUp'
-      when 'd'            then 'n_pageDown'
+      'u':                'n_pageUp'
+      'd':                'n_pageDown'
 
       # Selection
-      when 'h'            then 'n_select'
-      when 'l'            then 'n_unselect'
+      'h':                'n_select'
+      'l':                'n_unselect'
 
-      when 'a'            then 'n_toggleAllSelectionInCurrentPage'
-      when 's-a'          then 'n_toggleAll'
+      'a':                'n_toggleAllSelectionInCurrentPage'
+      's-a':              'n_toggleAll'
 
       # Other N_Action
-      when 'r'            then 'n_remove'
-      when 'forwardSlash' then 'n_goQueryMode'
+      'r':                'n_remove'
+      'forwardSlash':     'n_goQueryMode'
 
       # I_Action
-      when 't'            then 'i_tag'
-      when 's-t'          then 'i_editTag'
+      't':                'i_tag'
+      's-t':              'i_editTag'
 
-      else 'noop'
+    actionMap[keyString] || 'noop'
 
   # ------------------------------------------------------------
 
   matchInCommandMode: (keyString) ->
-    switch keyString
-      when 'c-backspace'  then 'n_clearInput'
+    actionMap =
+      'c-backspace':      'n_clearInput'
 
-      else 'noop'
+    actionMap[keyString] || 'noop'
 
   # ------------------------------------------------------------
 
   matchInSpecialMode: (keyString, specialMode) ->
-    switch specialMode
-      when 'recoverBookmark' then switch keyString
-        when 'k'            then 'n_up'
-        when 'j'            then 'n_down'
+    commonActionMap =
+      'c-backspace':        'n_deletePreviousWord'
 
-        when 'u'            then 'n_pageUp'
-        when 'd'            then 'n_pageDown'
-        when 'h'            then 'n_select'
-        when 'l'            then 'n_unselect'
+    actionMap =
+      'recoverBookmark':
+        'k':                'n_up'
+        'k':                'n_up'
+        'j':                'n_down'
 
-        when 'a'            then 'n_toggleAllSelectionInCurrentPage'
-        when 's-a'          then 'n_toggleAll'
+        'u':                'n_pageUp'
+        'd':                'n_pageDown'
+        'h':                'n_select'
+        'l':                'n_unselect'
 
-        else 'noop'
+        'a':                'n_toggleAllSelectionInCurrentPage'
+        's-a':              'n_toggleAll'
 
-      when 'editTag' then switch keyString
-        when 'c-backspace'  then 'n_deletePreviousWord'
+        'c-backspace':      'noop'
 
-        else 'noop'
-
-      else 'noop'
-
+    if actionMap[specialMode] and actionMap[specialMode][keyString]
+      actionMap[specialMode][keyString]
+    else
+      commonActionMap[keyString] || 'noop'
