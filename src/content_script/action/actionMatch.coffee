@@ -223,6 +223,9 @@ ActionMatch =
     commonActionMap =
       'c-backspace':        'n_deletePreviousWord'
 
+      'c-a':                'n_setCaretToStart'
+      'c-e':                'n_setCaretToEnd'
+
     actionMap =
       'recoverBookmark':
         'k':                'n_up'
@@ -238,6 +241,9 @@ ActionMatch =
         's-a':              'n_toggleAll'
 
         'c-backspace':      'noop'
+
+        'c-a':              'noop'
+        'c-e':              'noop'
 
     if actionMap[specialMode] and actionMap[specialMode][keyString]
       actionMap[specialMode][keyString]

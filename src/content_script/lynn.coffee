@@ -38,7 +38,7 @@ Top = React.createClass
       input
         ref: 'lynn_console'
       
-        className: 'lynn_console'
+        id: 'lynn_console'
         type: 'text'
         size: '80'
         placeholder: inputPlaceHolder

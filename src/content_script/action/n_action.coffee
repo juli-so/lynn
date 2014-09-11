@@ -421,3 +421,9 @@ N_Action =
     @setState { input }
 
     @callHandlerHelper('s_editTag', { target: { value: input } })
+
+  setCaretToStart: ->
+    Util.setCaretRange(0, 0)
+    
+  setCaretToEnd: ->
+    Util.setCaretRange(@state.input.length, @state.input.length)

@@ -24,3 +24,6 @@ Util =
       _.map tabArray, (tab) =>
         @tabToNode(tab)
     
+  setCaretRange: (start, end) ->
+    e = document.getElementById('lynn_console')
+    e.setSelectionRange(start, end)
