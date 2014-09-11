@@ -218,16 +218,21 @@ ActionMatch =
   matchInSpecialMode: (keyString, specialMode) ->
     switch specialMode
       when 'recoverBookmark' then switch keyString
-        when 'k'          then 'n_up'
-        when 'j'          then 'n_down'
+        when 'k'            then 'n_up'
+        when 'j'            then 'n_down'
 
-        when 'u'          then 'n_pageUp'
-        when 'd'          then 'n_pageDown'
-        when 'h'          then 'n_select'
-        when 'l'          then 'n_unselect'
+        when 'u'            then 'n_pageUp'
+        when 'd'            then 'n_pageDown'
+        when 'h'            then 'n_select'
+        when 'l'            then 'n_unselect'
 
-        when 'a'          then 'n_toggleAllSelectionInCurrentPage'
-        when 's-a'        then 'n_toggleAll'
+        when 'a'            then 'n_toggleAllSelectionInCurrentPage'
+        when 's-a'          then 'n_toggleAll'
+
+        else 'noop'
+
+      when 'editTag' then switch keyString
+        when 'c-backspace'  then 'n_deletePreviousWord'
 
         else 'noop'
 

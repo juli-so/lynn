@@ -371,7 +371,7 @@ N_Action =
     @callAction('n_hide')
 
   # ------------------------------------------------------------
-  # Other actions
+  # Cache
   # ------------------------------------------------------------
 
   storeCache: (cache) ->
@@ -409,3 +409,12 @@ N_Action =
     currentCache = _.cloneDeep(@state.cache)
     @callAction('n_storeCache')
     @callAction('n_recoverFromCache', [currentCache])
+
+  # ------------------------------------------------------------
+  # Other actions
+  # ------------------------------------------------------------
+
+  deletePreviousWord: ->
+    input = @state.input
+    [..., last] = input.split(' ')
+    @setState { input: _.without(input.split(' '), last).join(' ') }
