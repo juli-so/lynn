@@ -114,13 +114,14 @@ S_Action =
         request: 'editTag'
         node: @getCurrentNode()
     else
-      # If there are common tags, operate on them ( can delete them )
-      # Else, just do add tag
+      Message.postMessage
+        request: 'editTag'
+        nodeArray: @getSelectedNodeArray()
 
     nodeArray = @state.nodeArray
-    _.forEach nodeArray, (node) ->
+    _.forEach nodeArray, (node) =>
       if not _.isEmpty(node.pendingTagArray)
-        node.tagArray = node.pendingTagArray
+        node.tagArray = node.tagArray.concat(node.pendingTagArray)
         node.pendingTagArray = []
 
     @setState { specialMode: 'no' }

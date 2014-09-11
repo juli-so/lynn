@@ -69,7 +69,8 @@ InputHandler =
     if @hasNoSelection()
       nodeArray[@getCurrentNodeFullIndex()].pendingTagArray = tagArray
     else
-      # What to do?
+      _.forEach @state.selectedArray, (index) =>
+        nodeArray[index].pendingTagArray = tagArray
 
     @setState
       nodeArray: nodeArray

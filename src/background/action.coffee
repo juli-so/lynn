@@ -100,7 +100,11 @@ Action =
         Bookmark.addTag(message.node, tag)
         true # do not exit early
     else
-      # haven't decided what to do
+      _.forEach message.nodeArray, (node) ->
+        Bookmark.delAllTag(node)
+        _.forEach node.tagArray.concat(node.pendingTagArray), (tag) ->
+          Bookmark.addTag(node, tag)
+          true
 
     Bookmark.storeTag()
 

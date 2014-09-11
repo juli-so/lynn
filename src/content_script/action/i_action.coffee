@@ -141,7 +141,6 @@ I_Action =
   editTag: ->
     @callAction('n_storeCache')
 
-    # How about multiple selections?
     if @hasNoSelection()
       nodeArray = @state.nodeArray
       currentNode = @getCurrentNode()
@@ -156,3 +155,23 @@ I_Action =
         input: input
         specialMode: 'editTag'
         nodeArray: nodeArray
+
+    else
+      selectedNodeArray = _.at(@state.nodeArray, @state.selectedArray)
+
+      commonTagArray = _.intersection.apply(null, _.pluck(selectedNodeArray, 'tagArray'))
+
+      input = commonTagArray.join(' ') + ' '
+
+      nodeArray = @state.nodeArray
+      _.forEach @state.selectedArray, (index) =>
+        node = nodeArray[index]
+        node.tagArray = _.difference(node.tagArray, commonTagArray)
+        node.pendingTagArray = commonTagArray
+
+      @setState
+        input: input
+        specialMode: 'editTag'
+        nodeArray: nodeArray
+
+
