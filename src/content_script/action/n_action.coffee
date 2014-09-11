@@ -415,6 +415,9 @@ N_Action =
   # ------------------------------------------------------------
 
   deletePreviousWord: ->
-    input = @state.input
+    input = @state.input.trim()
     [..., last] = input.split(' ')
-    @setState { input: _.without(input.split(' '), last).join(' ') }
+    input =  _.without(input.split(' '), last).join(' ')
+    @setState { input }
+
+    @callHandlerHelper('s_editTag', { target: { value: input } })

@@ -190,14 +190,6 @@ Lynn = React.createClass
 
           @callAction(actionName)
 
-  componentDidUpdate: (prevProps, prevState) ->
-    if @state.input isnt prevState.input and
-      @state.mode is prevState.mode and
-      @state.specialMode is prevState.specialMode
-        handler = InputHandler.matchHandler(@state.mode, @state.specialMode)
-        handler.call(@, event) if handler
-
-
   # ------------------------------------------------------------
 
   render: ->
