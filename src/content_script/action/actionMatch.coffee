@@ -172,6 +172,9 @@ ActionMatch =
     actionMap =
       'c-backspace':      'n_clearInput'
 
+      'c-a':              'n_setCaretToStart'
+      'c-e':              'n_setCaretToEnd'
+
       'c-r':              'n_remove'
 
     actionMap[keyString] || 'noop'
@@ -215,6 +218,9 @@ ActionMatch =
     actionMap =
       'c-backspace':      'n_clearInput'
 
+      'c-a':              'n_setCaretToStart'
+      'c-e':              'n_setCaretToEnd'
+
     actionMap[keyString] || 'noop'
 
   # ------------------------------------------------------------
@@ -225,9 +231,6 @@ ActionMatch =
 
       'c-a':                'n_setCaretToStart'
       'c-e':                'n_setCaretToEnd'
-
-      'c-leftArrow':        'n_setCaretOneWordLeft'
-      'c-rightArrow':       'n_setCaretOneWordRight'
 
     actionMap =
       'recoverBookmark':
@@ -247,9 +250,6 @@ ActionMatch =
 
         'c-a':              'noop'
         'c-e':              'noop'
-
-        'c-leftArrow':      'noop'
-        'c-rightArrow':     'noop'
 
     if actionMap[specialMode] and actionMap[specialMode][keyString]
       actionMap[specialMode][keyString]

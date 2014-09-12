@@ -414,45 +414,14 @@ N_Action =
   # Other actions
   # ------------------------------------------------------------
 
-  deletePreviousWord: ->
-    input = @state.input.trim()
-    [..., last] = input.split(' ')
-    input =  _.without(input.split(' '), last).join(' ')
-    @setState { input }
-
-    @callHandlerHelper('s_editTag', { target: { value: input } })
-
-  deleteNextWord: ->
-
   setCaretToStart: ->
-    Util.setCaretRange(0, 0)
+    if @state.mode is 'query'
+      Util.setCaretRange(0, 0)
+    else
+      if @state.specialMode isnt 'no'
+        Util.setCaretRange(0, 0)
+      else
+        Util.setCaretRange(1, 1)
     
   setCaretToEnd: ->
     Util.setCaretRange(@state.input.length, @state.input.length)
-
-  setCaretOneWordLeft: ->
-    [start, end] = Util.getCaretPosition()
-    input = @state.input[0...start].trim()
-    [..., last] = input.split(' ')
-    position = input.length - last.length
-    Util.setCaretRange(position, position)
-
-  # '  go b '
-  setCaretOneWordRight: ->
-    [start, end] = Util.getCaretPosition()
-    former = @state.input[0...start]
-    latter = @state.input[start...]
-    latterCharArray = latter.split('')
-
-    spaceCount = 0
-    _.forEach latterCharArray, (c) ->
-      if c is ' '
-        spaceCount += 1
-        return true
-      else
-        return false
-
-    firstWordLength = latter[spaceCount...].split(' ')[0].length
-    position = former.length + spaceCount + firstWordLength
-
-    Util.setCaretRange(position, position)
