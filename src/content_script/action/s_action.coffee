@@ -36,6 +36,7 @@ S_Action =
           tagArray: tagArray
 
     @callAction('c_storeTag')
+    @callAction('n_clearCache')
 
     # For multiple bookmark
     # Don't do 'if only one tag is inputted, search for it'

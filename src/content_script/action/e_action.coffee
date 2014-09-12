@@ -58,7 +58,6 @@ E_Action =
 
         if CommandMap[modifierString + command]
           @callAction(CommandMap[modifierString + command], args)
-          @callAction('n_clearCache')
         else if @state.groupMap[command]
           nodeArray = @state.groupMap[command]
 
