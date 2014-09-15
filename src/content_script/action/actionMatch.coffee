@@ -144,6 +144,8 @@ ActionMatch =
       'tab':              'n_nextMode'
       's-tab':            'n_prevMode'
 
+      'c-backspace':      'n_clearInput'
+
       # Movement
       'upArrow':          'n_up'
       'c-k':              'n_up'
@@ -172,8 +174,6 @@ ActionMatch =
 
   matchInQueryMode: (keyString) ->
     actionMap =
-      'c-backspace':      'n_clearInput'
-
       'c-a':              'n_setCaretToStart'
       'c-e':              'n_setCaretToEnd'
 
@@ -220,8 +220,6 @@ ActionMatch =
 
   matchInCommandMode: (keyString) ->
     actionMap =
-      'c-backspace':      'n_clearInput'
-
       'c-a':              'n_setCaretToStart'
       'c-e':              'n_setCaretToEnd'
 

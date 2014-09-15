@@ -60,6 +60,9 @@ N_Action =
 
         currentNodeIndex: 0
         currentPageIndex: 0
+    else if @state.mode is 'fast'
+      @setState { mode: 'query' }
+      @callAction('n_clearInput')
     else
       @setState { input: ':' }
 
