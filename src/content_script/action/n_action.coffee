@@ -425,3 +425,79 @@ N_Action =
     
   setCaretToEnd: ->
     Util.setCaretRange(@state.input.length, @state.input.length)
+
+  setCaretToPrevWord: ->
+    input = @state.input
+    [start, end] = Util.getCaretPosition()
+    
+    beforeCaret = input[0...start]
+    afterCaret = input[start...]
+
+    beforeCaretArray = beforeCaret.split(' ')
+
+    spaceTokenNum = (_.last beforeCaretArray, (s) ->
+      s is ""
+    ).length
+
+    leftTokenSize = Math.max(0, beforeCaretArray.length - spaceTokenNum - 1)
+    position = beforeCaretArray[0...leftTokenSize].join(' ').length
+
+    Util.setCaretRange(position, position)
+    
+  setCaretToNextWord: ->
+    input = @state.input
+    [start, end] = Util.getCaretPosition()
+
+    beforeCaret = input[0...start]
+    afterCaret = input[start...]
+
+    afterCaretArray = afterCaret.split(' ')
+
+    spaceTokenNum = (_.first afterCaretArray, (s) ->
+      s is ""
+    ).length
+
+    position = beforeCaret.length +
+      afterCaretArray[0...spaceTokenNum + 1].join(' ').length
+
+    Util.setCaretRange(position, position)
+
+  deletePrevWord: ->
+    input = @state.input
+    [start, end] = Util.getCaretPosition()
+    
+    beforeCaret = input[0...start]
+    afterCaret = input[start...]
+
+    beforeCaretArray = beforeCaret.split(' ')
+
+    spaceTokenNum = (_.last beforeCaretArray, (s) ->
+      s is ""
+    ).length
+
+    leftTokenSize = Math.max(0, beforeCaretArray.length - spaceTokenNum - 1)
+    input = beforeCaretArray[0...leftTokenSize].join(' ') + afterCaret
+    position = beforeCaretArray[0...leftTokenSize].join(' ').length
+
+    @setState { input }
+    Util.setCaretRange(position, position)
+
+  deleteNextWord: ->
+    input = @state.input
+    [start, end] = Util.getCaretPosition()
+
+    beforeCaret = input[0...start]
+    afterCaret = input[start...]
+
+    afterCaretArray = afterCaret.split(' ')
+
+    spaceTokenNum = (_.first afterCaretArray, (s) ->
+      s is ""
+    ).length
+
+    console.log afterCaretArray
+    console.log spaceTokenNum
+    input = beforeCaret + afterCaretArray[spaceTokenNum + 1...].join(' ')
+
+    @setState { input }
+    Util.setCaretRange(start, start)

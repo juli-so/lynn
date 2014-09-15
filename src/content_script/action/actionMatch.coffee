@@ -18,6 +18,8 @@ Key =
   '35' : 'end'
   '36' : 'home'
 
+  '46' : 'delete'
+
   '38' : 'upArrow'
   '40' : 'downArrow'
   '37' : 'leftArrow'
@@ -155,9 +157,9 @@ ActionMatch =
 
       # Selection
       'c-h':              'n_select'
-      'leftArrow':        'n_select'
+      'c-leftArrow':      'n_select'
       'c-l':              'n_unselect'
-      'rightArrow':       'n_unselect'
+      'c-rightArrow':     'n_unselect'
 
       'c-a':              'n_toggleAllSelectionInCurrentPage'
       'c-s-a':            'n_toggleAll'
@@ -197,7 +199,9 @@ ActionMatch =
 
       # Selection
       'h':                'n_select'
+      'leftArrow':        'n_select'
       'l':                'n_unselect'
+      'rightArrow':       'n_unselect'
 
       'a':                'n_toggleAllSelectionInCurrentPage'
       's-a':              'n_toggleAll'
@@ -227,10 +231,15 @@ ActionMatch =
 
   matchInSpecialMode: (keyString, specialMode) ->
     commonActionMap =
-      'c-backspace':        'n_deletePreviousWord'
-
       'c-a':                'n_setCaretToStart'
       'c-e':                'n_setCaretToEnd'
+
+      'c-backspace':        'n_deletePrevWord'
+      'c-delete':           'n_deleteNextWord'
+
+      'c-leftArrow':        'n_setCaretToPrevWord'
+      'c-rightArrow':       'n_setCaretToNextWord'
+
 
     actionMap =
       'recoverBookmark':
