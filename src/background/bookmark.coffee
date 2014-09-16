@@ -235,6 +235,7 @@ Bookmark =
   find: (query, pool = @allNode) ->
     # Special cases
     return [] if _.isEmpty(query)
+    return @lastAddedNodeArray if query is '#last'
 
     if query is '#' or query is '@'
       prefix = query
