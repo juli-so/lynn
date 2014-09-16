@@ -99,32 +99,26 @@ Bookmark =
     else
       false
 
-  delAllTag: (node) ->
-    node = @allNode[node.id]
-
-    _.remove(node.tagArray, -> true)
-
   # when removing a bookmark
   # all its tags should also be removed
-  delAssociatedTag: (node) ->
+  delAllTag: (node) ->
     # in case the node is sent from front end
     node = @allNode[node.id]
 
     _.forEach node.tagArray, (tag) =>
-      _.pull(@tagNodeMap[tag], node.id)
+      _.pull(@tagNodeMap[tag], '' + node.id)
     _.remove(node.tagArray)
 
   # remove meaningless entries in nodeTagMap and tagNodeMap
-  cleanTag: ->
-    nodeTagMapKey = Object.keys(@nodeTagMap)
-    _.forEach nodeTagMapKey, (key) =>
-      if not @allNode[key]
-        delete @nodeTagMap[key]
+  rebuildTagNodeMap: ->
+    @tagNodeMap = {}
 
-    tagNodeMapKey = Object.keys(@tagNodeMap)
-    _.forEach tagNodeMapKey, (key) =>
-      if _.isEmpty(@tagNodeMap[key])
-        delete @tagNodeMap[key]
+    _.forEach @allNode, (node) =>
+      _.forEach node.tagArray, (tag) =>
+        @tagNodeMap[tag] = [] unless @tagNodeMap[tag]
+        @tagNodeMap[tag].unshift(node.id)
+
+    chrome.storage.local.set({ tagNodeMap: @tagNodeMap })
 
   storeTag: ->
     chrome.storage.local.set
@@ -283,12 +277,6 @@ Bookmark =
   create: (bookmark, tagArray) ->
     bookmark = _.assign(bookmark, { parentId: '232' })
 
-    bmCopy = _.cloneDeep(bookmark)
-    @lastAddedNodeArray.unshift(bmCopy)
-    while @lastAddedNodeArray.length > @MAX_LAST_ADD_NUM
-      @lastAddedNodeArray.pop()
-    chrome.storage.sync.set({ lastAddedNodeArray: @lastAddedNodeArray })
-
     chrome.bookmarks.create bookmark, (result) =>
       result.isBookmark = yes
       result.tagArray = @nodeTagMap[result.id] = []
@@ -297,6 +285,13 @@ Bookmark =
       _.forEach tagArray, (tag) =>
         @addTag(result, tag)
       @storeTag()
+
+      bmCopy = _.cloneDeep(@allNode[result.id])
+
+      @lastAddedNodeArray.unshift(bmCopy)
+      while @lastAddedNodeArray.length > @MAX_LAST_ADD_NUM
+        @lastAddedNodeArray.pop()
+      chrome.storage.sync.set({ lastAddedNodeArray: @lastAddedNodeArray })
     
   move: ->
   update: ->
@@ -312,10 +307,11 @@ Bookmark =
     chrome.storage.sync.set({ lastDeletedNodeArray: @lastDeletedNodeArray })
 
     chrome.bookmarks.remove id, =>
-      @delAssociatedTag({ id })
+      _.forEach @allNode[id].tagArray, (tag) =>
+
+      @delAllTag({ id })
       delete @allNode[id]
 
-      @cleanTag()
       @storeTag()
 
   recover: (indexOrIndexArray) ->
