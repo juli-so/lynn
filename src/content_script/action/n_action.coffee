@@ -240,7 +240,10 @@ N_Action =
       message['nodeArray'] = nodeArray
 
     Message.postMessage(message)
-    if needHide then @callAction('n_hide')
+    if needHide
+      @callAction('n_hide')
+    else
+      @setState { selectedArray: [] }
 
   open: ->
     @callAction('n_openHelper', [{ active:    yes }, no , yes])
