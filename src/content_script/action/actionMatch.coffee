@@ -206,6 +206,12 @@ ActionMatch =
       'a':                'n_toggleAllSelectionInCurrentPage'
       's-a':              'n_toggleAll'
 
+      # Insertion
+      'c':                'n_clearInput'
+      
+      'i':                'n_insert'
+      's-i':              'n_insertBefore'
+
       # Other N_Action
       'r':                'n_remove'
       'forwardSlash':     'n_goQueryMode'

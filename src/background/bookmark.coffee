@@ -5,10 +5,12 @@ Bookmark =
   tagNodeMap: {} # tag -> [Node.id]
 
   # Synced to storage.sync
+  lastAddedNodeArray: []
   lastDeletedNodeArray: []
 
   # Options
   MAX_RECOVER_NUM: 10
+  MAX_LASTADD_NUM: 10
 
   # ------------------------------------------------------------
   # Init
@@ -42,6 +44,8 @@ Bookmark =
 
     initOther = =>
       chrome.storage.sync.get null, (storageObject) =>
+        @lastAddedNodeArray =
+          storageObject.lastAddedNodeArray || @lastDeletedNodeArray
         @lastDeletedNodeArray =
           storageObject.lastDeletedNodeArray || @lastDeletedNodeArray
         @MAX_RECOVER_NUM =
@@ -278,6 +282,13 @@ Bookmark =
 
   create: (bookmark, tagArray) ->
     bookmark = _.assign(bookmark, { parentId: '232' })
+
+    bmCopy = _.cloneDeep(bookmark)
+    @lastAddedNodeArray.unshift(bmCopy)
+    while @lastAddedNodeArray.length > @MAX_LAST_ADD_NUM
+      @lastAddedNodeArray.pop()
+    chrome.storage.sync.set({ lastAddedNodeArray: @lastAddedNodeArray })
+
     chrome.bookmarks.create bookmark, (result) =>
       result.isBookmark = yes
       result.tagArray = @nodeTagMap[result.id] = []
@@ -296,7 +307,7 @@ Bookmark =
 
     bm = _.cloneDeep(@allNode[id])
     @lastDeletedNodeArray.unshift(bm)
-    if @lastDeletedNodeArray.length > @MAX_RECOVER_NUM
+    while @lastDeletedNodeArray.length > @MAX_RECOVER_NUM
       @lastDeletedNodeArray.pop()
     chrome.storage.sync.set({ lastDeletedNodeArray: @lastDeletedNodeArray })
 

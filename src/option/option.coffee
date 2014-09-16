@@ -38,7 +38,6 @@ $(->
       $('#dashboard_container')[0]
 
     $('#MAX_SUGGESTION_NUM').val(storageObject.option['MAX_SUGGESTION_NUM'])
-    console.log storageObject
 
   $('#save').click ->
     save()
