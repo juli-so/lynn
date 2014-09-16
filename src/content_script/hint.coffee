@@ -8,6 +8,7 @@ Hint =
     'addMultipleBookmark'        : 'Enter your tag here'
     'addAllCurrentWindowBookmark': 'Enter your tag here'
     'addAllWindowBookmark'       : 'Enter your tag here'
+    'addLinkBookmark'            : 'Enter your tag here'
     'addGroup'                   : 'Enter name of your group here'
     'recoverBookmark'            : 'No need to enter anything'
 
@@ -19,5 +20,6 @@ Hint =
     'addAllCurrentWindowBookmark': 'Add all tabs in current window 
                                     as Bookmark'
     'addAllWindowBookmark'       : 'Add all open tabs as Bookmark'
+    'addLinkBookmark'            : 'Add this link as a bookmark'
     'addGroup'                   : 'Add these bookmarks to group: '
     'recoverBookmark'            : 'Recover deleted bookmarks'

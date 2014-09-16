@@ -82,6 +82,45 @@ I_Action =
 
         @setState { nodeArray }
 
+  addLinkBookmark: ->
+    @callAction('n_storeCache')
+  
+    @callAction('n_hide')
+
+    $(document).click (e) =>
+      e.preventDefault()
+      $(document).unbind('click')
+
+      @callAction('n_show')
+      @setState
+        mode: 'command'
+        specialMode: 'addLinkBookmark'
+        input: ''
+
+      $.ajax
+        url: e.target.href
+        success: (data) =>
+          console.log data
+          parser = new DOMParser()
+          doc = parser.parseFromString(data, 'text/html')
+          title = doc.getElementsByTagName('title')[0].text
+
+          # Recursively go up until reaching <a>
+          element = e.target
+          while element.nodeName isnt 'A'
+            element = element.parentNode
+
+          node =
+            title: title
+            url: element.href
+            tagArray: []
+            suggestedTagArray: []
+
+          Listener.listenOnce 'suggestTag', { bookmark: node }, (message) =>
+            node = _.assign(node, { suggestedTagArray: message.tagArray })
+            @setState { nodeArray: [node] }
+
+
   # ------------------------------------------------------------
   # Recover bookmarks
   # ------------------------------------------------------------
@@ -159,7 +198,8 @@ I_Action =
     else
       selectedNodeArray = _.at(@state.nodeArray, @state.selectedArray)
 
-      commonTagArray = _.intersection.apply(null, _.pluck(selectedNodeArray, 'tagArray'))
+      commonTagArray =
+        _.intersection.apply(null, _.pluck(selectedNodeArray, 'tagArray'))
 
       input = commonTagArray.join(' ') + ' '
 

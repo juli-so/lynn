@@ -42,8 +42,7 @@ S_Action =
     # Don't do 'if only one tag is inputted, search for it'
     if @state.specialMode is 'addMultipleBookmark'
       @callAction('n_hide')
-    # If the inputted tag is only one
-    # Search for that tag after bookmark is added
+    # Search for tags after bookmark is added
     else
       inputtedTagArray = _.filter @state.input.split(' '), (token) ->
         Util.isTag(token)
@@ -66,6 +65,9 @@ S_Action =
     @callAction('s_addBookmarkHelper')
 
   addAllWindowBookmark: ->
+    @callAction('s_addBookmarkHelper')
+
+  addLinkBookmark: ->
     @callAction('s_addBookmarkHelper')
 
   # ------------------------------------------------------------

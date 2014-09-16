@@ -108,6 +108,9 @@ InputHandler =
   s_addAllWindowBookmark: ->
     @callHandlerHelper('addBookmarkHelper', event)
 
+  s_addLinkBookmark: ->
+    @callHandlerHelper('addBookmarkHelper', event)
+
   # ------------------------------------------------------------
 
   s_addGroup: (event) ->
