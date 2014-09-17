@@ -501,6 +501,8 @@ N_Action =
     @setState { input }
     Util.setCaretRange(position, position)
 
+    @
+
   deleteNextWord: ->
     input = @state.input
     [start, end] = Util.getCaretPosition()

@@ -9,8 +9,7 @@ InputHandler =
 
   # ------------------------------------------------------------
 
-  query: (event) ->
-    input = event.target.value
+  query: (input) ->
     @callAction('n_clearInput')
 
     if input[-1..] is ':'
@@ -26,10 +25,9 @@ InputHandler =
         request: 'search'
         input: input
 
-  fast: (event) ->
+  fast: (input) ->
 
-  command: (event) ->
-    input = event.target.value
+  command: (input) ->
     if input is '' or input[0] isnt ':'
       @callAction('n_clearInput')
       @setState
@@ -44,8 +42,7 @@ InputHandler =
 
   # ------------------------------------------------------------
 
-  s_tag: (event) ->
-    input = event.target.value
+  s_tag: (input) ->
     tagArray = _.filter input.split(' '), (token) ->
       Util.isTag(token)
     nodeArray = @state.nodeArray
@@ -60,8 +57,7 @@ InputHandler =
       nodeArray: nodeArray
       input: input
 
-  s_editTag: (event) ->
-    input = event.target.value
+  s_editTag: (input) ->
     tagArray = _.filter input.split(' '), (token) ->
       Util.isTag(token)
     nodeArray = @state.nodeArray
@@ -78,8 +74,7 @@ InputHandler =
 
   # ------------------------------------------------------------
 
-  addBookmarkHelper: (event) ->
-    input = event.target.value
+  addBookmarkHelper: (input) ->
     useSuggestedTag = input[0] isnt '!'
 
     # the '!' is also filtered if not using suggested tag
@@ -96,24 +91,23 @@ InputHandler =
 
     @setState { nodeArray, input, useSuggestedTag }
 
-  s_addBookmark: (event) ->
-    @callHandlerHelper('addBookmarkHelper', event)
+  s_addBookmark: (input) ->
+    @callHandlerHelper('addBookmarkHelper', input)
 
-  s_addMultipleBookmark: (event) ->
-    @callHandlerHelper('addBookmarkHelper', event)
+  s_addMultipleBookmark: (input) ->
+    @callHandlerHelper('addBookmarkHelper', input)
 
-  s_addAllCurrentWindowBookmark: ->
-    @callHandlerHelper('addBookmarkHelper', event)
+  s_addAllCurrentWindowBookmark: (input) ->
+    @callHandlerHelper('addBookmarkHelper', input)
 
-  s_addAllWindowBookmark: ->
-    @callHandlerHelper('addBookmarkHelper', event)
+  s_addAllWindowBookmark: (input) ->
+    @callHandlerHelper('addBookmarkHelper', input)
 
-  s_addLinkBookmark: ->
-    @callHandlerHelper('addBookmarkHelper', event)
+  s_addLinkBookmark: (input) ->
+    @callHandlerHelper('addBookmarkHelper', input)
 
   # ------------------------------------------------------------
 
-  s_addGroup: (event) ->
-    input = event.target.value
+  s_addGroup: (input) ->
     @setState { input }
     

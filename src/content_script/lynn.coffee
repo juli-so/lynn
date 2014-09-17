@@ -244,7 +244,7 @@ Lynn = React.createClass
     input = event.target.value
 
     handler = InputHandler.matchHandler(@state.mode, @state.specialMode)
-    handler.call(@, event) if handler
+    handler.call(@, input) if handler
 
   # ------------------------------------------------------------
   # Helper functions for getting data
@@ -305,8 +305,8 @@ Lynn = React.createClass
   callAction: (actionName, params) ->
     ActionMatch.findAction(actionName).apply(@, params)
 
-  callHandlerHelper: (helperName, event) ->
-    InputHandler[helperName].call(@, event)
+  callHandlerHelper: (helperName, input) ->
+    InputHandler[helperName].call(@, input)
 
   setDeepState: (state) ->
     _.forEach state, (val, key) =>
