@@ -1,26 +1,5 @@
 { div, span } = React.DOM
 
-###
-Structure
-
-div.lynn
-  div.lynn_top
-    input.lynn_console
-    span.lynn_console_status
-  div.lynn_mid
-    [div.lynn_suggestion]
-      div.lynn_mainline
-        span.lynn_title
-      div.lynn_tagline
-        [span.lynn_tag]
-  div.lynn_bot
-    span.lynn_info
-    span.lynn_pageView
-
-###
-
-# lynn_top
-
 Top = React.createClass
   render: ->
     { input } = React.DOM

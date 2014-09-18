@@ -18,7 +18,7 @@ CommandMap =
 
   'r'             : 'i_recoverBookmark'
 
-  'l'             : 'i_addLinkBookmark'
+  'al'            : 'i_addLinkBookmark'
 
 E_Action =
   esc: ->
