@@ -131,11 +131,13 @@ S_Action =
     @callAction('n_clearCache')
 
   # ------------------------------------------------------------
+  # Sessions
+  # ------------------------------------------------------------
 
   storeWindowSession: ->
     sessionName = @state.input.split(' ')[0]
 
-    if not _.isEmpty(sessionName)
+    if not _.isEmpty(sessionName) and not CommandMap[sessionName]
       Listener.listenOnce 'storeWindowSession', { sessionName }, (message) =>
         Message.postMessage { request: 'getSyncStorage' }
 
