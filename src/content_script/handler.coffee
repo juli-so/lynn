@@ -111,3 +111,12 @@ InputHandler =
   s_storeWindowSession: (input) ->
     @setState { input }
     
+  s_removeWindowSession: (input) ->
+    @setState { input }
+
+    if _.isEmpty(input)
+      @setState { nodeArray: [] }
+    else
+      Message.postMessage
+        request: 'searchSession'
+        input: input

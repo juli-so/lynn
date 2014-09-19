@@ -155,12 +155,16 @@ I_Action =
 
       @setState { nodeArray }
 
-  removeWindowSession: (sessionName) ->
-    if not _.isEmpty(sessionName)
-      Listener.listenOnce 'removeWindowSession', { sessionName }, (message) ->
-        Listener.listenOnce { request: 'getSyncStorage' }
+  removeWindowSession: ->
+    @callAction('n_storeCache')
 
-      @callAction('n_hide')
+    @setState
+      specialMode: 'removeWindowSession'
+      input: ''
+
+    Listener.listen 'searchSession', (message) =>
+      @setState
+        nodeArray: message.session
 
   storeChromeSession: ->
 

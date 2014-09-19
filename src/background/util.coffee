@@ -15,6 +15,9 @@ Util =
   startsWith: (str, start) ->
     str.lastIndexOf(start, 0) is 0
 
+  ciStartsWith: (str, start) ->
+    @startsWith(str.toLowerCase(), start.toLowerCase())
+
   ciContains: (str, fragment) ->
     str.toLowerCase().indexOf(fragment.toLowerCase()) isnt -1
 

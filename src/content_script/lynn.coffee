@@ -96,9 +96,10 @@ Bot = React.createClass
           ''
         else
           botString = Hint.botStringSpecialModeMap[@props.specialMode]
-          sessionName = @props.input.split(' ')[0]
-          if @props.specialMode is 'storeWindowSession'
-            botString += sessionName
+          if @props.specialMode is 'storeWindowSession' or
+            @props.specialMode is 'removeWindowSession'
+              sessionName = @props.input.split(' ')[0]
+              botString += sessionName
 
           'Speical Mode: ' + botString
       span className: 'lynn_bot_right',

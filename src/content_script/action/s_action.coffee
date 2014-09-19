@@ -136,7 +136,18 @@ S_Action =
     sessionName = @state.input.split(' ')[0]
 
     if not _.isEmpty(sessionName)
-      Listener.listenOnce 'storeWindowSession', { sessionName }, (message) ->
+      Listener.listenOnce 'storeWindowSession', { sessionName }, (message) =>
         Message.postMessage { request: 'getSyncStorage' }
 
-    @callAction('n_hide')
+        @callAction('n_hide')
+
+  removeWindowSession: ->
+    sessionName = @state.input.split(' ')[0]
+
+    if not _.isEmpty(sessionName)
+      Listener.listenOnce 'removeWindowSession', { sessionName }, (message) =>
+        Message.postMessage { request: 'getSyncStorage' }
+
+        Listener.stopListen('searchSession')
+
+        @callAction('n_hide')

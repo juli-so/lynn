@@ -121,7 +121,7 @@ Action =
 
   storeWindowSession: (message, port) ->
     chrome.storage.sync.get 'sessionMap', (storageObject) ->
-      sessionMap = storageObject.sessionMap
+      { sessionMap } = storageObject
       currentWindowTabArray = Tab.getCurrentWindowTabArray()
       simplifiedTabArray = _.map currentWindowTabArray, (tab) ->
         title: tab.title
@@ -134,10 +134,27 @@ Action =
 
   removeWindowSession: (message, port) ->
     chrome.storage.sync.get 'sessionMap', (storageObject) ->
-      sessionMap = storageObject.sessionMap
-      delete sessionMap[message.sessionName]
-      chrome.storage.sync.set { sessionMap }, ->
-        port.postMessage { response: 'removeWindowSession' }
+      { sessionMap } = storageObject
+
+      sessionName = _.findKey sessionMap, (s, sName) ->
+        Util.ciStartsWith(sName, message.sessionName)
+
+      if sessionName
+        delete sessionMap[sessionName]
+        chrome.storage.sync.set { sessionMap }, ->
+          port.postMessage { response: 'removeWindowSession' }
+
+  searchSession: (message, port) ->
+    chrome.storage.sync.get 'sessionMap', (storageObject) ->
+      { sessionMap } = storageObject
+
+      session = _.find sessionMap, (s, sName) ->
+        Util.ciStartsWith(sName, message.input)
+      session or= []
+
+      port.postMessage
+        response: 'searchSession'
+        session: session
   
   # ------------------------------------------------------------
   # Adding / Removing Bookmark
