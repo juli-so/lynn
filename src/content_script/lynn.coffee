@@ -95,10 +95,10 @@ Bot = React.createClass
         if @props.specialMode is 'no'
           ''
         else
-          groupName = @props.input.split(' ')[0]
           botString = Hint.botStringSpecialModeMap[@props.specialMode]
-          if @props.specialMode is 'addGroup'
-            botString += groupName
+          sessionName = @props.input.split(' ')[0]
+          if @props.specialMode is 'storeWindowSession'
+            botString += sessionName
 
           'Speical Mode: ' + botString
       span className: 'lynn_bot_right',
@@ -142,7 +142,7 @@ Lynn = React.createClass
     option:
       MAX_SUGGESTION_NUM: 8
 
-    groupMap: {}
+    sessionMap: {}
 
   componentWillMount: ->
     Listener.listen 'search', (message) =>
@@ -151,7 +151,7 @@ Lynn = React.createClass
     Listener.listen 'getSyncStorage', (message) =>
       @setState
         option: message.storageObject.option || @state.option
-        groupMap: message.storageObject.groupMap || @state.groupMap
+        sessionMap: message.storageObject.sessionMap || @state.sessionMap
 
     Message.postMessage { request: 'getSyncStorage' }
 

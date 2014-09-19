@@ -430,7 +430,7 @@ N_Action =
     @callAction('n_recoverFromCache', [currentCache])
 
   # ------------------------------------------------------------
-  # Other actions
+  # Caret movement and word processing
   # ------------------------------------------------------------
 
   setCaretToStart: ->
@@ -501,8 +501,6 @@ N_Action =
     @setState { input }
     Util.setCaretRange(position, position)
 
-    @
-
   deleteNextWord: ->
     input = @state.input
     [start, end] = Util.getCaretPosition()
@@ -522,3 +520,18 @@ N_Action =
 
     @setState { input }
     Util.setCaretRange(start, start)
+
+  # ------------------------------------------------------------
+  # Session
+  # ------------------------------------------------------------
+
+  openSession: (command, modifierString) ->
+    nodeArray = @state.sessionMap[command]
+
+    openArgs = switch modifierString
+      when ''       then [{ active:    yes }, no , yes, nodeArray]
+      when 's-'     then [{ active:    no  }, no , no , nodeArray]
+      when 'c-'     then [{ incognito: no  }, yes, yes, nodeArray]
+      when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArray]
+    @callAction('n_openHelper', openArgs)
+

@@ -6,14 +6,6 @@
 #     if needed
 #   - returns a message object that'll be posted after its execution
 #
-# Sometimes async operations can't return result immediately
-# A message taking the form
-# {
-#   response: 'a_action'
-#   data...
-# }
-# will be posted to frontend
-#
 
 Action =
   search: (message) ->
@@ -29,8 +21,9 @@ Action =
         storageObject: storageObject
 
   # ------------------------------------------------------------
+  # Open bookmarks
+  # ------------------------------------------------------------
 
-  # Opening bookmarks
   open: (message) ->
     if message.node
       chrome.tabs.create
@@ -52,6 +45,8 @@ Action =
       url: url
       incognito: message.option.incognito
 
+  # ------------------------------------------------------------
+  # Open last opened windows
   # ------------------------------------------------------------
 
   lastWindow: (message) ->
@@ -78,6 +73,8 @@ Action =
       url: urlArray
       incognito: yes
 
+  # ------------------------------------------------------------
+  # Tags
   # ------------------------------------------------------------
 
   addTag: (message) ->
@@ -119,34 +116,28 @@ Action =
     Bookmark.storeTag()
 
   # ------------------------------------------------------------
-
-  queryTab: (message) ->
-    response: 'queryTab'
-    current: Tab.current
-    tabArray: Tab.tabArray
-    currentWindowTabArray: Tab.getCurrentWindowTabArray()
-
+  # Sessions
   # ------------------------------------------------------------
 
-  addGroup: (message, port) ->
-    chrome.storage.sync.get 'groupMap', (storageObject) ->
-      groupMap = storageObject.groupMap
+  storeWindowSession: (message, port) ->
+    chrome.storage.sync.get 'sessionMap', (storageObject) ->
+      sessionMap = storageObject.sessionMap
       currentWindowTabArray = Tab.getCurrentWindowTabArray()
       simplifiedTabArray = _.map currentWindowTabArray, (tab) ->
         title: tab.title
         url: tab.url
 
-      groupMap[message.groupName] = simplifiedTabArray
+      sessionMap[message.sessionName] = simplifiedTabArray
 
-      chrome.storage.sync.set { groupMap }, ->
-        port.postMessage { response: 'addGroup' }
+      chrome.storage.sync.set { sessionMap }, ->
+        port.postMessage { response: 'storeWindowSession' }
 
-  removeGroup: (message, port) ->
-    chrome.storage.sync.get 'groupMap', (storageObject) ->
-      groupMap = storageObject.groupMap
-      delete groupMap[message.groupName]
-      chrome.storage.sync.set { groupMap }, ->
-        port.postMessage { response: 'removeGroup' }
+  removeWindowSession: (message, port) ->
+    chrome.storage.sync.get 'sessionMap', (storageObject) ->
+      sessionMap = storageObject.sessionMap
+      delete sessionMap[message.sessionName]
+      chrome.storage.sync.set { sessionMap }, ->
+        port.postMessage { response: 'removeWindowSession' }
   
   # ------------------------------------------------------------
   # Adding / Removing Bookmark
@@ -194,3 +185,14 @@ Action =
       Bookmark.recover(message.index)
     else
       Bookmark.recover(message.indexArray)
+
+  # ------------------------------------------------------------
+  # Others
+  # ------------------------------------------------------------
+
+  queryTab: (message) ->
+    response: 'queryTab'
+    current: Tab.current
+    tabArray: Tab.tabArray
+    currentWindowTabArray: Tab.getCurrentWindowTabArray()
+

@@ -8,8 +8,10 @@ CommandMap =
   'aa'            : 'i_addAllCurrentWindowBookmark'
   'aA'            : 'i_addAllWindowBookmark'
 
-  'g'             : 'i_addGroup'
-  'ug'            : 'i_removeGroup'
+  's'             : 'i_storeWindowSession'
+  'S'             : 'i_storeChromeSession'
+  'rs'            : 'i_removeWindowSession'
+  'rS'            : 'i_removeChromeSession'
 
   'l'             : 'n_lastWindow'
   's-l'           : 'n_lastWindowInBackground'
@@ -60,15 +62,8 @@ E_Action =
 
         if CommandMap[modifierString + command]
           @callAction(CommandMap[modifierString + command], args)
-        else if @state.groupMap[command]
-          nodeArray = @state.groupMap[command]
-
-          openArgs = switch modifierString
-            when ''       then [{ active: yes }, no , yes, nodeArray]
-            when 's-'     then [{ active: no  }, no , no , nodeArray]
-            when 'c-'     then [{ incognito: yes }, yes, yes, nodeArray]
-            when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArray]
-          @callAction('n_openHelper', openArgs)
+        else if @state.sessionMap[command]
+          @callAction('n_openSession', [command, modifierString])
 
   s_enter: ->
     @callAction('e_enter', ['s-'  ])

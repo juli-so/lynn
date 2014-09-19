@@ -27,9 +27,9 @@ Dashboard = React.createClass
             li null, autoTagDescription
 
       div null,
-        h4 null, 'Groups'
-        _.map @props.storageObject.groupMap, (nodeArray, groupName) ->
-          div null, ':', groupName, ' to invoke: ',
+        h4 null, 'Sessions'
+        _.map @props.storageObject.sessionMap, (nodeArray, sessionName) ->
+          div null, ':', sessionName, ' to invoke: ',
             ul null,
               _.map nodeArray, (node) ->
                 li null, '- ',

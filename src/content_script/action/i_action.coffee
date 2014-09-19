@@ -136,14 +136,14 @@ I_Action =
       @setState { nodeArray: message.nodeArray }
 
   # ------------------------------------------------------------
-  # Other actions
+  # Sessions
   # ------------------------------------------------------------
 
-  addGroup: (groupName) ->
+  storeWindowSession: ->
     @callAction('n_storeCache')
 
     @setState
-      specialMode: 'addGroup'
+      specialMode: 'storeWindowSession'
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
@@ -155,19 +155,20 @@ I_Action =
 
       @setState { nodeArray }
 
-  removeGroup: (groupName) ->
-    if not _.isEmpty(groupName)
-      Listener.listenOnce 'removeGroup', { groupName }, (message) ->
-        Listener.listenOnce { request: 'getSyncStorage' },
-          request: 'removeGroup'
-          groupName: groupName
+  removeWindowSession: (sessionName) ->
+    if not _.isEmpty(sessionName)
+      Listener.listenOnce 'removeWindowSession', { sessionName }, (message) ->
+        Listener.listenOnce { request: 'getSyncStorage' }
 
-      Message.postMessage
-        request: 'removeGroup'
-        groupName: groupName
+      @callAction('n_hide')
 
-      @callAction('hide')
+  storeChromeSession: ->
 
+  removeChromeSession: ->
+
+
+  # ------------------------------------------------------------
+  # Tag
   # ------------------------------------------------------------
 
   tag: ->

@@ -9,7 +9,7 @@ Hint =
     'addAllCurrentWindowBookmark': 'Enter your tag here'
     'addAllWindowBookmark'       : 'Enter your tag here'
     'addLinkBookmark'            : 'Enter your tag here'
-    'addGroup'                   : 'Enter name of your group here'
+    'storeWindowSession'         : 'Enter name of your session here'
     'recoverBookmark'            : 'No need to enter anything'
 
   botStringSpecialModeMap:
@@ -21,5 +21,5 @@ Hint =
                                     as Bookmark'
     'addAllWindowBookmark'       : 'Add all open tabs as Bookmark'
     'addLinkBookmark'            : 'Add this link as a bookmark'
-    'addGroup'                   : 'Add these bookmarks to group: '
+    'storeWindowSession'         : 'Add these bookmarks to session: '
     'recoverBookmark'            : 'Recover deleted bookmarks'

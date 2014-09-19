@@ -132,11 +132,11 @@ S_Action =
 
   # ------------------------------------------------------------
 
-  addGroup: ->
-    groupName = @state.input.split(' ')[0]
+  storeWindowSession: ->
+    sessionName = @state.input.split(' ')[0]
 
-    if not _.isEmpty(groupName)
-      Listener.listenOnce 'addGroup', { groupName }, (message) ->
+    if not _.isEmpty(sessionName)
+      Listener.listenOnce 'storeWindowSession', { sessionName }, (message) ->
         Message.postMessage { request: 'getSyncStorage' }
 
     @callAction('n_hide')

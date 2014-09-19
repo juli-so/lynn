@@ -108,6 +108,6 @@ InputHandler =
 
   # ------------------------------------------------------------
 
-  s_addGroup: (input) ->
+  s_storeWindowSession: (input) ->
     @setState { input }
     
