@@ -23,8 +23,9 @@ Dashboard = React.createClass
             else
               prereq = 'If bookmark title contains ' + autoTagRecord.matchString
 
-            autoTagDescription = '- ' + prereq + ' -> ' + tagName
-            li null, autoTagDescription
+            autoTagDescription = prereq + ' -> '
+            li null, autoTagDescription,
+              p null, tagName
 
       div null,
         h4 null, 'Sessions'

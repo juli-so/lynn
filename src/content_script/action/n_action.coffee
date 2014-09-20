@@ -527,13 +527,23 @@ N_Action =
   # ------------------------------------------------------------
 
   openSession: (command, modifierString) ->
-    nodeArray = @state.sessionMap[command]
+    sessionRecord = @state.sessionMap[command]
 
-    openArgs = switch modifierString
-      when ''       then [{ active:    yes }, no , yes, nodeArray]
-      when 's-'     then [{ active:    no  }, no , no , nodeArray]
-      when 'c-'     then [{ incognito: no  }, yes, yes, nodeArray]
-      when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArray]
+    if sessionRecord.type is 'window'
+      nodeArray = sessionRecord.session
+      
+      openArgs = switch modifierString
+        when ''       then [{ active:    yes }, no , yes, nodeArray]
+        when 's-'     then [{ active:    no  }, no , no , nodeArray]
+        when 'c-'     then [{ incognito: no  }, yes, yes, nodeArray]
+        when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArray]
 
-    @callAction('n_openHelper', openArgs)
+      @callAction('n_openHelper', openArgs)
+    else
+      _.forEach sessionRecord.session, (nodeArray) =>
+        openArgs = switch modifierString
+          when ''       then [{ incognito: no  }, yes, yes, nodeArray]
+          when 's-'     then [{ incognito: yes }, yes, yes, nodeArray]
+
+        @callAction('n_openHelper', openArgs)
 

@@ -153,3 +153,13 @@ S_Action =
         Listener.stopListen('searchSession')
 
         @callAction('n_hide')
+
+  storeChromeSession: ->
+    sessionName = @state.input.split(' ')[0]
+
+    if not _.isEmpty(sessionName) and not CommandMap[sessionName]
+      Listener.listenOnce 'storeChromeSession', { sessionName }, (message) =>
+        Message.postMessage { request: 'getSyncStorage' }
+
+        @callAction('n_hide')
+

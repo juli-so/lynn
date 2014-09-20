@@ -163,8 +163,12 @@ I_Action =
       input: ''
 
     Listener.listen 'searchSession', (message) =>
-      @setState
-        nodeArray: message.session
+      if message.sessionRecord.type is 'window'
+        @setState
+          nodeArray: message.sessionRecord.session
+      else
+        @setState
+          nodeArray: _.flatten(message.sessionRecord.session)
 
   storeChromeSession: ->
     @callAction('n_storeCache')
@@ -174,8 +178,7 @@ I_Action =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
-      currentWindowTabArray = message.currentWindowTabArray
-      nodeArray = _.map currentWindowTabArray, (tab) ->
+      nodeArray = _.map message.tabArray, (tab) ->
         title: tab.title
         url: tab.url
         tagArray: []
@@ -183,7 +186,6 @@ I_Action =
       @setState { nodeArray }
 
   removeChromeSession: ->
-
 
   # ------------------------------------------------------------
   # Tag

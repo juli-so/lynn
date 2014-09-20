@@ -11,6 +11,7 @@ Hint =
     'addLinkBookmark'            : 'Enter your tag here'
     'storeWindowSession'         : 'Enter name of your session here'
     'removeWindowSession'        : 'Enter name of the session to remove'
+    'storeChromeSession'         : 'Enter name of your session here'
     'recoverBookmark'            : 'No need to enter anything'
 
   botStringSpecialModeMap:
@@ -24,4 +25,5 @@ Hint =
     'addLinkBookmark'            : 'Add this link as a bookmark'
     'storeWindowSession'         : 'Add these bookmarks to session: '
     'removeWindowSession'        : 'Remove session: '
+    'storeChromeSession'         : 'Add these bookmarks to session: '
     'recoverBookmark'            : 'Recover deleted bookmarks'

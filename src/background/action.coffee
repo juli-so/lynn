@@ -127,7 +127,9 @@ Action =
         title: tab.title
         url: tab.url
 
-      sessionMap[message.sessionName] = simplifiedTabArray
+      sessionMap[message.sessionName] =
+        type: 'window'
+        session: simplifiedTabArray
 
       chrome.storage.sync.set { sessionMap }, ->
         port.postMessage { response: 'storeWindowSession' }
@@ -144,17 +146,43 @@ Action =
         chrome.storage.sync.set { sessionMap }, ->
           port.postMessage { response: 'removeWindowSession' }
 
+  storeChromeSession: (message, port) ->
+    chrome.storage.sync.get 'sessionMap', (storageObject) ->
+      { sessionMap } = storageObject
+      tabArray = Tab.tabArray
+      session = _.values(_.groupBy(tabArray, 'windowId'))
+
+      sessionMap[message.sessionName] =
+        type: 'chrome'
+        session: session
+
+      chrome.storage.sync.set { sessionMap }, ->
+        port.postMessage { response: 'storeChromeSession' }
+
+      ###
+      simplifiedTabArray = _.map currentWindowTabArray, (tab) ->
+        title: tab.title
+        url: tab.url
+
+      sessionMap[message.sessionName] =
+        type: 'window'
+        session: simplifiedTabArray
+
+      chrome.storage.sync.set { sessionMap }, ->
+        port.postMessage { response: 'storeWindowSession' }
+        ###
+
   searchSession: (message, port) ->
     chrome.storage.sync.get 'sessionMap', (storageObject) ->
       { sessionMap } = storageObject
 
-      session = _.find sessionMap, (s, sName) ->
+      sessionRecord = _.find sessionMap, (s, sName) ->
         Util.ciStartsWith(sName, message.input)
-      session or= []
+      sessionRecord or= []
 
       port.postMessage
         response: 'searchSession'
-        session: session
+        sessionRecord: sessionRecord
   
   # ------------------------------------------------------------
   # Adding / Removing Bookmark

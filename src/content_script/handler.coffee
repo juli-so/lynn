@@ -120,3 +120,6 @@ InputHandler =
       Message.postMessage
         request: 'searchSession'
         input: input
+
+  s_storeChromeSession: (input) ->
+    @setState { input }

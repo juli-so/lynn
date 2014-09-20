@@ -97,7 +97,8 @@ Bot = React.createClass
         else
           botString = Hint.botStringSpecialModeMap[@props.specialMode]
           if @props.specialMode is 'storeWindowSession' or
-            @props.specialMode is 'removeWindowSession'
+            @props.specialMode is 'removeWindowSession' or
+            @props.specialMode is 'storeChromeSession'
               sessionName = @props.input.split(' ')[0]
               botString += sessionName
 
