@@ -155,21 +155,6 @@ I_Action =
 
       @setState { nodeArray }
 
-  removeWindowSession: ->
-    @callAction('n_storeCache')
-
-    @setState
-      specialMode: 'removeWindowSession'
-      input: ''
-
-    Listener.listen 'searchSession', (message) =>
-      if message.sessionRecord.type is 'window'
-        @setState
-          nodeArray: message.sessionRecord.session
-      else
-        @setState
-          nodeArray: _.flatten(message.sessionRecord.session)
-
   storeChromeSession: ->
     @callAction('n_storeCache')
 
@@ -185,7 +170,20 @@ I_Action =
 
       @setState { nodeArray }
 
-  removeChromeSession: ->
+  removeSession: ->
+    @callAction('n_storeCache')
+
+    @setState
+      specialMode: 'removeSession'
+      input: ''
+
+    Listener.listen 'searchSession', (message) =>
+      if message.sessionRecord.type is 'window'
+        @setState
+          nodeArray: message.sessionRecord.session
+      else
+        @setState
+          nodeArray: _.flatten(message.sessionRecord.session)
 
   # ------------------------------------------------------------
   # Tag

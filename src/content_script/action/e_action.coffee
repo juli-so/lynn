@@ -10,8 +10,7 @@ CommandMap =
 
   's'             : 'i_storeWindowSession'
   'S'             : 'i_storeChromeSession'
-  'rs'            : 'i_removeWindowSession'
-  'rS'            : 'i_removeChromeSession'
+  'rs'            : 'i_removeSession'
 
   'l'             : 'n_lastWindow'
   's-l'           : 'n_lastWindowInBackground'

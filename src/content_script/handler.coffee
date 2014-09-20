@@ -111,7 +111,10 @@ InputHandler =
   s_storeWindowSession: (input) ->
     @setState { input }
     
-  s_removeWindowSession: (input) ->
+  s_storeChromeSession: (input) ->
+    @setState { input }
+
+  s_removeSession: (input) ->
     @setState { input }
 
     if _.isEmpty(input)
@@ -120,6 +123,3 @@ InputHandler =
       Message.postMessage
         request: 'searchSession'
         input: input
-
-  s_storeChromeSession: (input) ->
-    @setState { input }

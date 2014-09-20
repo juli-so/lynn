@@ -143,11 +143,11 @@ S_Action =
 
         @callAction('n_hide')
 
-  removeWindowSession: ->
+  removeSession: ->
     sessionName = @state.input.split(' ')[0]
 
     if not _.isEmpty(sessionName)
-      Listener.listenOnce 'removeWindowSession', { sessionName }, (message) =>
+      Listener.listenOnce 'removeSession', { sessionName }, (message) =>
         Message.postMessage { request: 'getSyncStorage' }
 
         Listener.stopListen('searchSession')

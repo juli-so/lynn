@@ -10,8 +10,8 @@ Hint =
     'addAllWindowBookmark'       : 'Enter your tag here'
     'addLinkBookmark'            : 'Enter your tag here'
     'storeWindowSession'         : 'Enter name of your session here'
-    'removeWindowSession'        : 'Enter name of the session to remove'
     'storeChromeSession'         : 'Enter name of your session here'
+    'removeSession'              : 'Enter name of the session to remove'
     'recoverBookmark'            : 'No need to enter anything'
 
   botStringSpecialModeMap:
@@ -24,6 +24,6 @@ Hint =
     'addAllWindowBookmark'       : 'Add all open tabs as Bookmark'
     'addLinkBookmark'            : 'Add this link as a bookmark'
     'storeWindowSession'         : 'Add these bookmarks to session: '
-    'removeWindowSession'        : 'Remove session: '
     'storeChromeSession'         : 'Add these bookmarks to session: '
+    'removeSession'              : 'Remove session: '
     'recoverBookmark'            : 'Recover deleted bookmarks'
