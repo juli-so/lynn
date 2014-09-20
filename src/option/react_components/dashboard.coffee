@@ -28,12 +28,20 @@ Dashboard = React.createClass
 
       div null,
         h4 null, 'Sessions'
-        _.map @props.storageObject.sessionMap, (nodeArray, sessionName) ->
+        _.map @props.storageObject.sessionMap, (sessionRecord, sessionName) ->
           div null, ':', sessionName, ' to invoke: ',
-            ul null,
-              _.map nodeArray, (node) ->
-                li null, '- ',
-                  a { href: node.url }, node.title
+            if sessionRecord.type is 'window'
+              ul null,
+                _.map sessionRecord.session, (node) ->
+                  li null,
+                    a { href: node.url }, node.title
+            else
+              ul null,
+                _.map sessionRecord.session, (nodeArray) ->
+                  ul null,
+                    _.map nodeArray, (node) ->
+                      li null,
+                        a { href: node.url }, node.title
 
       div null,
         h4 null, 'Synotags'

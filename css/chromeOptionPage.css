@@ -716,3 +716,14 @@
   -webkit-margin-start: 10px;
   display: block;
 }
+
+/* Custom */
+
+.chrome-bootstrap ul li:before {
+  content: '- '
+}
+
+.chrome-bootstrap ul ul:before {
+  content: '* '
+}
+

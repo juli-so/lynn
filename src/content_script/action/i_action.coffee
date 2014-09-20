@@ -167,6 +167,20 @@ I_Action =
         nodeArray: message.session
 
   storeChromeSession: ->
+    @callAction('n_storeCache')
+
+    @setState
+      specialMode: 'storeChromeSession'
+      input: ''
+
+    Listener.listenOnce 'queryTab', {}, (message) =>
+      currentWindowTabArray = message.currentWindowTabArray
+      nodeArray = _.map currentWindowTabArray, (tab) ->
+        title: tab.title
+        url: tab.url
+        tagArray: []
+
+      @setState { nodeArray }
 
   removeChromeSession: ->
 

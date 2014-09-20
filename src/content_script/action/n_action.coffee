@@ -253,6 +253,7 @@ N_Action =
       message['nodeArray'] = nodeArray
 
     Message.postMessage(message)
+
     if needHide
       @callAction('n_hide')
     else
@@ -533,5 +534,6 @@ N_Action =
       when 's-'     then [{ active:    no  }, no , no , nodeArray]
       when 'c-'     then [{ incognito: no  }, yes, yes, nodeArray]
       when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArray]
+
     @callAction('n_openHelper', openArgs)
 
