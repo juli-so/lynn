@@ -110,7 +110,10 @@ Bookmark =
     _.remove(node.tagArray)
 
   # remove meaningless entries in nodeTagMap and tagNodeMap
-  rebuildTagNodeMap: ->
+  pruneTag: ->
+    _.forEach @nodeTagMap, (tagArray, index) =>
+      delete @nodeTagMap[index] unless @allNode[index]
+
     @tagNodeMap = {}
 
     _.forEach @allNode, (node) =>

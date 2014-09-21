@@ -719,11 +719,11 @@
 
 /* Custom */
 
-.chrome-bootstrap ul li:before {
+.chrome-bootstrap .dash-list ul li:before {
   content: '- '
 }
 
-.chrome-bootstrap ul ul:before {
+.chrome-bootstrap .dash-list ul ul:before {
   content: '* '
 }
 

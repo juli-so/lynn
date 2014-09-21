@@ -32,14 +32,14 @@ Dashboard = React.createClass
         _.map @props.storageObject.sessionMap, (sessionRecord, sessionName) ->
           div null, ':', sessionName, ' to invoke: ',
             if sessionRecord.type is 'window'
-              ul null,
+              ul { className: 'dash-list' },
                 _.map sessionRecord.session, (node) ->
                   li null,
                     a { href: node.url }, node.title
             else
               ul null,
                 _.map sessionRecord.session, (nodeArray) ->
-                  ul null,
+                  ul { className: 'dash-list' },
                     _.map nodeArray, (node) ->
                       li null,
                         a { href: node.url }, node.title
