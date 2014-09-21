@@ -37,13 +37,11 @@ Top = React.createClass
     if not prevProps.visible and @props.visible
       @refs.lynn_console.getDOMNode().focus()
 
-# lynn_mid
-
 Mid = React.createClass
   render: ->
     div { id: 'lynn_mid' },
       _.map @props.nodeArray[@props.start...@props.end], (node, index) =>
-        animation = @props.nodeAnimation[index] || 'fadeInDown'
+        animation = @props.nodeAnimation[index] || 'fadeInLeft'
 
         Suggestion
           key: node.id
@@ -77,8 +75,6 @@ Suggestion = React.createClass
         _.map @props.node.pendingTagArray, (tag) ->
           span { className: 'lynn_pending_tag' }, tag
 
-# lynn_bot
-
 Bot = React.createClass
   render: ->
     numToString = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five',
@@ -106,13 +102,7 @@ Bot = React.createClass
       span className: 'lynn_bot_right',
         'Page ' + numToString[@props.currentPageIndex + 1]
 
-# lynn
 Lynn = React.createClass
-  # @state
-  #   - getInitialState
-  #   - option loaded in componentWillMount
-
-  # React methods
   getInitialState: ->
     visible: no
     input: ''
