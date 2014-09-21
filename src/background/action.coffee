@@ -50,25 +50,25 @@ Action =
   # ------------------------------------------------------------
 
   lastWindow: (message) ->
-    _.forEach Window.lastWindowTabArray, (tab) ->
+    _.forEach WinTab.g_lastWinTabArr(), (tab) ->
       chrome.tabs.create
         url: tab.url
         active: yes
   
   lastWindowInBackground: (message) ->
-    _.forEach Window.lastWindowTabArray, (tab) ->
+    _.forEach WinTab.g_lastWinTabArr(), (tab) ->
       chrome.tabs.create
         url: tab.url
         active: no
   
   lastWindowInNewWindow: (message) ->
-    urlArray = _.pluck(Window.lastWindowTabArray, 'url')
+    urlArray = _.pluck(WinTab.g_lastWinTabArr(), 'url')
     chrome.windows.create
       url: urlArray
       incognito: no
   
   lastWindowInNewIncognitoWindow: (message) ->
-    urlArray = _.pluck(Window.lastWindowTabArray, 'url')
+    urlArray = _.pluck(WinTab.g_lastWinTabArr(), 'url')
     chrome.windows.create
       url: urlArray
       incognito: yes
@@ -134,7 +134,7 @@ Action =
   storeWindowSession: (message, port) ->
     chrome.storage.sync.get 'sessionMap', (storageObject) ->
       { sessionMap } = storageObject
-      currentWindowTabArray = Tab.getCurrentWindowTabArray()
+      currentWindowTabArray = WinTab.g_currWinTabArr()
       simplifiedTabArray = _.map currentWindowTabArray, (tab) ->
         title: tab.title
         url: tab.url
@@ -149,7 +149,7 @@ Action =
   storeChromeSession: (message, port) ->
     chrome.storage.sync.get 'sessionMap', (storageObject) ->
       { sessionMap } = storageObject
-      tabArray = Tab.tabArray
+      tabArray = WinTab.g_allTabArr()
       session = _.values(_.groupBy(tabArray, 'windowId'))
 
       sessionMap[message.sessionName] =
@@ -224,7 +224,7 @@ Action =
 
   queryTab: (message) ->
     response: 'queryTab'
-    current: Tab.current
-    tabArray: Tab.tabArray
-    currentWindowTabArray: Tab.getCurrentWindowTabArray()
+    current: WinTab.g_currTab()
+    tabArray: WinTab.g_allTabArr()
+    currentWindowTabArray: WinTab.g_currWinTabArr()
 

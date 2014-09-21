@@ -4,8 +4,7 @@
 #
 ################################################################
 
-Tab.init()
-Window.init()
+WinTab.init()
 Message.init()
 Tag.init()
 

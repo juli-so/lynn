@@ -47,8 +47,7 @@
         "vendor/js/lodash.min.js",
 
         "lib/background/util.js",
-        "lib/background/tab.js",
-        "lib/background/window.js",
+        "lib/background/wintab.js",
         "lib/background/tag.js",
         "lib/background/action.js",
         "lib/background/message.js",
