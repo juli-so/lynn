@@ -12,11 +12,6 @@ CommandMap =
   'S'             : 'i_storeChromeSession'
   'rs'            : 'i_removeSession'
 
-  'l'             : 'n_lastWindow'
-  's-l'           : 'n_lastWindowInBackground'
-  'c-l'           : 'n_lastWindowInNewWindow'
-  'c-s-l'         : 'n_lastWindowInNewIncognitoWindow'
-
   'r'             : 'i_recoverBookmark'
 
   'al'            : 'i_addLinkBookmark'

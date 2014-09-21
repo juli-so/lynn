@@ -12,12 +12,6 @@
 
 WinTab =
   winArr: []
-
-  # Keep the last window before closing, so people can revert to it.
-  # If there are more than one non-chrome windows, don't do it.
-  lastWin: {}
-  onlyOneNCWin: false
-
   currWin: {}
 
   # Helper
@@ -34,16 +28,9 @@ WinTab =
   _c_g_AllWin: (cb) ->
     chrome.windows.getAll { populate: yes }, (winArr) -> cb(winArr)
 
-  _c_storeLastWin: ->
-    @lastWin = @_g_NCWinArr()[0]
-    chrome.storage.sync.set { lastWin: 'lastWin' }
-
   _update: (winArr) ->
     @winArr = winArr
     @currWin = _.find(winArr, 'focused')
-    @onlyOneNCWin = @_g_NCWinArr().length is 1
-
-    @_c_storeLastWin() if @onlyOneNCWin
 
   _log: ->
 
@@ -53,9 +40,6 @@ WinTab =
     @_c_g_AllWin (winArr) =>
       @_update()
       @listen()
-
-    chrome.storage.sync.get 'lastWin', (storObj) =>
-      @lastWin = storObj.lastWin
 
   listen: ->
     c_win = chrome.windows
@@ -105,12 +89,6 @@ WinTab =
       _.filter(allTabArr, @_isNCTab)
     else
       allTabArr
-
-  g_lastWinTabArr: (NC = yes) ->
-    if NC
-      _.filter(@lastWin.tabs, @_isNCTab)
-    else
-      @lastWin.tabs
 
 _.bindAll(WinTab)
 

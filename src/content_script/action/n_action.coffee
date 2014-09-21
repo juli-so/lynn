@@ -367,30 +367,6 @@ N_Action =
         setTimeout(timeOutFunc, 350)
 
   # ------------------------------------------------------------
-  # Open last opened windows
-  # ------------------------------------------------------------
-
-  lastWindow: (option) ->
-    Message.postMessage
-      request: 'lastWindow'
-    @callAction('n_hide')
-
-  lastWindowInBackground: (option) ->
-    Message.postMessage
-      request: 'lastWindowInBackground'
-    @callAction('n_clearInput')
-
-  lastWindowInNewWindow: (option) ->
-    Message.postMessage
-      request: 'lastWindowInNewWindow'
-    @callAction('n_hide')
-
-  lastWindowInNewIncognitoWindow: (option) ->
-    Message.postMessage
-      request: 'lastWindowInNewIncognitoWindow'
-    @callAction('n_hide')
-
-  # ------------------------------------------------------------
   # Cache
   # ------------------------------------------------------------
 

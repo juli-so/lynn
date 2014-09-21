@@ -46,34 +46,6 @@ Action =
       incognito: message.option.incognito
 
   # ------------------------------------------------------------
-  # Open last opened windows
-  # ------------------------------------------------------------
-
-  lastWindow: (message) ->
-    _.forEach WinTab.g_lastWinTabArr(), (tab) ->
-      chrome.tabs.create
-        url: tab.url
-        active: yes
-  
-  lastWindowInBackground: (message) ->
-    _.forEach WinTab.g_lastWinTabArr(), (tab) ->
-      chrome.tabs.create
-        url: tab.url
-        active: no
-  
-  lastWindowInNewWindow: (message) ->
-    urlArray = _.pluck(WinTab.g_lastWinTabArr(), 'url')
-    chrome.windows.create
-      url: urlArray
-      incognito: no
-  
-  lastWindowInNewIncognitoWindow: (message) ->
-    urlArray = _.pluck(WinTab.g_lastWinTabArr(), 'url')
-    chrome.windows.create
-      url: urlArray
-      incognito: yes
-
-  # ------------------------------------------------------------
   # Tags
   # ------------------------------------------------------------
 
