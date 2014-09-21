@@ -334,7 +334,7 @@ Bookmark =
       _.forEach bmArray, (bm) =>
         @create(Util.toSimpleBookmark(bm), bm.tagArray)
 
-      @lastDeletedNodeArray = _.difference(@lastWindowTabArray, bmArray)
+      @lastDeletedNodeArray = _.difference(@lastDeletedNodeArray, bmArray)
       chrome.storage.sync.set({ lastDeletedNodeArray: @lastDeletedNodeArray })
 
   # ------------------------------------------------------------

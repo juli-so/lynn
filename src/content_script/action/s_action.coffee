@@ -73,11 +73,7 @@ S_Action =
   # ------------------------------------------------------------
 
   recoverBookmark: ->
-    currentNode = @getCurrentNode()
-    @callAction('n_openHelper', [{ active: no }, no, no])
-
     if @hasNoSelection()
-      console.log @getCurrentNodeFullIndex()
       Message.postMessage
         request: 'recoverBookmark'
         index: @getCurrentNodeFullIndex()
@@ -85,6 +81,9 @@ S_Action =
       Message.postMessage
         request: 'recoverBookmark'
         indexArray: @state.selectedArray
+
+    currentNode = @getCurrentNode()
+    @callAction('n_openHelper', [{ active: no }, no, no])
 
     @callAction('n_hide')
 

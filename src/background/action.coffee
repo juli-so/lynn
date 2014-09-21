@@ -213,7 +213,7 @@ Action =
     nodeArray: Bookmark.lastDeletedNodeArray
 
   recoverBookmark: (message) ->
-    if message.index isnt undefined
+    if message.index
       Bookmark.recover(message.index)
     else
       Bookmark.recover(message.indexArray)
