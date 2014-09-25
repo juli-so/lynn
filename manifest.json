@@ -18,6 +18,7 @@
         "matches": ["<all_urls>"],
         "css": [
           "css/style.css",
+          "css/font.css",
           "vendor/css/animate.min.css",
           "vendor/css/font-awesome.css"
         ],
@@ -58,6 +59,7 @@
     },
 
     "web_accessible_resources": [
-      "vendor/font/fontawesome-webfont.woff"
+      "vendor/font/fontawesome-webfont.woff",
+      "vendor/font/OpenSans-Regular-webfont.woff"
     ]
 }

@@ -1,3 +1,12 @@
+/* Loading fonts */
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('chrome-extension://__MSG_@@extension_id__/vendor/font/OpenSans-Regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* lynn */
 
 #lynn p,
@@ -85,7 +94,7 @@
 #lynn #lynn_mid .lynn_suggestion {
   width: 700px;
 
-  font-family: 'Open Sans', Georgia;
+  font-family: 'OpenSans', Georgia;
   color: #777777;
 
   padding: 12px 20px;
