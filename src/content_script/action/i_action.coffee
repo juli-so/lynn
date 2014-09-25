@@ -97,10 +97,14 @@ I_Action =
         specialMode: 'addLinkBookmark'
         input: ''
 
+      if _.contains(window.location.hostname, 'google.com')
+        href = e.target.dataset.href
+      else
+        href = e.target.href
+
       $.ajax
-        url: e.target.href
+        url: href
         success: (data) =>
-          console.log data
           parser = new DOMParser()
           doc = parser.parseFromString(data, 'text/html')
           title = doc.getElementsByTagName('title')[0].text
