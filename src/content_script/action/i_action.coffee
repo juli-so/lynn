@@ -97,35 +97,32 @@ I_Action =
         specialMode: 'addLinkBookmark'
         input: ''
 
-      # Bookmarklet
-      if not Util.startsWith(e.target.href, 'javascript:')
-        $.ajax
-          url: e.target.href
-          success: (data) =>
-            console.log data
-            parser = new DOMParser()
-            doc = parser.parseFromString(data, 'text/html')
-            title = doc.getElementsByTagName('title')[0].text
-
-            # Recursively go up until reaching <a>
-            element = e.target
-            while element.nodeName isnt 'A'
-              element = element.parentNode
-
-            node =
-              title: title
-              url: element.href
-              tagArray: []
-              suggestedTagArray: []
-
-            Listener.listenOnce 'suggestTag', { bookmark: node }, (message) =>
-              node = _.assign(node, { suggestedTagArray: message.tagArray })
-              @setState { nodeArray: [node] }
+      if _.contains(window.location.hostname, 'google.com')
+        href = e.target.dataset.href
       else
-        node =
-          title: e.target.text
-          url: e.target.href
-          suggestedTagArray: []
+        href = e.target.href
+
+      $.ajax
+        url: href
+        success: (data) =>
+          parser = new DOMParser()
+          doc = parser.parseFromString(data, 'text/html')
+          title = doc.getElementsByTagName('title')[0].text
+
+          # Recursively go up until reaching <a>
+          element = e.target
+          while element.nodeName isnt 'A'
+            element = element.parentNode
+
+          node =
+            title: title
+            url: element.href
+            tagArray: []
+            suggestedTagArray: []
+
+          Listener.listenOnce 'suggestTag', { bookmark: node }, (message) =>
+            node = _.assign(node, { suggestedTagArray: message.tagArray })
+            @setState { nodeArray: [node] }
 
         @setState { nodeArray: [node] }
 
