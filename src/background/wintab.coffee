@@ -1,20 +1,27 @@
-# Note: Do not use chrome.windows.getCurrent to get current window.
-# From https://developer.chrome.com/extensions/windows
-#
-#   The current window is the window that contains the code that is currently
-#   executing. It's important to realize that this can be different from the
-#   topmost or focused window.
-#
-#
-# Abbrs:
-#   win -> windows
-#   NC -> Non-Chrome
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Store window and tab info here for easier retrieval                          #
+#                                                                              #
+# - All WinTab methods are bound to itself for easier chaining                 #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Note: Do not use chrome.windows.getCurrent to get current window.            #
+# From https://developer.chrome.com/extensions/windows                         #
+#                                                                              #
+#   The current window is the window that contains the code that is currently  #
+#   executing. It's important to realize that this can be different from the   #
+#   topmost or focused window.                                                 #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
 
 WinTab =
   winArr: []
   currWin: {}
 
+  # ------------------------------------------------------------
   # Helper
+  # ------------------------------------------------------------
 
   _isNCTab: (tab) ->
     not Util.startsWith(tab.url, 'chrome')
@@ -34,7 +41,9 @@ WinTab =
 
   _log: ->
 
-  # Main body
+  # ------------------------------------------------------------
+  # Init & Listen
+  # ------------------------------------------------------------
 
   init: ->
     @_c_g_AllWin (winArr) =>
@@ -45,7 +54,9 @@ WinTab =
     c_win = chrome.windows
     c_tab = chrome.tabs
 
+    # ----------------------------------------------------------
     # Window events
+    # ----------------------------------------------------------
 
     c_win.onCreated.addListener (win) =>
       @_c_g_AllWin(@_update)
@@ -57,7 +68,9 @@ WinTab =
     c_win.onFocusChanged.addListener (winId) =>
       @_c_g_AllWin(@_update)
 
+    # ----------------------------------------------------------
     # Tab events
+    # ----------------------------------------------------------
 
     c_tab.onCreated.addListener (tab) =>
       @_c_g_AllWin(@_update)
@@ -68,7 +81,10 @@ WinTab =
     c_tab.onRemoved.addListener (tab) =>
       @_c_g_AllWin(@_update)
 
+  # ------------------------------------------------------------
   # Getters
+  # ------------------------------------------------------------
+
   g_currWinTabArr: (NC = yes) ->
     if NC
       _.filter(@currWin.tabs, @_isNCTab)
