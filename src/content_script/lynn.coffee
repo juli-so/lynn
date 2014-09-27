@@ -40,7 +40,7 @@ Top = React.createClass
 Mid = React.createClass
   render: ->
     div { id: 'lynn_mid' },
-      _.map @props.nodeArray[@props.start...@props.end], (node, index) =>
+      _.map @props.nodeArr[@props.start...@props.end], (node, index) =>
         animation = @props.nodeAnimation[index] || 'fadeInLeft'
 
         Suggestion
@@ -48,7 +48,7 @@ Mid = React.createClass
 
           node: node
           isCurrent: index is @props.currentNodeIndex
-          isSelected: _.contains(@props.selectedArray, @props.start + index)
+          isSelected: _.contains(@props.selectedArr, @props.start + index)
 
           animation: animation
 
@@ -67,12 +67,12 @@ Suggestion = React.createClass
           @props.node.title
       div className: 'lynn_tagline',
         if @props.useSuggestedTag
-          _.map @props.node.suggestedTagArray, (tag) ->
+          _.map @props.node.suggestedTagArr, (tag) ->
             span { className: 'lynn_suggested_tag' }, tag
 
-        _.map @props.node.tagArray, (tag) ->
+        _.map @props.node.tagArr, (tag) ->
           span { className: 'lynn_tag' }, tag
-        _.map @props.node.pendingTagArray, (tag) ->
+        _.map @props.node.pendingTagArr, (tag) ->
           span { className: 'lynn_pending_tag' }, tag
 
 Bot = React.createClass
@@ -80,8 +80,8 @@ Bot = React.createClass
     numToString = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five',
       'Six', 'Seven', 'Eight', 'Nine', 'Ten']
 
-    infoString = @props.nodeArray.length + ' result'
-    infoString += 's' if @props.nodeArray.length > 1
+    infoString = @props.nodeArr.length + ' result'
+    infoString += 's' if @props.nodeArr.length > 1
 
       
     div { id: 'lynn_bot' },
@@ -108,7 +108,7 @@ Lynn = React.createClass
     input: ''
 
     mode: 'query' # query | fast | command
-    # in special mode, mode and nodeArray change won't be triggered
+    # in special mode, mode and nodeArr change won't be triggered
     # when 'no' it is disabled
     specialMode: 'no'
 
@@ -117,8 +117,8 @@ Lynn = React.createClass
     # nodeIndex -> animation string
     nodeAnimation: {}
 
-    nodeArray: []
-    selectedArray: []
+    nodeArr: []
+    selectedArr: []
 
     useSuggestedTag: yes
 
@@ -127,8 +127,8 @@ Lynn = React.createClass
 
     cache:
       input: ''
-      nodeArray: []
-      selectedArray: []
+      nodeArr: []
+      selectedArr: []
 
     # loaded from storage
     option:
@@ -138,14 +138,14 @@ Lynn = React.createClass
 
   componentWillMount: ->
     Listener.listen 'search', (message) =>
-      @setState nodeArray: message.result
+      @setState nodeArr: message.result
 
     Listener.listen 'getSyncStorage', (message) =>
       @setState
-        option: message.storageObject.option || @state.option
-        sessionMap: message.storageObject.sessionMap || @state.sessionMap
+        option: message.storageObj.option || @state.option
+        sessionMap: message.storageObj.sessionMap || @state.sessionMap
 
-    Message.postMessage { request: 'getSyncStorage' }
+    Message.postMessage { req: 'getSyncStorage' }
 
     # keydown events
     $(window).keydown (event) =>
@@ -190,8 +190,8 @@ Lynn = React.createClass
 
         nodeAnimation: @state.nodeAnimation
 
-        nodeArray: @state.nodeArray
-        selectedArray: @state.selectedArray
+        nodeArr: @state.nodeArr
+        selectedArr: @state.selectedArr
 
         useSuggestedTag: @state.useSuggestedTag
 
@@ -204,8 +204,8 @@ Lynn = React.createClass
         mode: @state.mode
         specialMode: @state.specialMode
 
-        nodeArray: @state.nodeArray
-        selectedArray: @state.selectedArray
+        nodeArr: @state.nodeArr
+        selectedArr: @state.selectedArr
 
         currentPageIndex: @state.currentPageIndex
 
@@ -225,23 +225,23 @@ Lynn = React.createClass
       @state.currentNodeIndex
 
   getCurrentNode: ->
-    @state.nodeArray[@getCurrentNodeFullIndex()]
+    @state.nodeArr[@getCurrentNodeFullIndex()]
 
-  getSelectedNodeArray: ->
-    _.at(@state.nodeArray, @state.selectedArray)
+  getSelectedNodeArr: ->
+    _.at(@state.nodeArr, @state.selectedArr)
 
   getNodeIndexStart: ->
     @state.currentPageIndex * @state.option.MAX_SUGGESTION_NUM
 
   getNodeIndexEnd: ->
     start = @getNodeIndexStart()
-    Math.min(@state.nodeArray.length, start + @state.option.MAX_SUGGESTION_NUM)
+    Math.min(@state.nodeArr.length, start + @state.option.MAX_SUGGESTION_NUM)
 
-  getCurrentPageNodeArray: ->
-    @state.nodeArray[@getNodeIndexStart()...@getNodeIndexEnd()]
+  getCurrentPageNodeArr: ->
+    @state.nodeArr[@getNodeIndexStart()...@getNodeIndexEnd()]
 
   hasNoSelection: ->
-    _.isEmpty(@state.selectedArray)
+    _.isEmpty(@state.selectedArr)
 
   hasSelection: ->
     not @hasNoSelection()
@@ -256,8 +256,8 @@ Lynn = React.createClass
       @state.animation is 'fadeInDown' and
       _.isEmpty(@state.nodeAnimation) and
 
-      _.isEmpty(@state.nodeArray) and
-      _.isEmpty(@state.selectedArray) and
+      _.isEmpty(@state.nodeArr) and
+      _.isEmpty(@state.selectedArr) and
 
       @state.useSuggestedTag is yes and
 
@@ -265,8 +265,8 @@ Lynn = React.createClass
       @state.currentPageIndex is 0 and
 
       @state.cache.input is '' and
-      _.isEmpty(@state.cache.nodeArray) and
-      _.isEmpty(@state.cache.selectedArray)
+      _.isEmpty(@state.cache.nodeArr) and
+      _.isEmpty(@state.cache.selectedArr)
 
     @callAction('n_clearCache')
 

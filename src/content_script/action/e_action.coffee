@@ -50,9 +50,9 @@ E_Action =
         if not Util.startsWith(@state.input, ':')
           return
 
-        tokenArray = @state.input.split(' ')
-        command = tokenArray[0][1..]
-        args    = tokenArray[1..]
+        tokenArr = @state.input.split(' ')
+        command  = tokenArr[0][1..]
+        args     = tokenArr[1..]
 
         if CommandMap[modifierString + command]
           @callAction(CommandMap[modifierString + command], args)

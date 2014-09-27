@@ -40,8 +40,8 @@ N_Action =
       animation: 'fadeInDown'
       nodeAnimation: {}
 
-      nodeArray: []
-      selectedArray: []
+      nodeArr: []
+      selectedArr: []
 
       useSuggestedTag: yes
 
@@ -55,8 +55,8 @@ N_Action =
       @setState
         input: ''
 
-        nodeArray: []
-        selectedArray: []
+        nodeArr: []
+        selectedArr: []
 
         currentNodeIndex: 0
         currentPageIndex: 0
@@ -122,13 +122,13 @@ N_Action =
   # ------------------------------------------------------------
 
   up: ->
-    if @state.nodeArray.length is 0
+    if @state.nodeArr.length is 0
       return
 
     MAX = @state.option.MAX_SUGGESTION_NUM
     if @state.currentNodeIndex is 0
       if @state.currentPageIndex is 0
-        currentNodeFullIndex = @state.nodeArray.length - 1
+        currentNodeFullIndex = @state.nodeArr.length - 1
         @setState
           currentNodeIndex:
             currentNodeFullIndex % MAX
@@ -142,11 +142,11 @@ N_Action =
       @setState { currentNodeIndex }
 
   down: ->
-    if @state.nodeArray.length is 0
+    if @state.nodeArr.length is 0
       return
 
     MAX = @state.option.MAX_SUGGESTION_NUM
-    if @getCurrentNodeFullIndex() is @state.nodeArray.length - 1
+    if @getCurrentNodeFullIndex() is @state.nodeArr.length - 1
       @setState
         currentNodeIndex: 0
         currentPageIndex: 0
@@ -169,7 +169,7 @@ N_Action =
   pageDown: ->
     currentPageLastNodeIndex =
       (@state.currentPageIndex + 1) * @state.option.MAX_SUGGESTION_NUM
-    if currentPageLastNodeIndex < @state.nodeArray.length
+    if currentPageLastNodeIndex < @state.nodeArr.length
       @setState
         currentPageIndex: @state.currentPageIndex + 1
         currentNodeIndex: 0
@@ -179,45 +179,45 @@ N_Action =
   # ------------------------------------------------------------
 
   select: ->
-    unless _.contains(@state.selectedArray, @getCurrentNodeFullIndex())
-      selectedArray =
-        _.union(@state.selectedArray, [@getCurrentNodeFullIndex()])
-      @setState { selectedArray }
+    unless _.contains(@state.selectedArr, @getCurrentNodeFullIndex())
+      selectedArr =
+        _.union(@state.selectedArr, [@getCurrentNodeFullIndex()])
+      @setState { selectedArr }
 
   unselect: ->
-    if _.contains(@state.selectedArray, @getCurrentNodeFullIndex())
-      selectedArray =
-        _.without(@state.selectedArray, @getCurrentNodeFullIndex())
-      @setState { selectedArray }
+    if _.contains(@state.selectedArr, @getCurrentNodeFullIndex())
+      selectedArr =
+        _.without(@state.selectedArr, @getCurrentNodeFullIndex())
+      @setState { selectedArr }
 
   # ------------------------------------------------------------
 
   selectAllInCurrentPage: ->
     newlySelected = [@getNodeIndexStart()...@getNodeIndexEnd()]
-    selectedArray = _.union(@state.selectedArray, newlySelected)
-    @setState { selectedArray }
+    selectedArr = _.union(@state.selectedArr, newlySelected)
+    @setState { selectedArr }
 
   selectAll: ->
-    @setState { selectedArray: [0...@state.nodeArray.length] }
+    @setState { selectedArr: [0...@state.nodeArr.length] }
 
   unselectAllInCurrentPage: ->
     newlyUnselected = [@getNodeIndexStart()...@getNodeIndexEnd()]
-    selectedArray = _.difference(@state.selectedArray, newlyUnselected)
-    @setState { selectedArray }
+    selectedArr = _.difference(@state.selectedArr, newlyUnselected)
+    @setState { selectedArr }
 
   unselectAll: ->
-    @setState { selectedArray: [] }
+    @setState { selectedArr: [] }
 
   toggleAllSelectionInCurrentPage: ->
-    currentPageNodeIndexArray = []
+    currentPageNodeIndexArr = []
     if _.every([@getNodeIndexStart()...@getNodeIndexEnd()],
-        (index) => _.contains(@state.selectedArray, index))
+        (index) => _.contains(@state.selectedArr, index))
       @callAction('n_unselectAllInCurrentPage')
     else
       @callAction('n_selectAllInCurrentPage')
 
   toggleAll: ->
-    if @state.selectedArray.length is @state.nodeArray.length
+    if @state.selectedArr.length is @state.nodeArr.length
       @callAction('n_unselectAll')
     else
       @callAction('n_selectAll')
@@ -239,25 +239,25 @@ N_Action =
   # Opening bookmarks
   # ------------------------------------------------------------
   
-  openHelper: (option, newWindow, needHide, nodeArray = null) ->
+  openHelper: (option, newWindow, needHide, nodeArr = null) ->
     message =
-      request: if newWindow then 'openInNewWindow' else 'open'
+      req: if newWindow then 'openInNewWindow' else 'open'
       option: option
 
-    if _.isNull(nodeArray)
+    if _.isNull(nodeArr)
       if @hasNoSelection()
         message['node'] = @getCurrentNode()
       else
-        message['nodeArray'] = @getSelectedNodeArray()
+        message['nodeArr'] = @getSelectedNodeArr()
     else
-      message['nodeArray'] = nodeArray
+      message['nodeArr'] = nodeArr
 
     Message.postMessage(message)
 
     if needHide
       @callAction('n_hide')
     else
-      @setState { selectedArray: [] }
+      @setState { selectedArr: [] }
 
   open: ->
     @callAction('n_openHelper', [{ active:    yes }, no , yes])
@@ -276,13 +276,13 @@ N_Action =
   # ------------------------------------------------------------
     
   remove: ->
-    if @state.nodeArray.length isnt 0
-      nodeArray = @state.nodeArray
-      selectedArray = @state.selectedArray
+    if @state.nodeArr.length isnt 0
+      nodeArr = @state.nodeArr
+      selectedArr = @state.selectedArr
       MAX = @state.option.MAX_SUGGESTION_NUM
 
       if @hasNoSelection()
-        # index within all nodeArray, not within current page nodes
+        # index within all nodeArr, not within current page nodes
         currentNodeFullIndex = @getCurrentNodeFullIndex()
         nodeAnimation = {}
         nodeAnimation[currentNodeFullIndex] = 'fadeOutRight'
@@ -290,16 +290,16 @@ N_Action =
 
         # Remove the bookmark in DB
         Message.postMessage
-          request: 'removeBookmark'
+          req: 'removeBookmark'
           id: @getCurrentNode().id
 
         # Remove bookmark from screen using animation
         timeOutFunc = =>
-          nodeArray = _.without(nodeArray, nodeArray[currentNodeFullIndex])
+          nodeArr = _.without(nodeArr, nodeArr[currentNodeFullIndex])
 
           # if the current selected node is the last one
           # let it still point to the last node after one node is removed
-          if currentNodeFullIndex is nodeArray.length
+          if currentNodeFullIndex is nodeArr.length
             if @state.currentNodeIndex is 0
               currentNodeIndex = MAX - 1
               currentPageIndex = @state.currentPageIndex - 1
@@ -308,42 +308,42 @@ N_Action =
               currentPageIndex = @state.currentPageIndex
 
             @setState
-              nodeArray: nodeArray
+              nodeArr: nodeArr
               nodeAnimation: {}
 
               currentNodeIndex: currentNodeIndex
               currentPageIndex: currentPageIndex
           else
             @setState
-              nodeArray: nodeArray
+              nodeArr: nodeArr
               nodeAnimation: {}
 
           # Return to query mode if there is no search results 
-          @setState({ mode: 'query' }) if _.isEmpty(@state.nodeArray)
+          @setState({ mode: 'query' }) if _.isEmpty(@state.nodeArr)
 
         setTimeout(timeOutFunc, 350)
 
       else # HasSelection
         nodeAnimation = {}
-        _.forEach selectedArray, (nodeIndex) ->
+        _.forEach selectedArr, (nodeIndex) ->
           nodeAnimation[nodeIndex] = 'fadeOutRight'
         @setState { nodeAnimation }
 
         # Remove the bookmark in DB
-        idArray = _.pluck(_.at(nodeArray, selectedArray), 'id')
+        idArr = _.pluck(_.at(nodeArr, selectedArr), 'id')
         Message.postMessage
-          request: 'removeBookmark'
-          idArray: idArray
+          req: 'removeBookmark'
+          idArr: idArr
 
         # Remove the bookmark from screen using animation
         timeOutFunc = =>
-          leftNodeIndexArray =
-            _.difference([0...nodeArray.length], selectedArray)
-          leftNodeArray = _.at(nodeArray, leftNodeIndexArray)
+          leftNodeIndexArr =
+            _.difference([0...nodeArr.length], selectedArr)
+          leftNodeArr = _.at(nodeArr, leftNodeIndexArr)
 
           # Push node index back by the number of selected nodes before it
           currentNodeFullIndex = @getCurrentNodeFullIndex()
-          nodeBeforeCurrent = _.filter selectedArray, (nodeIndex) ->
+          nodeBeforeCurrent = _.filter selectedArr, (nodeIndex) ->
             nodeIndex < currentNodeFullIndex
 
           futureIndex = currentNodeFullIndex - nodeBeforeCurrent.length
@@ -353,8 +353,8 @@ N_Action =
           futurePageIndex = Math.floor(futureIndex / MAX)
 
           @setState
-            nodeArray: leftNodeArray
-            selectedArray: []
+            nodeArr: leftNodeArr
+            selectedArr: []
 
             nodeAnimation: {}
 
@@ -362,7 +362,7 @@ N_Action =
             currentPageIndex: futurePageIndex
 
           # Return to query mode if there is no search results 
-          @setState({ mode: 'query' }) if _.isEmpty(@state.nodeArray)
+          @setState({ mode: 'query' }) if _.isEmpty(@state.nodeArr)
 
         setTimeout(timeOutFunc, 350)
 
@@ -377,27 +377,27 @@ N_Action =
       @setDeepState
         cache:
           input: @state.input
-          nodeArray: _.cloneDeep(@state.nodeArray)
-          selectedArray: @state.selectedArray
+          nodeArr: _.cloneDeep(@state.nodeArr)
+          selectedArr: @state.selectedArr
 
   clearCache: ->
     @setState
       cache:
         input: ''
-        nodeArray: []
-        selectedArray: []
+        nodeArr: []
+        selectedArr: []
 
   recoverFromCache: (cache) ->
     if cache
       @setState
         input: cache.input
-        nodeArray: cache.nodeArray
-        selectedArray: cache.selectedArray
+        nodeArr: cache.nodeArr
+        selectedArr: cache.selectedArr
     else
       @setState
         input: @state.cache.input
-        nodeArray: @state.cache.nodeArray
-        selectedArray: @state.cache.selectedArray
+        nodeArr: @state.cache.nodeArr
+        selectedArr: @state.cache.selectedArr
 
   # Recover from the current cache, but store current state in cache
   # before recovering
@@ -429,14 +429,14 @@ N_Action =
     beforeCaret = input[0...start]
     afterCaret = input[start...]
 
-    beforeCaretArray = beforeCaret.split(' ')
+    beforeCaretArr = beforeCaret.split(' ')
 
-    spaceTokenNum = (_.last beforeCaretArray, (s) ->
+    spaceTokenNum = (_.last beforeCaretArr, (s) ->
       s is ""
     ).length
 
-    leftTokenSize = Math.max(0, beforeCaretArray.length - spaceTokenNum - 1)
-    position = beforeCaretArray[0...leftTokenSize].join(' ').length
+    leftTokenSize = Math.max(0, beforeCaretArr.length - spaceTokenNum - 1)
+    position = beforeCaretArr[0...leftTokenSize].join(' ').length
 
     Util.setCaretRange(position, position)
     
@@ -447,14 +447,14 @@ N_Action =
     beforeCaret = input[0...start]
     afterCaret = input[start...]
 
-    afterCaretArray = afterCaret.split(' ')
+    afterCaretArr = afterCaret.split(' ')
 
-    spaceTokenNum = (_.first afterCaretArray, (s) ->
+    spaceTokenNum = (_.first afterCaretArr, (s) ->
       s is ""
     ).length
 
     position = beforeCaret.length +
-      afterCaretArray[0...spaceTokenNum + 1].join(' ').length
+      afterCaretArr[0...spaceTokenNum + 1].join(' ').length
 
     Util.setCaretRange(position, position)
 
@@ -465,15 +465,15 @@ N_Action =
     beforeCaret = input[0...start]
     afterCaret = input[start...]
 
-    beforeCaretArray = beforeCaret.split(' ')
+    beforeCaretArr = beforeCaret.split(' ')
 
-    spaceTokenNum = (_.last beforeCaretArray, (s) ->
+    spaceTokenNum = (_.last beforeCaretArr, (s) ->
       s is ""
     ).length
 
-    leftTokenSize = Math.max(0, beforeCaretArray.length - spaceTokenNum - 1)
-    input = beforeCaretArray[0...leftTokenSize].join(' ') + afterCaret
-    position = beforeCaretArray[0...leftTokenSize].join(' ').length
+    leftTokenSize = Math.max(0, beforeCaretArr.length - spaceTokenNum - 1)
+    input = beforeCaretArr[0...leftTokenSize].join(' ') + afterCaret
+    position = beforeCaretArr[0...leftTokenSize].join(' ').length
 
     @setState { input }
     Util.setCaretRange(position, position)
@@ -485,15 +485,15 @@ N_Action =
     beforeCaret = input[0...start]
     afterCaret = input[start...]
 
-    afterCaretArray = afterCaret.split(' ')
+    afterCaretArr = afterCaret.split(' ')
 
-    spaceTokenNum = (_.first afterCaretArray, (s) ->
+    spaceTokenNum = (_.first afterCaretArr, (s) ->
       s is ""
     ).length
 
-    console.log afterCaretArray
+    console.log afterCaretArr
     console.log spaceTokenNum
-    input = beforeCaret + afterCaretArray[spaceTokenNum + 1...].join(' ')
+    input = beforeCaret + afterCaretArr[spaceTokenNum + 1...].join(' ')
 
     @setState { input }
     Util.setCaretRange(start, start)
@@ -506,22 +506,22 @@ N_Action =
     sessionRecord = @state.sessionMap[command]
 
     if sessionRecord.type is 'window'
-      nodeArray = sessionRecord.session
+      nodeArr = sessionRecord.session
       
       openArgs = switch modifierString
-        when ''       then [{ active:    yes }, no , yes, nodeArray]
-        when 's-'     then [{ active:    no  }, no , no , nodeArray]
-        when 'c-'     then [{ incognito: no  }, yes, yes, nodeArray]
-        when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArray]
+        when ''       then [{ active:    yes }, no , yes, nodeArr]
+        when 's-'     then [{ active:    no  }, no , no , nodeArr]
+        when 'c-'     then [{ incognito: no  }, yes, yes, nodeArr]
+        when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArr]
 
       @callAction('n_openHelper', openArgs)
     else
-      _.forEach sessionRecord.session, (nodeArray) =>
+      _.forEach sessionRecord.session, (nodeArr) =>
         openArgs = switch modifierString
-          when ''       then [{ active:    yes }, no , yes, nodeArray]
-          when 's-'     then [{ active:    no  }, no , no , nodeArray]
-          when 'c-'     then [{ incognito: no  }, yes, yes, nodeArray]
-          when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArray]
+          when ''       then [{ active:    yes }, no , yes, nodeArr]
+          when 's-'     then [{ active:    no  }, no , no , nodeArr]
+          when 'c-'     then [{ incognito: no  }, yes, yes, nodeArr]
+          when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArr]
 
         @callAction('n_openHelper', openArgs)
 

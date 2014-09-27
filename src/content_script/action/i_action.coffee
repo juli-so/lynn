@@ -16,11 +16,11 @@ I_Action =
     Listener.listenOnce 'queryTab', {}, (message) =>
       node = Util.tabToNode(message.current)
 
-      @setState { nodeArray: [node] }
+      @setState { nodeArr: [node] }
 
       Listener.listenOnce 'suggestTag', { bookmark: node } , (message) =>
-        node = _.assign(node, { suggestedTagArray: message.tagArray })
-        @setState { nodeArray: [node] }
+        node = _.assign(node, { suggestedTagArr: message.tagArr })
+        @setState { nodeArr: [node] }
 
   addMultipleBookmark: ->
     @callAction('n_storeCache')
@@ -30,16 +30,16 @@ I_Action =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
-      nodeArray = Util.tabToNode(message.tabArray)
+      nodeArr = Util.tabToNode(message.tabArr)
 
-      @setState { nodeArray }
+      @setState { nodeArr }
 
-      requestObject = { bookmarkArray: nodeArray }
-      Listener.listenOnce 'suggestTag', requestObject, (message) =>
-        _.forEach nodeArray, (node, index) =>
-          node.suggestedTagArray = message.tagArrayArray[index]
+      reqObj = { bookmarkArr: nodeArr }
+      Listener.listenOnce 'suggestTag', reqObj, (message) =>
+        _.forEach nodeArr, (node, index) =>
+          node.suggestedTagArr = message.tagArrArr[index]
 
-        @setState { nodeArray }
+        @setState { nodeArr }
 
   addAllCurrentWindowBookmark: ->
     @callAction('n_storeCache')
@@ -49,18 +49,18 @@ I_Action =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
-      currentWindowTabArray = message.currentWindowTabArray
-      nodeArray = Util.tabToNode(currentWindowTabArray)
-      selectedArray = [0...nodeArray.length]
+      currentWindowTabArr = message.currentWindowTabArr
+      nodeArr = Util.tabToNode(currentWindowTabArr)
+      selectedArr = [0...nodeArr.length]
 
-      @setState { nodeArray, selectedArray }
+      @setState { nodeArr, selectedArr }
 
-      requestObject = { bookmarkArray: nodeArray }
-      Listener.listenOnce 'suggestTag', requestObject, (message) =>
-        _.forEach nodeArray, (node, index) =>
-          node.suggestedTagArray = message.tagArrayArray[index]
+      reqObj = { bookmarkArr: nodeArr }
+      Listener.listenOnce 'suggestTag', reqObj, (message) =>
+        _.forEach nodeArr, (node, index) =>
+          node.suggestedTagArr = message.tagArrArr[index]
 
-        @setState { nodeArray }
+        @setState { nodeArr }
 
   addAllWindowBookmark: ->
     @callAction('n_storeCache')
@@ -70,17 +70,17 @@ I_Action =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
-      nodeArray = Util.tabToNode(message.tabArray)
-      selectedArray = [0...nodeArray.length]
+      nodeArr = Util.tabToNode(message.tabArr)
+      selectedArr = [0...nodeArr.length]
 
-      @setState { nodeArray, selectedArray }
+      @setState { nodeArr, selectedArr }
 
-      requestObject = { bookmarkArray: nodeArray }
-      Listener.listenOnce 'suggestTag', requestObject, (message) =>
-        _.forEach nodeArray, (node, index) =>
-          node.suggestedTagArray = message.tagArrayArray[index]
+      reqObj = { bookmarkArr: nodeArr }
+      Listener.listenOnce 'suggestTag', reqObj, (message) =>
+        _.forEach nodeArr, (node, index) =>
+          node.suggestedTagArr = message.tagArrArr[index]
 
-        @setState { nodeArray }
+        @setState { nodeArr }
 
   addLinkBookmark: ->
     @callAction('n_storeCache')
@@ -117,14 +117,14 @@ I_Action =
           node =
             title: title
             url: element.href
-            tagArray: []
-            suggestedTagArray: []
+            tagArr: []
+            suggestedTagArr: []
 
           Listener.listenOnce 'suggestTag', { bookmark: node }, (message) =>
-            node = _.assign(node, { suggestedTagArray: message.tagArray })
-            @setState { nodeArray: [node] }
+            node = _.assign(node, { suggestedTagArr: message.tagArr })
+            @setState { nodeArr: [node] }
 
-        @setState { nodeArray: [node] }
+        @setState { nodeArr: [node] }
 
   # ------------------------------------------------------------
   # Recover bookmarks
@@ -138,7 +138,7 @@ I_Action =
       input: ''
 
     Listener.listenOnce 'queryDeletedBookmark', {}, (message) =>
-      @setState { nodeArray: message.nodeArray }
+      @setState { nodeArr: message.nodeArr }
 
   # ------------------------------------------------------------
   # Sessions
@@ -152,13 +152,13 @@ I_Action =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
-      currentWindowTabArray = message.currentWindowTabArray
-      nodeArray = _.map currentWindowTabArray, (tab) ->
+      currentWindowTabArr = message.currentWindowTabArr
+      nodeArr = _.map currentWindowTabArr, (tab) ->
         title: tab.title
         url: tab.url
-        tagArray: []
+        tagArr: []
 
-      @setState { nodeArray }
+      @setState { nodeArr }
 
   storeChromeSession: ->
     @callAction('n_storeCache')
@@ -168,12 +168,12 @@ I_Action =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
-      nodeArray = _.map message.tabArray, (tab) ->
+      nodeArr = _.map message.tabArr, (tab) ->
         title: tab.title
         url: tab.url
-        tagArray: []
+        tagArr: []
 
-      @setState { nodeArray }
+      @setState { nodeArr }
 
   removeSession: ->
     @callAction('n_storeCache')
@@ -185,10 +185,10 @@ I_Action =
     Listener.listen 'searchSession', (message) =>
       if message.sessionRecord.type is 'window'
         @setState
-          nodeArray: message.sessionRecord.session
+          nodeArr: message.sessionRecord.session
       else
         @setState
-          nodeArray: _.flatten(message.sessionRecord.session)
+          nodeArr: _.flatten(message.sessionRecord.session)
 
   # ------------------------------------------------------------
   # Tag
@@ -205,37 +205,35 @@ I_Action =
     @callAction('n_storeCache')
 
     if @hasNoSelection()
-      nodeArray = @state.nodeArray
+      nodeArr = @state.nodeArr
       currentNode = @getCurrentNode()
 
-      input = @getCurrentNode().tagArray.join(' ') + ' '
-      currentNode.pendingTagArray = currentNode.tagArray
-      currentNode.tagArray = []
+      input = @getCurrentNode().tagArr.join(' ') + ' '
+      currentNode.pendingTagArr = currentNode.tagArr
+      currentNode.tagArr = []
 
-      nodeArray[@getCurrentNodeFullIndex()] = currentNode
+      nodeArr[@getCurrentNodeFullIndex()] = currentNode
 
       @setState
         input: input
         specialMode: 'editTag'
-        nodeArray: nodeArray
+        nodeArr: nodeArr
 
     else
-      selectedNodeArray = _.at(@state.nodeArray, @state.selectedArray)
+      selectedNodeArr = _.at(@state.nodeArr, @state.selectedArr)
 
-      commonTagArray =
-        _.intersection.apply(null, _.pluck(selectedNodeArray, 'tagArray'))
+      commonTagArr =
+        _.intersection.apply(null, _.pluck(selectedNodeArr, 'tagArr'))
 
-      input = commonTagArray.join(' ') + ' '
+      input = commonTagArr.join(' ') + ' '
 
-      nodeArray = @state.nodeArray
-      _.forEach @state.selectedArray, (index) =>
-        node = nodeArray[index]
-        node.tagArray = _.difference(node.tagArray, commonTagArray)
-        node.pendingTagArray = commonTagArray
+      nodeArr = @state.nodeArr
+      _.forEach @state.selectedArr, (index) =>
+        node = nodeArr[index]
+        node.tagArr = _.difference(node.tagArr, commonTagArr)
+        node.pendingTagArr = commonTagArr
 
       @setState
         input: input
         specialMode: 'editTag'
-        nodeArray: nodeArray
-
-
+        nodeArr: nodeArr

@@ -1,147 +1,152 @@
-# Defines Actions requested to be performed by front-end
-#
-# All methods 
-#   - take an argument 'message'
-#   - take an optional argument 'port', used to post message back to front
-#     if needed
-#   - returns a message object that'll be posted after its execution
-#
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Define actions requested to be performed by front end                        #
+#                                                                              #
+# All methods                                                                  #
+#   - take an argument 'message'                                               #
+#   - take an optional argument 'port', used to post message back when needed  #
+#   - returns a message object that'll be posted back after its execution      #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
 
 Action =
-  search: (message) ->
-    response: 'search'
-    result: Bookmark.find(message.input)
+
+  # ------------------------------------------------------------
+
+  search: (msg) ->
+    res: 'search'
+    result: Bookmark.find(msg.input)
   
   # ------------------------------------------------------------
 
-  getSyncStorage: (message, port) ->
-    chrome.storage.sync.get null, (storageObject) ->
+  getSyncStorage: (msg, port) ->
+    chrome.storage.sync.get null, (storageObj) ->
       port.postMessage
-        response: 'getSyncStorage'
-        storageObject: storageObject
+        res: 'getSyncStorage'
+        storageObj: storageObj
 
   # ------------------------------------------------------------
   # Open bookmarks
   # ------------------------------------------------------------
 
-  open: (message) ->
-    if message.node
+  open: (msg) ->
+    if msg.node
       chrome.tabs.create
-        url: message.node.url
-        active: message.option.active
+        url: msg.node.url
+        active: msg.option.active
     else
-      _.forEach message.nodeArray, (node) ->
+      _.forEach msg.nodeArr, (node) ->
         chrome.tabs.create
           url: node.url
-          active: message.option.active
+          active: msg.option.active
 
-  openInNewWindow: (message) ->
-    if message.node
-      url = message.node.url
+  openInNewWin: (msg) ->
+    if msg.node
+      url = msg.node.url
     else
-      url = _.pluck(message.nodeArray, 'url')
+      url = _.pluck(msg.nodeArr, 'url')
 
     chrome.windows.create
       url: url
-      incognito: message.option.incognito
+      incognito: msg.option.incognito
 
   # ------------------------------------------------------------
   # Tags
   # ------------------------------------------------------------
 
-  addTag: (message) ->
-    if message.node
-      _.forEach message.node.pendingTagArray, (tag) ->
-        Bookmark.addTag(message.node, tag)
+  addTag: (msg) ->
+    if msg.node
+      _.forEach msg.node.pendingTagArr, (tag) ->
+        Bookmark.addTag(msg.node, tag)
         true # do not exit early
     else
-      _.forEach message.nodeArray, (node) ->
-        _.forEach node.pendingTagArray, (tag) ->
+      _.forEach msg.nodeArr, (node) ->
+        _.forEach node.pendingTagArr, (tag) ->
           Bookmark.addTag(node, tag)
           true # do not exit early
 
     Bookmark.storeTag()
 
-  editTag: (message) ->
-    if message.node
-      Bookmark.delAllTag(message.node)
-      _.forEach message.node.pendingTagArray, (tag) ->
-        Bookmark.addTag(message.node, tag)
+  editTag: (msg) ->
+    if msg.node
+      Bookmark.delAllTag(msg.node)
+      _.forEach msg.node.pendingTagArr, (tag) ->
+        Bookmark.addTag(msg.node, tag)
         true # do not exit early
     else
-      _.forEach message.nodeArray, (node) ->
+      _.forEach msg.nodeArr, (node) ->
         Bookmark.delAllTag(node)
-        _.forEach node.tagArray.concat(node.pendingTagArray), (tag) ->
+        _.forEach node.tagArr.concat(node.pendingTagArr), (tag) ->
           Bookmark.addTag(node, tag)
           true
 
     Bookmark.storeTag()
 
-  delAllTag: (message) ->
-    if message.node
-      Bookmark.delAllTag(message.node)
+  delAllTag: (msg) ->
+    if msg.node
+      Bookmark.delAllTag(msg.node)
     else
-      _.forEach message.nodeArray, (node) ->
+      _.forEach msg.nodeArr, (node) ->
         Bookmark.delAllTag(node)
 
-  storeTag: (message) ->
+  storeTag: (msg) ->
     Bookmark.storeTag()
 
   # ------------------------------------------------------------
   # Sessions
   # ------------------------------------------------------------
 
-  searchSession: (message, port) ->
-    chrome.storage.sync.get 'sessionMap', (storageObject) ->
-      { sessionMap } = storageObject
+  searchSession: (msg, port) ->
+    chrome.storage.sync.get 'sessionMap', (storageObj) ->
+      { sessionMap } = storageObj
 
       sessionRecord = _.find sessionMap, (s, sName) ->
-        Util.ciStartsWith(sName, message.input)
+        Util.ciStartsWith(sName, msg.input)
       sessionRecord or= []
 
       port.postMessage
-        response: 'searchSession'
+        res: 'searchSession'
         sessionRecord: sessionRecord
   
-  storeWindowSession: (message, port) ->
-    chrome.storage.sync.get 'sessionMap', (storageObject) ->
-      { sessionMap } = storageObject
-      currentWindowTabArray = WinTab.g_currWinTabArr()
-      simplifiedTabArray = _.map currentWindowTabArray, (tab) ->
+  storeWinSession: (msg, port) ->
+    chrome.storage.sync.get 'sessionMap', (storageObj) ->
+      { sessionMap } = storageObj
+      currentWinTabArr = WinTab.g_currWinTabArr()
+      simplifiedTabArr = _.map currentWinTabArr, (tab) ->
         title: tab.title
         url: tab.url
 
-      sessionMap[message.sessionName] =
+      sessionMap[msg.sessionName] =
         type: 'window'
-        session: simplifiedTabArray
+        session: simplifiedTabArr
 
       chrome.storage.sync.set { sessionMap }, ->
-        port.postMessage { response: 'storeWindowSession' }
+        port.postMessage { res: 'storeWinSession' }
 
-  storeChromeSession: (message, port) ->
-    chrome.storage.sync.get 'sessionMap', (storageObject) ->
-      { sessionMap } = storageObject
-      tabArray = WinTab.g_allTabArr()
-      session = _.values(_.groupBy(tabArray, 'windowId'))
+  storeChromeSession: (msg, port) ->
+    chrome.storage.sync.get 'sessionMap', (storageObj) ->
+      { sessionMap } = storageObj
+      tabArr = WinTab.g_allTabArr()
+      session = _.values(_.groupBy(tabArr, 'windowId'))
 
-      sessionMap[message.sessionName] =
+      sessionMap[msg.sessionName] =
         type: 'chrome'
         session: session
 
       chrome.storage.sync.set { sessionMap }, ->
-        port.postMessage { response: 'storeChromeSession' }
+        port.postMessage { res: 'storeChromeSession' }
 
-  removeSession: (message, port) ->
-    chrome.storage.sync.get 'sessionMap', (storageObject) ->
-      { sessionMap } = storageObject
+  removeSession: (msg, port) ->
+    chrome.storage.sync.get 'sessionMap', (storageObj) ->
+      { sessionMap } = storageObj
 
       sessionName = _.findKey sessionMap, (s, sName) ->
-        Util.ciStartsWith(sName, message.sessionName)
+        Util.ciStartsWith(sName, msg.sessionName)
 
       if sessionName
         delete sessionMap[sessionName]
         chrome.storage.sync.set { sessionMap }, ->
-          port.postMessage { response: 'removeSession' }
+          port.postMessage { res: 'removeSession' }
 
   # ------------------------------------------------------------
   # Adding / Removing Bookmark
@@ -152,51 +157,51 @@ Action =
     a.href = url
     a.hostname
 
-  suggestTag: (message) ->
-    if message.bookmark
-      hostname = @_getHostname(message.bookmark.url)
-      tagArray = Tag.autoTag(message.bookmark.title, hostname)
+  suggestTag: (msg) ->
+    if msg.bookmark
+      hostname = @_getHostname(msg.bookmark.url)
+      tagArr = Tag.autoTag(msg.bookmark.title, hostname)
 
-      response: 'suggestTag'
-      tagArray: tagArray
+      res: 'suggestTag'
+      tagArr: tagArr
     else
-      tagArrayArray = []
+      tagArrArr = []
 
-      _.forEach message.bookmarkArray, (bookmark) =>
+      _.forEach msg.bookmarkArr, (bookmark) =>
         hostname = @_getHostname(bookmark.url)
-        tagArray = Tag.autoTag(bookmark.title, hostname)
-        tagArrayArray.push(tagArray)
+        tagArr = Tag.autoTag(bookmark.title, hostname)
+        tagArrArr.push(tagArr)
 
-      response: 'suggestTag'
-      tagArrayArray: tagArrayArray
+      res: 'suggestTag'
+      tagArrArr: tagArrArr
 
-  addBookmark: (message) ->
-    Bookmark.create(message.bookmark, message.tagArray)
+  addBookmark: (msg) ->
+    Bookmark.create(msg.bookmark, msg.tagArr)
 
-  removeBookmark: (message) ->
-    if message.id
-      Bookmark.remove(message.id)
+  removeBookmark: (msg) ->
+    if msg.id
+      Bookmark.remove(msg.id)
     else
-      _.forEach message.idArray, (id) ->
+      _.forEach msg.idArr, (id) ->
         Bookmark.remove(id)
 
-  queryDeletedBookmark: (message) ->
-    response: 'queryDeletedBookmark'
-    nodeArray: Bookmark.lastDeletedNodeArray
+  queryDeletedBookmark: (msg) ->
+    res: 'queryDeletedBookmark'
+    nodeArr: Bookmark.lastDeletedNodeArr
 
-  recoverBookmark: (message) ->
-    if message.index
-      Bookmark.recover(message.index)
+  recoverBookmark: (msg) ->
+    if msg.index
+      Bookmark.recover(msg.index)
     else
-      Bookmark.recover(message.indexArray)
+      Bookmark.recover(msg.indexArr)
 
   # ------------------------------------------------------------
   # Others
   # ------------------------------------------------------------
 
-  queryTab: (message) ->
-    response: 'queryTab'
+  queryTab: (msg) ->
+    res: 'queryTab'
     current: WinTab.g_currTab()
-    tabArray: WinTab.g_allTabArr()
-    currentWindowTabArray: WinTab.g_currWinTabArr()
+    tabArr: WinTab.g_allTabArr()
+    currentWinTabArr: WinTab.g_currWinTabArr()
 

@@ -7,14 +7,14 @@
 log = (item) -> console.log(item)
 c = console
 
-logArray = (strArray) ->
-  logStr = _.reduce(strArray, (prev, next) ->
+logArr = (strArr) ->
+  logStr = _.reduce(strArr, (prev, next) ->
     prev + next
   )
   log(logStr)
 
 makeCharString = (charNum, char = ' ') ->
-  new Array(charNum + 1).join(char)
+  new Arr(charNum + 1).join(char)
 
 makeUniform = (str, length, char=' ') ->
   diff = length - str.length
@@ -24,18 +24,18 @@ pad = (str, length, char = ' ') ->
   makeCharString(length, char) + str
 
 logNodeTag = (node, charNum, char = ' ') ->
-  if node.tagArray.length > 0
-    nodeStr = node.tagArray.join(' ')
+  if node.tagArr.length > 0
+    nodeStr = node.tagArr.join(' ')
     log(pad(nodeStr, charNum))
   else
-    log(pad('Node Array: Empty', charNum))
+    log(pad('Node Arr: Empty', charNum))
 
-logNodeArray = (nodeArray, property = 'all') ->
+logNodeArr = (nodeArr, property = 'all') ->
   log('==================================================')
   switch property
     when 'all'
       c.group('###Log all###')
-      _.forEach(nodeArray, (node) ->
+      _.forEach(nodeArr, (node) ->
         c.group('Bookmark : ' + makeUniform(node.id, 4) + ' | ' + node.title)
         c.log("%c  " + node.url, "color: darkblue")
         logNodeTag(node, 2)
@@ -44,23 +44,23 @@ logNodeArray = (nodeArray, property = 'all') ->
       c.groupEnd()
     when 'tag'
       log('###Log tag###')
-      _.forEach(nodeArray, (node) ->
+      _.forEach(nodeArr, (node) ->
         log('  ' + node.title)
         logNodeTag(node, 4)
       )
     when 'title'
       log('###Log title###')
-      _.forEach(nodeArray, (node) ->
+      _.forEach(nodeArr, (node) ->
         log('  ' + node.title)
       )
     when 'id'
       log('###Log id###')
-      _.forEach(nodeArray, (node) ->
+      _.forEach(nodeArr, (node) ->
         log('  ' + makeUniform(node.id, 4) + ' | ' + node.title)
       )
     when 'url'
       log('###Log url###')
-      _.forEach(nodeArray, (node) ->
+      _.forEach(nodeArr, (node) ->
         log(makeUniform(node.id, 4) + ' | ' + node.title)
         if node.isBookmark
           log('  ' + node.url)
@@ -69,7 +69,7 @@ logNodeArray = (nodeArray, property = 'all') ->
       )
     when 'children'
       log('###Log children###')
-      _.forEach(nodeArray, (node) ->
+      _.forEach(nodeArr, (node) ->
         if node.isBookmark
           log('  Bookmark')
         else
@@ -84,4 +84,4 @@ logNodeArray = (nodeArray, property = 'all') ->
   log('==================================================')
 
 #Aliases 
-lna = logNodeArray
+lna = logNodeArr

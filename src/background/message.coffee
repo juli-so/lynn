@@ -6,7 +6,7 @@ Message =
     chrome.runtime.onConnect.addListener (port) =>
       port.onMessage.addListener (message) =>
         # pass port to it in case it needs to send additional responses
-        responseMessage = Action[message.request](message, port)
+        resMsg = Action[message.req](message, port)
 
-        if responseMessage and responseMessage.response
-          port.postMessage(responseMessage)
+        if resMsg and resMsg.res
+          port.postMessage(resMsg)

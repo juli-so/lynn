@@ -1,15 +1,15 @@
 Util =
-  tabToNode: (tabOrTabArray) ->
-    if not _.isArray(tabOrTabArray)
-      tab = tabOrTabArray
+  tabToNode: (tabOrTabArr) ->
+    if not _.isArray(tabOrTabArr)
+      tab = tabOrTabArr
 
       title: tab.title
       url: tab.url
-      tagArray: []
+      tagArr: []
     else
-      tabArray = tabOrTabArray
+      tabArr = tabOrTabArr
 
-      _.map tabArray, (tab) =>
+      _.map tabArr, (tab) =>
         @tabToNode(tab)
     
   startsWith: (str, start) ->

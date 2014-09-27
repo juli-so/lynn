@@ -1,24 +1,24 @@
 # Process async responses from backend
 
 Listener =
-  callbackMap: {} # response -> callback
+  callbackMap: {} # res -> callback
 
   init: ->
     Message.addListener (message) =>
-      if @callbackMap[message.response]
-        @callbackMap[message.response](message)
+      if @callbackMap[message.res]
+        @callbackMap[message.res](message)
 
-  listen: (response, callback) ->
-    @callbackMap[response] = callback
+  listen: (res, callback) ->
+    @callbackMap[res] = callback
 
   # Also make the request after the listener is set 
-  listenOnce: (response, requestObject, callback) ->
-    @listen response, (message) =>
+  listenOnce: (res, reqObj, callback) ->
+    @listen res, (message) =>
       callback(message)
-      @stopListen(response)
+      @stopListen(res)
 
-    defaultRequestObject = { request: response }
-    Message.postMessage(_.assign(defaultRequestObject, requestObject))
+    defaultReqObj = { req: res }
+    Message.postMessage(_.assign(defaultReqObj, reqObj))
 
-  stopListen: (response) ->
-    delete @callbackMap[response]
+  stopListen: (res) ->
+    delete @callbackMap[res]

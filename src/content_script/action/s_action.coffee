@@ -11,29 +11,29 @@ S_Action =
       node = @getCurrentNode()
 
       if @state.useSuggestedTag
-        tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
+        tagArr = _.uniq(node.suggestedTagArr.concat(node.tagArr))
       else
-        tagArray = node.tagArray
+        tagArr = node.tagArr
 
       Message.postMessage
-        request: 'addBookmark'
+        req: 'addBookmark'
         bookmark:
           title: node.title
           url: node.url
-        tagArray: tagArray
+        tagArr: tagArr
 
     else
-      _.forEach @getSelectedNodeArray(), (node) =>
+      _.forEach @getSelectedNodeArr(), (node) =>
         if @state.useSuggestedTag
-          tagArray = _.uniq(node.suggestedTagArray.concat(node.tagArray))
+          tagArr = _.uniq(node.suggestedTagArr.concat(node.tagArr))
         else
-          tagArray = node.tagArray
+          tagArr = node.tagArr
         Message.postMessage
-          request: 'addBookmark'
+          req: 'addBookmark'
           bookmark:
             title: node.title
             url: node.url
-          tagArray: tagArray
+          tagArr: tagArr
 
     @callAction('c_storeTag')
     @callAction('n_clearCache')
@@ -44,15 +44,15 @@ S_Action =
       @callAction('n_hide')
     # Search for tags after bookmark is added
     else
-      inputtedTagArray = _.filter @state.input.split(' '), (token) ->
+      inputtedTagArr = _.filter @state.input.split(' '), (token) ->
         Util.isTag(token)
 
       @callAction('n_reset')
-      input = inputtedTagArray.join(' ')
+      input = inputtedTagArr.join(' ')
       @setState { input }
 
       Message.postMessage
-        request: 'search'
+        req: 'search'
         input: input
 
   addBookmark: ->
@@ -75,12 +75,12 @@ S_Action =
   recoverBookmark: ->
     if @hasNoSelection()
       Message.postMessage
-        request: 'recoverBookmark'
+        req: 'recoverBookmark'
         index: @getCurrentNodeFullIndex()
     else
       Message.postMessage
-        request: 'recoverBookmark'
-        indexArray: @state.selectedArray
+        req: 'recoverBookmark'
+        indexArr: @state.selectedArr
 
     currentNode = @getCurrentNode()
     @callAction('n_openHelper', [{ active: no }, no, no])
@@ -94,18 +94,18 @@ S_Action =
   tag: ->
     if @hasNoSelection()
       Message.postMessage
-        request: 'addTag'
+        req: 'addTag'
         node: @getCurrentNode()
     else
       Message.postMessage
-        request: 'addTag'
-        nodeArray: @getSelectedNodeArray()
+        req: 'addTag'
+        nodeArr: @getSelectedNodeArr()
 
-    nodeArray = @state.nodeArray
-    _.forEach nodeArray, (node) ->
-      if not _.isEmpty(node.pendingTagArray)
-        node.tagArray = node.tagArray.concat(node.pendingTagArray)
-        node.pendingTagArray = []
+    nodeArr = @state.nodeArr
+    _.forEach nodeArr, (node) ->
+      if not _.isEmpty(node.pendingTagArr)
+        node.tagArr = node.tagArr.concat(node.pendingTagArr)
+        node.pendingTagArr = []
 
     @setState { specialMode: 'no' }
     @callAction('n_clearCache')
@@ -113,18 +113,18 @@ S_Action =
   editTag: ->
     if @hasNoSelection()
       Message.postMessage
-        request: 'editTag'
+        req: 'editTag'
         node: @getCurrentNode()
     else
       Message.postMessage
-        request: 'editTag'
-        nodeArray: @getSelectedNodeArray()
+        req: 'editTag'
+        nodeArr: @getSelectedNodeArr()
 
-    nodeArray = @state.nodeArray
-    _.forEach nodeArray, (node) =>
-      if not _.isEmpty(node.pendingTagArray)
-        node.tagArray = node.tagArray.concat(node.pendingTagArray)
-        node.pendingTagArray = []
+    nodeArr = @state.nodeArr
+    _.forEach nodeArr, (node) =>
+      if not _.isEmpty(node.pendingTagArr)
+        node.tagArr = node.tagArr.concat(node.pendingTagArr)
+        node.pendingTagArr = []
 
     @setState { specialMode: 'no' }
     @callAction('n_clearCache')
@@ -138,7 +138,7 @@ S_Action =
 
     if not _.isEmpty(sessionName) and not CommandMap[sessionName]
       Listener.listenOnce 'storeWindowSession', { sessionName }, (message) =>
-        Message.postMessage { request: 'getSyncStorage' }
+        Message.postMessage { req: 'getSyncStorage' }
 
         @callAction('n_hide')
 
@@ -147,7 +147,7 @@ S_Action =
 
     if not _.isEmpty(sessionName)
       Listener.listenOnce 'removeSession', { sessionName }, (message) =>
-        Message.postMessage { request: 'getSyncStorage' }
+        Message.postMessage { req: 'getSyncStorage' }
 
         Listener.stopListen('searchSession')
 
@@ -158,7 +158,7 @@ S_Action =
 
     if not _.isEmpty(sessionName) and not CommandMap[sessionName]
       Listener.listenOnce 'storeChromeSession', { sessionName }, (message) =>
-        Message.postMessage { request: 'getSyncStorage' }
+        Message.postMessage { req: 'getSyncStorage' }
 
         @callAction('n_hide')
 

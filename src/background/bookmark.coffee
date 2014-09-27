@@ -1,12 +1,12 @@
 Bookmark =
   allNode: {} # id -> Node
 
-  nodeTagMap: {} # Node.id -> Node.tagArray
+  nodeTagMap: {} # Node.id -> Node.tagArr
   tagNodeMap: {} # tag -> [Node.id]
 
   # Synced to storage.sync
-  lastAddedNodeArray: []
-  lastDeletedNodeArray: []
+  lastAddedNodeArr: []
+  lastDeletedNodeArr: []
 
   # Options
   MAX_RECOVER_NUM: 10
@@ -28,33 +28,33 @@ Bookmark =
 
     initTag = =>
       chrome.storage.local.get ['nodeTagMap', 'tagNodeMap'],
-        (storageObject) =>
-          @nodeTagMap = storageObject['nodeTagMap'] || {}
-          @tagNodeMap = storageObject['tagNodeMap'] || {}
+        (storageObj) =>
+          @nodeTagMap = storageObj['nodeTagMap'] || {}
+          @tagNodeMap = storageObj['tagNodeMap'] || {}
 
           _.forEach @allNode, (node) =>
             if @nodeTagMap[node.id]
-              node.tagArray = @nodeTagMap[node.id]
+              node.tagArr = @nodeTagMap[node.id]
             else
-              node.tagArray = @nodeTagMap[node.id] = []
+              node.tagArr = @nodeTagMap[node.id] = []
 
           # initNode only contains synchronous calls but initTag has async calls
           # Put callback here to ensure it happens after all initiation
           callback()
 
     initOther = =>
-      chrome.storage.sync.get null, (storageObject) =>
-        @lastAddedNodeArray =
-          storageObject.lastAddedNodeArray || @lastDeletedNodeArray
-        @lastDeletedNodeArray =
-          storageObject.lastDeletedNodeArray || @lastDeletedNodeArray
+      chrome.storage.sync.get null, (storageObj) =>
+        @lastAddedNodeArr =
+          storageObj.lastAddedNodeArr || @lastDeletedNodeArr
+        @lastDeletedNodeArr =
+          storageObj.lastDeletedNodeArr || @lastDeletedNodeArr
         @MAX_RECOVER_NUM =
-          storageObject.MAX_RECOVER_NUM || @MAX_RECOVER_NUM
+          storageObj.MAX_RECOVER_NUM || @MAX_RECOVER_NUM
 
     # '1' for 'Bookmarks Bar' in chrome by default
     # Later might let user specify root
-    chrome.bookmarks.getSubTree '1', (nodeArray) ->
-      initNode(nodeArray[0])
+    chrome.bookmarks.getSubTree '1', (nodeArr) ->
+      initNode(nodeArr[0])
       initTag()
       initOther()
 
@@ -78,10 +78,10 @@ Bookmark =
     # in case the node is sent from front end
     node = @allNode[node.id]
 
-    if _.contains(node.tagArray, tag)
+    if _.contains(node.tagArr, tag)
       false
     else
-      node.tagArray.push(tag)
+      node.tagArr.push(tag)
       @tagNodeMap[tag] or= []
       @tagNodeMap[tag].push(node.id)
       true
@@ -92,8 +92,8 @@ Bookmark =
     # in case the node is sent from front end
     node = @allNode[node.id]
 
-    if _.contains(node.tagArray, tag)
-      _.pull(node.tagArray, tag)
+    if _.contains(node.tagArr, tag)
+      _.pull(node.tagArr, tag)
       _.pull(@tagNodeMap[tag], node.id)
       true
     else
@@ -105,19 +105,19 @@ Bookmark =
     # in case the node is sent from front end
     node = @allNode[node.id]
 
-    _.forEach node.tagArray, (tag) =>
+    _.forEach node.tagArr, (tag) =>
       _.pull(@tagNodeMap[tag], '' + node.id)
-    _.remove(node.tagArray)
+    _.remove(node.tagArr)
 
   # remove meaningless entries in nodeTagMap and tagNodeMap
   pruneTag: ->
-    _.forEach @nodeTagMap, (tagArray, index) =>
+    _.forEach @nodeTagMap, (tagArr, index) =>
       delete @nodeTagMap[index] unless @allNode[index]
 
     @tagNodeMap = {}
 
     _.forEach @allNode, (node) =>
-      _.forEach node.tagArray, (tag) =>
+      _.forEach node.tagArr, (tag) =>
         @tagNodeMap[tag] = [] unless @tagNodeMap[tag]
         @tagNodeMap[tag].unshift(node.id)
 
@@ -141,21 +141,18 @@ Bookmark =
   # Find and Filter
   # ------------------------------------------------------------
 
-  # Change nodeArray to { node.id: node } object to allow chaining
-  _toNodeObject: (nodeArray) ->
-    _.zipObject(_.pluck(nodeArray, 'id'), nodeArray)
-
-  # Shortname
-  _toNO: (nodeArray) ->
-    _.zipObject(_.pluck(nodeArray, 'id'), nodeArray)
+  # To Node Object
+  # Change nodeArr to { node.id: node } object to allow chaining
+  _toNO: (nodeArr) ->
+    _.zipObject(_.pluck(nodeArr, 'id'), nodeArr)
 
   # ------------------------------------------------------------
 
   findByTag: (tag, pool = @allNode) ->
-    matchedTagArray = _.filter Object.keys(@tagNodeMap), (t) ->
+    matchedTagArr = _.filter Object.keys(@tagNodeMap), (t) ->
       t.toLowerCase() is tag.toLowerCase()
 
-    idList = _(matchedTagArray)
+    idList = _(matchedTagArr)
                .map((matchedTag) => @tagNodeMap[matchedTag])
                .flatten()
                .uniq()
@@ -163,25 +160,25 @@ Bookmark =
 
     _.compact(_.at(pool, idList))
 
-  # find node that has ALL the tags in tagArray
-  findByTagArray: (tagArray, pool = @allNode) ->
-    if _.isEmpty(tagArray)
+  # find node that has ALL the tags in tagArr
+  findByTagArr: (tagArr, pool = @allNode) ->
+    if _.isEmpty(tagArr)
       result = pool
     else
       reduceFunc = (accumulator, tag) =>
         @_toNO(@findByTag(tag, accumulator))
 
-      result = _.reduce(tagArray, reduceFunc, pool)
+      result = _.reduce(tagArr, reduceFunc, pool)
 
     _.toArray(result)
 
-  # find node that has AT LEAST ONE tag in tagArray
-  findByTagRange: (tagArray, pool = @allNode) ->
-    if _.isEmpty(tagArray)
+  # find node that has AT LEAST ONE tag in tagArr
+  findByTagRange: (tagArr, pool = @allNode) ->
+    if _.isEmpty(tagArr)
       result = pool
     else
       result = {}
-      _.forEach tagArray, (tag) =>
+      _.forEach tagArr, (tag) =>
         result = _.defaults(result, @_toNO(@findByTag(tag, pool)))
 
     _.toArray(result)
@@ -194,25 +191,25 @@ Bookmark =
       _.filter pool, (node) =>
         Util.ciContains(node.title, fragment)
 
-  # find node that has ALL fragments in fragmentArray
-  findByTitleArray: (fragmentArray, isCaseSensitive = no, pool = @allNode) ->
-    if _.isEmpty(fragmentArray)
+  # find node that has ALL fragments in fragmentArr
+  findByTitleArr: (fragmentArr, isCaseSensitive = no, pool = @allNode) ->
+    if _.isEmpty(fragmentArr)
       result = pool
     else
       reduceFunc = (accumulator, fragment) =>
         @_toNO(@findByTitle(fragment, isCaseSensitive, accumulator))
 
-      result = _.reduce(fragmentArray, reduceFunc, pool)
+      result = _.reduce(fragmentArr, reduceFunc, pool)
 
     _.toArray(result)
 
   # find node that has AT LEAST ONE fragment
-  findByTitleRange: (fragmentArray, isCaseSensitive = no, pool = @allNode) ->
-    if _.isEmpty(fragmentArray)
+  findByTitleRange: (fragmentArr, isCaseSensitive = no, pool = @allNode) ->
+    if _.isEmpty(fragmentArr)
       result = pool
     else
       result = {}
-      _.forEach fragmentArray, (fragment) =>
+      _.forEach fragmentArr, (fragment) =>
         result = _.defaults(result, @_toNO(@findByTitle(fragment, no, pool)))
 
     _.toArray(result)
@@ -238,7 +235,7 @@ Bookmark =
   find: (query, pool = @allNode) ->
     # Special cases
     return [] if _.isEmpty(query)
-    return @lastAddedNodeArray if query is '#last'
+    return @lastAddedNodeArr if query is '#last'
 
     if query is '#' or query is '@'
       prefix = query
@@ -247,28 +244,28 @@ Bookmark =
       return @findByTagRange(tagRange)
 
     # process query and tokenize tag and keyword
-    tokenArray = query.split(' ')
-    keywordArray = []
-    tagArray = []
+    tokenArr = query.split(' ')
+    keywordArr = []
+    tagArr = []
 
-    _.forEach tokenArray, (token) =>
+    _.forEach tokenArr, (token) =>
       if @isTag(token)
-        tagArray.push(token)
+        tagArr.push(token)
       else
-        keywordArray.push(token)
+        keywordArr.push(token)
 
-    if not _.isEmpty(tagArray)
-      suggestedTagArray = _(tagArray)
+    if not _.isEmpty(tagArr)
+      suggestedTagArr = _(tagArr)
                             .map((tag) => @_suggestTag(tag))
                             .flatten()
                             .uniq()
                             .value()
-      return [] if _.isEmpty(suggestedTagArray)
+      return [] if _.isEmpty(suggestedTagArr)
 
-      pool = @_toNO(@findByTagRange(suggestedTagArray))
+      pool = @_toNO(@findByTagRange(suggestedTagArr))
       return [] if _.isEmpty(pool)
 
-    @findByTitleArray(keywordArray, no, pool)
+    @findByTitleArr(keywordArr, no, pool)
 
   # ------------------------------------------------------------
   # Find and Filter end
@@ -278,24 +275,24 @@ Bookmark =
   # Bookmark operation
   # ------------------------------------------------------------
 
-  create: (bookmark, tagArray) ->
+  create: (bookmark, tagArr) ->
     bookmark = _.assign(bookmark, { parentId: '232' })
 
     chrome.bookmarks.create bookmark, (result) =>
       result.isBookmark = yes
-      result.tagArray = @nodeTagMap[result.id] = []
+      result.tagArr = @nodeTagMap[result.id] = []
       @allNode[result.id] = result
 
-      _.forEach tagArray, (tag) =>
+      _.forEach tagArr, (tag) =>
         @addTag(result, tag)
       @storeTag()
 
       bmCopy = _.cloneDeep(@allNode[result.id])
 
-      @lastAddedNodeArray.unshift(bmCopy)
-      while @lastAddedNodeArray.length > @MAX_LAST_ADD_NUM
-        @lastAddedNodeArray.pop()
-      chrome.storage.sync.set({ lastAddedNodeArray: @lastAddedNodeArray })
+      @lastAddedNodeArr.unshift(bmCopy)
+      while @lastAddedNodeArr.length > @MAX_LAST_ADD_NUM
+        @lastAddedNodeArr.pop()
+      chrome.storage.sync.set({ lastAddedNodeArr: @lastAddedNodeArr })
     
   move: ->
   update: ->
@@ -305,37 +302,37 @@ Bookmark =
       id = Util.numToString(id)
 
     bm = _.cloneDeep(@allNode[id])
-    @lastDeletedNodeArray.unshift(bm)
-    while @lastDeletedNodeArray.length > @MAX_RECOVER_NUM
-      @lastDeletedNodeArray.pop()
-    chrome.storage.sync.set({ lastDeletedNodeArray: @lastDeletedNodeArray })
+    @lastDeletedNodeArr.unshift(bm)
+    while @lastDeletedNodeArr.length > @MAX_RECOVER_NUM
+      @lastDeletedNodeArr.pop()
+    chrome.storage.sync.set({ lastDeletedNodeArr: @lastDeletedNodeArr })
 
     chrome.bookmarks.remove id, =>
-      _.forEach @allNode[id].tagArray, (tag) =>
+      _.forEach @allNode[id].tagArr, (tag) =>
 
       @delAllTag({ id })
       delete @allNode[id]
 
       @storeTag()
 
-  recover: (indexOrIndexArray) ->
-    if _.isNumber(indexOrIndexArray)
-      index = indexOrIndexArray
+  recover: (indexOrIndexArr) ->
+    if _.isNumber(indexOrIndexArr)
+      index = indexOrIndexArr
 
-      bm = @lastDeletedNodeArray[index]
-      @create(Util.toSimpleBookmark(bm), bm.tagArray)
-      @lastDeletedNodeArray = _.without(@lastDeletedNodeArray, bm)
-      chrome.storage.sync.set({ lastDeletedNodeArray: @lastDeletedNodeArray })
+      bm = @lastDeletedNodeArr[index]
+      @create(Util.toSimpleBookmark(bm), bm.tagArr)
+      @lastDeletedNodeArr = _.without(@lastDeletedNodeArr, bm)
+      chrome.storage.sync.set({ lastDeletedNodeArr: @lastDeletedNodeArr })
 
     else
-      indexArray = indexOrIndexArray
+      indexArr = indexOrIndexArr
 
-      bmArray = _.at(@lastDeletedNodeArray, indexArray)
-      _.forEach bmArray, (bm) =>
-        @create(Util.toSimpleBookmark(bm), bm.tagArray)
+      bmArr = _.at(@lastDeletedNodeArr, indexArr)
+      _.forEach bmArr, (bm) =>
+        @create(Util.toSimpleBookmark(bm), bm.tagArr)
 
-      @lastDeletedNodeArray = _.difference(@lastDeletedNodeArray, bmArray)
-      chrome.storage.sync.set({ lastDeletedNodeArray: @lastDeletedNodeArray })
+      @lastDeletedNodeArr = _.difference(@lastDeletedNodeArr, bmArr)
+      chrome.storage.sync.set({ lastDeletedNodeArr: @lastDeletedNodeArr })
 
   # ------------------------------------------------------------
   # Bookmark operation end

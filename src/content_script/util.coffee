@@ -10,18 +10,18 @@ Util =
   startsWith: (str, start) ->
     str.lastIndexOf(start, 0) is 0
 
-  # Empty tagArray
-  tabToNode: (tabOrTabArray) ->
-    if not _.isArray(tabOrTabArray)
-      tab = tabOrTabArray
+  # Empty tagArr
+  tabToNode: (tabOrTabArr) ->
+    if not _.isArray(tabOrTabArr)
+      tab = tabOrTabArr
 
       title: tab.title
       url: tab.url
-      tagArray: []
+      tagArr: []
     else
-      tabArray = tabOrTabArray
+      tabArr = tabOrTabArr
 
-      _.map tabArray, (tab) =>
+      _.map tabArr, (tab) =>
         @tabToNode(tab)
     
   # ------------------------------------------------------------

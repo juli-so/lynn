@@ -22,7 +22,7 @@ InputHandler =
       @setState { input }
 
       Message.postMessage
-        request: 'search'
+        req: 'search'
         input: input
 
   fast: (input) ->
@@ -35,7 +35,7 @@ InputHandler =
         mode: 'query'
 
       Message.postMessage
-        request: 'search'
+        req: 'search'
         input: input
     else
       @setState { input }
@@ -43,33 +43,33 @@ InputHandler =
   # ------------------------------------------------------------
 
   s_tag: (input) ->
-    tagArray = _.filter input.split(' '), (token) ->
+    tagArr = _.filter input.split(' '), (token) ->
       Util.isTag(token)
-    nodeArray = @state.nodeArray
+    nodeArr = @state.nodeArr
 
     if @hasNoSelection()
-      nodeArray[@getCurrentNodeFullIndex()].pendingTagArray = tagArray
+      nodeArr[@getCurrentNodeFullIndex()].pendingTagArr = tagArr
     else
-      _.forEach @state.selectedArray, (selectedIndex) =>
-        nodeArray[selectedIndex].pendingTagArray = tagArray
+      _.forEach @state.selectedArr, (selectedIndex) =>
+        nodeArr[selectedIndex].pendingTagArr = tagArr
 
     @setState
-      nodeArray: nodeArray
+      nodeArr: nodeArr
       input: input
 
   s_editTag: (input) ->
-    tagArray = _.filter input.split(' '), (token) ->
+    tagArr = _.filter input.split(' '), (token) ->
       Util.isTag(token)
-    nodeArray = @state.nodeArray
+    nodeArr = @state.nodeArr
 
     if @hasNoSelection()
-      nodeArray[@getCurrentNodeFullIndex()].pendingTagArray = tagArray
+      nodeArr[@getCurrentNodeFullIndex()].pendingTagArr = tagArr
     else
-      _.forEach @state.selectedArray, (index) =>
-        nodeArray[index].pendingTagArray = tagArray
+      _.forEach @state.selectedArr, (index) =>
+        nodeArr[index].pendingTagArr = tagArr
 
     @setState
-      nodeArray: nodeArray
+      nodeArr: nodeArr
       input: input
 
   # ------------------------------------------------------------
@@ -78,18 +78,18 @@ InputHandler =
     useSuggestedTag = input[0] isnt '!'
 
     # the '!' is also filtered if not using suggested tag
-    tagArray = _.filter input.split(' '), (token) ->
+    tagArr = _.filter input.split(' '), (token) ->
       Util.isTag(token)
 
     # make the current tags in input field shown on node
-    nodeArray = @state.nodeArray
+    nodeArr = @state.nodeArr
     if @hasNoSelection()
-      nodeArray[@getCurrentNodeFullIndex()].tagArray = tagArray
+      nodeArr[@getCurrentNodeFullIndex()].tagArr = tagArr
     else
-      _.forEach @state.selectedArray, (selectedIndex) ->
-        nodeArray[selectedIndex].tagArray = tagArray
+      _.forEach @state.selectedArr, (selectedIndex) ->
+        nodeArr[selectedIndex].tagArr = tagArr
 
-    @setState { nodeArray, input, useSuggestedTag }
+    @setState { nodeArr, input, useSuggestedTag }
 
   s_addBookmark: (input) ->
     @callHandlerHelper('addBookmarkHelper', input)
@@ -118,8 +118,8 @@ InputHandler =
     @setState { input }
 
     if _.isEmpty(input)
-      @setState { nodeArray: [] }
+      @setState { nodeArr: [] }
     else
       Message.postMessage
-        request: 'searchSession'
+        req: 'searchSession'
         input: input

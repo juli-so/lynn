@@ -18,8 +18,8 @@
 
 Tag =
   init: ->
-    chrome.storage.sync.get 'autoTaggingMap', (storageObject) =>
-      autoTaggingMap = storageObject.autoTaggingMap
+    chrome.storage.sync.get 'autoTaggingMap', (storageObj) =>
+      autoTaggingMap = storageObj.autoTaggingMap
       @titleContainsMap = {}
       @hostnameExactMap = {}
       @hostnameContainsMap = {}
@@ -36,21 +36,21 @@ Tag =
             @hostnameContainsMap[matchString] = tag
 
   autoTag: (title, hostname) ->
-    tagArray = []
+    tagArr = []
 
     _.forEach @titleContainsMap, (tag, matchString) =>
       if Util.ciContains(title, matchString)
-        tagArray.push(tag)
+        tagArr.push(tag)
 
     _.forEach @hostnameExactMap, (tag, matchString) =>
       if matchString is hostname
-        tagArray.push(tag)
+        tagArr.push(tag)
 
     _.forEach @hostnameContainsMap, (tag, matchString) =>
       if Util.ciContains(hostname, matchString)
-        tagArray.push(tag)
+        tagArr.push(tag)
 
-    tagArray
+    tagArr
       
   _log: ->
     console.log @titleContainsMap

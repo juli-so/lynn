@@ -5,8 +5,8 @@ save = ->
     MAX_SUGGESTION_NUM: MAX_SUGGESTION_NUM
 
   if isValid(option)
-    chrome.storage.sync.get 'option', (storageObject) ->
-      option = _.assign(storageObject.option || {}, option)
+    chrome.storage.sync.get 'option', (storageObj) ->
+      option = _.assign(storageObj.option || {}, option)
       chrome.storage.sync.set { option }
 
 isValid = (option) ->
@@ -33,11 +33,11 @@ $(->
   # Initiation
   initTab()
 
-  chrome.storage.sync.get null, (storageObject) ->
-    React.renderComponent Dashboard({ storageObject }),
+  chrome.storage.sync.get null, (storageObj) ->
+    React.renderComponent Dashboard({ storageObj }),
       $('#dashboard_container')[0]
 
-    $('#MAX_SUGGESTION_NUM').val(storageObject.option['MAX_SUGGESTION_NUM'])
+    $('#MAX_SUGGESTION_NUM').val(storageObj.option['MAX_SUGGESTION_NUM'])
 
   $('#save').click ->
     save()
