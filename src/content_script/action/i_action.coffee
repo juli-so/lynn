@@ -41,16 +41,16 @@ I_Action =
 
         @setState { nodeArr }
 
-  addAllCurrentWindowBookmark: ->
+  addAllCurrentWinBookmark: ->
     @callAction('n_storeCache')
 
     @setState
-      specialMode: 'addAllCurrentWindowBookmark'
+      specialMode: 'addAllCurrentWinBookmark'
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
-      currentWindowTabArr = message.currentWindowTabArr
-      nodeArr = Util.tabToNode(currentWindowTabArr)
+      currentWinTabArr = message.currentWinTabArr
+      nodeArr = Util.tabToNode(currentWinTabArr)
       selectedArr = [0...nodeArr.length]
 
       @setState { nodeArr, selectedArr }
@@ -62,11 +62,11 @@ I_Action =
 
         @setState { nodeArr }
 
-  addAllWindowBookmark: ->
+  addAllWinBookmark: ->
     @callAction('n_storeCache')
 
     @setState
-      specialMode: 'addAllWindowBookmark'
+      specialMode: 'addAllWinBookmark'
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
@@ -144,16 +144,16 @@ I_Action =
   # Sessions
   # ------------------------------------------------------------
 
-  storeWindowSession: ->
+  storeWinSession: ->
     @callAction('n_storeCache')
 
     @setState
-      specialMode: 'storeWindowSession'
+      specialMode: 'storeWinSession'
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (message) =>
-      currentWindowTabArr = message.currentWindowTabArr
-      nodeArr = _.map currentWindowTabArr, (tab) ->
+      currentWinTabArr = message.currentWinTabArr
+      nodeArr = _.map currentWinTabArr, (tab) ->
         title: tab.title
         url: tab.url
         tagArr: []

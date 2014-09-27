@@ -1,7 +1,7 @@
 # manages
 #   * auto-tagging
 
-# autoTaggingMap is saved in syncStorage
+# autoTaggingMap is saved in syncStor
 # it has the following structure
 # autoTaggingMap = {
 #   '#tag1': { 
@@ -18,8 +18,8 @@
 
 Tag =
   init: ->
-    chrome.storage.sync.get 'autoTaggingMap', (storageObj) =>
-      autoTaggingMap = storageObj.autoTaggingMap
+    chrome.storage.sync.get 'autoTaggingMap', (storObj) =>
+      autoTaggingMap = storObj.autoTaggingMap
       @titleContainsMap = {}
       @hostnameExactMap = {}
       @hostnameContainsMap = {}

@@ -239,9 +239,9 @@ N_Action =
   # Opening bookmarks
   # ------------------------------------------------------------
   
-  openHelper: (option, newWindow, needHide, nodeArr = null) ->
+  openHelper: (option, newWin, needHide, nodeArr = null) ->
     message =
-      req: if newWindow then 'openInNewWindow' else 'open'
+      req: if newWin then 'openInNewWin' else 'open'
       option: option
 
     if _.isNull(nodeArr)
@@ -265,10 +265,10 @@ N_Action =
   openInBackground: ->
     @callAction('n_openHelper', [{ active:    no  }, no , no ])
 
-  openInNewWindow: ->
+  openInNewWin: ->
     @callAction('n_openHelper', [{ incognito: no  }, yes, yes])
 
-  openInNewIncognitoWindow: ->
+  openInNewIncognitoWin: ->
     @callAction('n_openHelper', [{ incognito: yes }, yes, yes])
 
   # ------------------------------------------------------------

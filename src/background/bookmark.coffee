@@ -28,9 +28,9 @@ Bookmark =
 
     initTag = =>
       chrome.storage.local.get ['nodeTagMap', 'tagNodeMap'],
-        (storageObj) =>
-          @nodeTagMap = storageObj['nodeTagMap'] || {}
-          @tagNodeMap = storageObj['tagNodeMap'] || {}
+        (storObj) =>
+          @nodeTagMap = storObj['nodeTagMap'] || {}
+          @tagNodeMap = storObj['tagNodeMap'] || {}
 
           _.forEach @allNode, (node) =>
             if @nodeTagMap[node.id]
@@ -43,13 +43,13 @@ Bookmark =
           callback()
 
     initOther = =>
-      chrome.storage.sync.get null, (storageObj) =>
+      chrome.storage.sync.get null, (storObj) =>
         @lastAddedNodeArr =
-          storageObj.lastAddedNodeArr || @lastDeletedNodeArr
+          storObj.lastAddedNodeArr || @lastDeletedNodeArr
         @lastDeletedNodeArr =
-          storageObj.lastDeletedNodeArr || @lastDeletedNodeArr
+          storObj.lastDeletedNodeArr || @lastDeletedNodeArr
         @MAX_RECOVER_NUM =
-          storageObj.MAX_RECOVER_NUM || @MAX_RECOVER_NUM
+          storObj.MAX_RECOVER_NUM || @MAX_RECOVER_NUM
 
     # '1' for 'Bookmarks Bar' in chrome by default
     # Later might let user specify root

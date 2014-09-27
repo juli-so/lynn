@@ -5,10 +5,10 @@
 CommandMap =
   'a'             : 'i_addBookmark'
   'am'            : 'i_addMultipleBookmark'
-  'aa'            : 'i_addAllCurrentWindowBookmark'
-  'aA'            : 'i_addAllWindowBookmark'
+  'aa'            : 'i_addAllCurrentWinBookmark'
+  'aA'            : 'i_addAllWinBookmark'
 
-  's'             : 'i_storeWindowSession'
+  's'             : 'i_storeWinSession'
   'S'             : 'i_storeChromeSession'
   'rs'            : 'i_removeSession'
 
@@ -43,8 +43,8 @@ E_Action =
         switch modifierString
           when ''       then @callAction('n_open')
           when 's-'     then @callAction('n_openInBackground')
-          when 'c-'     then @callAction('n_openInNewWindow')
-          when 'c-s-'   then @callAction('n_openInNewIncognitoWindow')
+          when 'c-'     then @callAction('n_openInNewWin')
+          when 'c-s-'   then @callAction('n_openInNewIncognitoWin')
       # Command mode
       else
         if not Util.startsWith(@state.input, ':')

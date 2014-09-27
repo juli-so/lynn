@@ -61,10 +61,10 @@ S_Action =
   addMultipleBookmark: ->
     @callAction('s_addBookmarkHelper')
 
-  addAllCurrentWindowBookmark: ->
+  addAllCurrentWinBookmark: ->
     @callAction('s_addBookmarkHelper')
 
-  addAllWindowBookmark: ->
+  addAllWinBookmark: ->
     @callAction('s_addBookmarkHelper')
 
   addLinkBookmark: ->
@@ -133,12 +133,12 @@ S_Action =
   # Sessions
   # ------------------------------------------------------------
 
-  storeWindowSession: ->
+  storeWinSession: ->
     sessionName = @state.input.split(' ')[0]
 
     if not _.isEmpty(sessionName) and not CommandMap[sessionName]
-      Listener.listenOnce 'storeWindowSession', { sessionName }, (message) =>
-        Message.postMessage { req: 'getSyncStorage' }
+      Listener.listenOnce 'storeWinSession', { sessionName }, (message) =>
+        Message.postMessage { req: 'getSyncStor' }
 
         @callAction('n_hide')
 
@@ -147,7 +147,7 @@ S_Action =
 
     if not _.isEmpty(sessionName)
       Listener.listenOnce 'removeSession', { sessionName }, (message) =>
-        Message.postMessage { req: 'getSyncStorage' }
+        Message.postMessage { req: 'getSyncStor' }
 
         Listener.stopListen('searchSession')
 
@@ -158,7 +158,7 @@ S_Action =
 
     if not _.isEmpty(sessionName) and not CommandMap[sessionName]
       Listener.listenOnce 'storeChromeSession', { sessionName }, (message) =>
-        Message.postMessage { req: 'getSyncStorage' }
+        Message.postMessage { req: 'getSyncStor' }
 
         @callAction('n_hide')
 

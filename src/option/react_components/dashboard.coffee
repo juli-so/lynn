@@ -14,7 +14,7 @@ Dashboard = React.createClass
       div null,
         h4 null, 'Auto-tagging'
         ul null,
-          _.map @props.storageObj.autoTaggingMap, (autoTagRecord, tagName) ->
+          _.map @props.storObj.autoTaggingMap, (autoTagRecord, tagName) ->
             if autoTagRecord.matchProp is 'hostname'
               if autoTagRecord.matchType is 'exact'
                 prereq = 'If hostname is exactly ' + autoTagRecord.matchString
@@ -29,7 +29,7 @@ Dashboard = React.createClass
 
       div null,
         h4 null, 'Sessions'
-        _.map @props.storageObj.sessionMap, (sessionRecord, sessionName) ->
+        _.map @props.storObj.sessionMap, (sessionRecord, sessionName) ->
           div null, ':', sessionName, ' to invoke: ',
             if sessionRecord.type is 'window'
               ul { className: 'dash-list' },

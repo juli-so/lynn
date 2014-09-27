@@ -92,7 +92,7 @@ Bot = React.createClass
           ''
         else
           botString = Hint.botStringSpecialModeMap[@props.specialMode]
-          if @props.specialMode is 'storeWindowSession' or
+          if @props.specialMode is 'storeWinSession' or
             @props.specialMode is 'storeChromeSession' or
             @props.specialMode is 'removeSession'
               sessionName = @props.input.split(' ')[0]
@@ -140,12 +140,12 @@ Lynn = React.createClass
     Listener.listen 'search', (message) =>
       @setState nodeArr: message.result
 
-    Listener.listen 'getSyncStorage', (message) =>
+    Listener.listen 'getSyncStor', (message) =>
       @setState
-        option: message.storageObj.option || @state.option
-        sessionMap: message.storageObj.sessionMap || @state.sessionMap
+        option: message.storObj.option || @state.option
+        sessionMap: message.storObj.sessionMap || @state.sessionMap
 
-    Message.postMessage { req: 'getSyncStorage' }
+    Message.postMessage { req: 'getSyncStor' }
 
     # keydown events
     $(window).keydown (event) =>

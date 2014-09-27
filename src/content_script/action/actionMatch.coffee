@@ -190,8 +190,8 @@ ActionMatch =
       # Opening bookmarks
       'o':                'n_open'
       's-o':              'n_openInBackground'
-      'c-o':              'n_openInNewWindow'
-      'c-s-o':            'n_openInNewIncognitoWindow'
+      'c-o':              'n_openInNewWin'
+      'c-s-o':            'n_openInNewIncognitoWin'
 
       # Movment
       'k':                'n_up'

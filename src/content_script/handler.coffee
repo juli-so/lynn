@@ -97,10 +97,10 @@ InputHandler =
   s_addMultipleBookmark: (input) ->
     @callHandlerHelper('addBookmarkHelper', input)
 
-  s_addAllCurrentWindowBookmark: (input) ->
+  s_addAllCurrentWinBookmark: (input) ->
     @callHandlerHelper('addBookmarkHelper', input)
 
-  s_addAllWindowBookmark: (input) ->
+  s_addAllWinBookmark: (input) ->
     @callHandlerHelper('addBookmarkHelper', input)
 
   s_addLinkBookmark: (input) ->
@@ -108,7 +108,7 @@ InputHandler =
 
   # ------------------------------------------------------------
 
-  s_storeWindowSession: (input) ->
+  s_storeWinSession: (input) ->
     @setState { input }
     
   s_storeChromeSession: (input) ->

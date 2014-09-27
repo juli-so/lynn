@@ -19,11 +19,11 @@ Action =
   
   # ------------------------------------------------------------
 
-  getSyncStorage: (msg, port) ->
-    chrome.storage.sync.get null, (storageObj) ->
+  getSyncStor: (msg, port) ->
+    chrome.storage.sync.get null, (storObj) ->
       port.postMessage
-        res: 'getSyncStorage'
-        storageObj: storageObj
+        res: 'getSyncStor'
+        storObj: storObj
 
   # ------------------------------------------------------------
   # Open bookmarks
@@ -97,8 +97,8 @@ Action =
   # ------------------------------------------------------------
 
   searchSession: (msg, port) ->
-    chrome.storage.sync.get 'sessionMap', (storageObj) ->
-      { sessionMap } = storageObj
+    chrome.storage.sync.get 'sessionMap', (storObj) ->
+      { sessionMap } = storObj
 
       sessionRecord = _.find sessionMap, (s, sName) ->
         Util.ciStartsWith(sName, msg.input)
@@ -109,8 +109,8 @@ Action =
         sessionRecord: sessionRecord
   
   storeWinSession: (msg, port) ->
-    chrome.storage.sync.get 'sessionMap', (storageObj) ->
-      { sessionMap } = storageObj
+    chrome.storage.sync.get 'sessionMap', (storObj) ->
+      { sessionMap } = storObj
       currentWinTabArr = WinTab.g_currWinTabArr()
       simplifiedTabArr = _.map currentWinTabArr, (tab) ->
         title: tab.title
@@ -124,8 +124,8 @@ Action =
         port.postMessage { res: 'storeWinSession' }
 
   storeChromeSession: (msg, port) ->
-    chrome.storage.sync.get 'sessionMap', (storageObj) ->
-      { sessionMap } = storageObj
+    chrome.storage.sync.get 'sessionMap', (storObj) ->
+      { sessionMap } = storObj
       tabArr = WinTab.g_allTabArr()
       session = _.values(_.groupBy(tabArr, 'windowId'))
 
@@ -137,8 +137,8 @@ Action =
         port.postMessage { res: 'storeChromeSession' }
 
   removeSession: (msg, port) ->
-    chrome.storage.sync.get 'sessionMap', (storageObj) ->
-      { sessionMap } = storageObj
+    chrome.storage.sync.get 'sessionMap', (storObj) ->
+      { sessionMap } = storObj
 
       sessionName = _.findKey sessionMap, (s, sName) ->
         Util.ciStartsWith(sName, msg.sessionName)
