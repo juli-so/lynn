@@ -2,6 +2,7 @@ lib/*
 tags
 bower_components/*
 node_modules/*
+vendor/*
 .*
 
 optionPage/*.html
