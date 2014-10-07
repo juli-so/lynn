@@ -12,6 +12,8 @@ Bookmark =
   MAX_RECOVER_NUM: 10
   MAX_LASTADD_NUM: 10
 
+  synoTagRecordArr: []
+
   # ------------------------------------------------------------
   # Init
   # ------------------------------------------------------------
@@ -50,6 +52,8 @@ Bookmark =
           storObj.lastDeletedNodeArr || @lastDeletedNodeArr
         @MAX_RECOVER_NUM =
           storObj.MAX_RECOVER_NUM || @MAX_RECOVER_NUM
+        @synoTagRecordArr =
+          storObj.synoTagRecordArr || @synoTagRecordArr
 
     # '1' for 'Bookmarks Bar' in chrome by default
     # Later might let user specify root
@@ -224,26 +228,50 @@ Bookmark =
 
   # ------------------------------------------------------------
 
+  # Suggest a tagArr from the tagFragment
+  # SynoTag matches are also included
   _suggestTag: (tagFragment) ->
     return [] if @isntTag(tagFragment)
 
     allTagName = Object.keys(@tagNodeMap)
 
-    _.filter allTagName, (tag) =>
+    suggestedTagArr = _.filter allTagName, (tag) =>
       Util.ciContains(tag, tagFragment)
+
+    # Synotag processing
+    # If found a match with a dominant tag, use that tag
+    # Else put all SynoTags into the array
+    _findSynoMatch = (tag) =>
+      _.find @synoTagRecordArr, (synoTagRecord) ->
+        _.any synoTagRecord.memberArr, (member) ->
+          _.ciContains(member, tag)
+
+    matchRecord = _findSynoMatch(tagFragment)
+    synoTagSuggestedTagArr = []
+    if matchRecord
+      if matchRecord.dominant
+        synoTagSuggestedTagArr.push(matchRecord.dominant)
+      else
+        _.forEach matchRecord.memberArr, (member) ->
+          synoTagSuggestedTagArr.push(member)
+
+    _.uniq(suggestedTagArr.concat(synoTagSuggestedTagArr))
+
 
   find: (query, pool = @allNode) ->
     # Special cases
     return [] if _.isEmpty(query)
     return @lastAddedNodeArr if query is '#last'
 
+    # When query is just '#' or '@'
+    # Show all bookmarks with any of these kinds of tags
     if query is '#' or query is '@'
       prefix = query
       tagRange = _.filter Object.keys(@tagNodeMap), (tag) ->
         Util.startsWith(tag, prefix)
       return @findByTagRange(tagRange)
 
-    # process query and tokenize tag and keyword
+    # Process query and tokenize tag and keyword
     tokenArr = query.split(' ')
     keywordArr = []
     tagArr = []
@@ -254,17 +282,23 @@ Bookmark =
       else
         keywordArr.push(token)
 
+    # Search with Tag
     if not _.isEmpty(tagArr)
       suggestedTagArr = _(tagArr)
-                            .map((tag) => @_suggestTag(tag))
-                            .flatten()
-                            .uniq()
-                            .value()
+                          .map((tag) => @_suggestTag(tag))
+                          .flatten()
+                          .uniq()
+                          .value()
+
       return [] if _.isEmpty(suggestedTagArr)
+
+      log 'In find'
+      log suggestedTagArr
 
       pool = @_toNO(@findByTagRange(suggestedTagArr))
       return [] if _.isEmpty(pool)
 
+    # Filter with Keyword
     @findByTitleArr(keywordArr, no, pool)
 
   # ------------------------------------------------------------
