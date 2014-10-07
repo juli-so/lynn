@@ -50,6 +50,7 @@
     "background": {
       "scripts": [
         "vendor/js/lodash.min.js",
+        "lib/background/lodashMixin.js",
 
         "lib/background/util.js",
         "lib/background/wintab.js",
