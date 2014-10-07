@@ -24,6 +24,8 @@
         ],
         "js": [
           "vendor/js/lodash.min.js",
+          "lib/content_script/lodashMixin.js",
+
           "vendor/js/jquery.min.js",
           "vendor/js/react.js",
 
