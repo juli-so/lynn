@@ -77,11 +77,23 @@ InputHandler =
   addBookmarkHelper: (input) ->
     useSuggestedTag = input[0] isnt '!'
 
-    # the '!' is also filtered if not using suggested tag
+    # '!' is also filtered when not using suggested tag
     tagArr = _.filter input.split(' '), (token) ->
       Util.isTag(token)
 
-    # make the current tags in input field shown on node
+    # SynoTag
+    # Only change when SynoTag has a dominant tag
+    tagArr = _.map tagArr, (tag) =>
+      matchRecord = _.find @state.synoTagRecordArr, (synoTagRecord) ->
+        _.any synoTagRecord.memberArr, (member) ->
+          _.ciEquals(member, tag)
+
+      if matchRecord and matchRecord.dominant
+        matchRecord.dominant
+      else
+        tag
+
+    # Make the current tags in input field shown on node
     nodeArr = @state.nodeArr
     if @hasNoSelection()
       nodeArr[@getCurrentNodeFullIndex()].tagArr = tagArr

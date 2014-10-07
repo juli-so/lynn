@@ -46,6 +46,15 @@ Dashboard = React.createClass
 
       div null,
         h4 null, 'Synotags'
-
-
+        _.map @props.storObj.synoTagRecordArr, (synoTagRecord) ->
+          if synoTagRecord.dominant
+            div null, "#{synoTagRecord.dominant} is a dominant SynoTag for:",
+              ul null,
+                _.map synoTagRecord.memberArr, (member) ->
+                  li null, member
+          else
+            div null, "The following are SynoTag to each other:",
+              ul null,
+                _.map synoTagRecord.memberArr, (member) ->
+                  li null, member
 

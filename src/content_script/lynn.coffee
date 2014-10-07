@@ -135,6 +135,7 @@ Lynn = React.createClass
       MAX_SUGGESTION_NUM: 8
 
     sessionMap: {}
+    synoTagRecordArr: []
 
   componentWillMount: ->
     Listener.listen 'search', (message) =>
@@ -144,6 +145,8 @@ Lynn = React.createClass
       @setState
         option: message.storObj.option || @state.option
         sessionMap: message.storObj.sessionMap || @state.sessionMap
+        synoTagRecordArr:
+          message.storObj.synoTagRecordArr || @state.synoTagRecordArr
 
     Message.postMessage { req: 'getSyncStor' }
 
