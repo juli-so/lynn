@@ -39,7 +39,9 @@
           "lib/content_script/message.js",
           "lib/content_script/handler.js",
           "lib/content_script/listener.js",
-          "lib/content_script/lynn.js",
+          "lib/content_script/react/component.js",
+          "lib/content_script/react/block.js",
+          "lib/content_script/react/lynn.js",
           "lib/content_script/main.js"
         ]
       }
