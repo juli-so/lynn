@@ -208,7 +208,10 @@ I_Action =
       nodeArr = @state.nodeArr
       currentNode = @getCurrentNode()
 
-      input = @getCurrentNode().tagArr.join(' ') + ' '
+      input = @getCurrentNode().tagArr.join(' ')
+      if not _.isEmpty(@getCurrentNode().tagArr)
+        input += ' '
+
       currentNode.pendingTagArr = currentNode.tagArr
       currentNode.tagArr = []
 
