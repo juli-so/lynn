@@ -13,6 +13,7 @@ Tag = React.createClass
       when 'normal'   then 'lynn_tag'
       when 'suggeset' then 'lynn_suggested_tag'
       when 'pending'  then 'lynn_pending_tag'
+      when 'special'  then 'lynn_special_tag'
 
     span { className }, @props.tag
 
@@ -33,7 +34,11 @@ Suggestion = React.createClass
             Tag { type: 'suggest', tag: tag }
 
         _.map @props.node.tagArr, (tag) ->
-          Tag { type: 'normal', tag: tag }
+          if _.ciEquals(tag, '#toread')
+            type = 'special'
+          else
+            type = 'normal'
+          Tag { type, tag }
 
         _.map @props.node.pendingTagArr, (tag) ->
           Tag { type: 'pending', tag: tag }

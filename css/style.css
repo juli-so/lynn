@@ -149,6 +149,11 @@
   color: red;
 }
 
+#lynn #lynn_mid .lynn_special_tag {
+  margin-left: 5px;
+  color: blue;
+}
+
 /* lynn bot */
 #lynn #lynn_bot {
   border: 2px #ddd solid;
