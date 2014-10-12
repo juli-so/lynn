@@ -16,11 +16,18 @@ InputHandler =
     @callAction('n_clearInput')
 
     if input[-1..] is ':'
+      @callAction('n_storeCache')
+
+      nodeArr = @state.nodeArr
+
       @setDeepState
         input: ':'
         mode: 'command'
         cache:
           input: @state.input
+
+      @setState { nodeArr }
+
     else
       @setState { input }
 
