@@ -23,44 +23,46 @@
           "vendor/css/font-awesome.css"
         ],
         "js": [
-          "vendor/js/lodash.min.js",
-          "lib/content_script/lodashMixin.js",
+          "lib/lodash.min.js",
+          "bin/content_script/lodashMixin.js",
 
-          "vendor/js/jquery.min.js",
-          "vendor/js/react.js",
+          "bin/lib/clipboard.js",
 
-          "lib/content_script/util.js",
-          "lib/content_script/hint.js",
-          "lib/content_script/action/actionMatch.js",
-          "lib/content_script/action/n_action.js",
-          "lib/content_script/action/i_action.js",
-          "lib/content_script/action/e_action.js",
-          "lib/content_script/action/s_action.js",
-          "lib/content_script/action/t_action.js",
-          "lib/content_script/message.js",
-          "lib/content_script/handler.js",
-          "lib/content_script/listener.js",
-          "lib/content_script/react/component.js",
-          "lib/content_script/react/block.js",
-          "lib/content_script/react/lynn.js",
-          "lib/content_script/main.js"
+          "lib/jquery.min.js",
+          "lib/react.js",
+
+          "bin/content_script/util.js",
+          "bin/content_script/hint.js",
+          "bin/content_script/action/actionMatch.js",
+          "bin/content_script/action/n_action.js",
+          "bin/content_script/action/i_action.js",
+          "bin/content_script/action/e_action.js",
+          "bin/content_script/action/s_action.js",
+          "bin/content_script/action/t_action.js",
+          "bin/content_script/message.js",
+          "bin/content_script/handler.js",
+          "bin/content_script/listener.js",
+          "bin/content_script/react/component.js",
+          "bin/content_script/react/block.js",
+          "bin/content_script/react/lynn.js",
+          "bin/content_script/main.js"
         ]
       }
     ],
 
     "background": {
       "scripts": [
-        "vendor/js/lodash.min.js",
-        "lib/background/lodashMixin.js",
+        "lib/lodash.min.js",
+        "bin/background/lodashMixin.js",
 
-        "lib/background/util.js",
-        "lib/background/wintab.js",
-        "lib/background/tag.js",
-        "lib/background/action.js",
-        "lib/background/message.js",
-        "lib/background/bookmark.js",
-        "lib/background/log.js",
-        "lib/background/main.js"
+        "bin/background/util.js",
+        "bin/background/wintab.js",
+        "bin/background/tag.js",
+        "bin/background/action.js",
+        "bin/background/message.js",
+        "bin/background/bookmark.js",
+        "bin/background/log.js",
+        "bin/background/main.js"
       ]
     },
 
