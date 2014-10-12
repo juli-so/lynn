@@ -1,4 +1,8 @@
-# Intereactive actions, mostly confirmed by Special actions
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Intereactive actions, mostly confirmed by Special actions                    #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
 
 I_Action =
 
@@ -128,7 +132,7 @@ I_Action =
 
   # ------------------------------------------------------------
 
-  addSelectionBookmark: ->
+  h_addSelection: (selector = 'a') ->
     @callAction('n_storeCache')
 
     @callAction('n_hide', [no])
@@ -138,7 +142,7 @@ I_Action =
       $(document).unbind 'mouseup.addSelectionBookmark'
 
       docFrag = document.getSelection().getRangeAt(0).cloneContents()
-      linkArr = docFrag.querySelectorAll('a')
+      linkArr = docFrag.querySelectorAll(selector)
 
       nodeArr = _.map linkArr, (link) ->
         title: link.text
@@ -153,6 +157,9 @@ I_Action =
         specialMode: 'addSelectionBookmark'
         nodeArr: nodeArr
         selectedArr: [0...nodeArr.length]
+
+  addSelectionBookmark: ->
+    @callAction('i_h_addSelection')
 
   # ------------------------------------------------------------
   # Recover bookmarks

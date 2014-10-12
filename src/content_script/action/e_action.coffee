@@ -1,5 +1,11 @@
-# Handle Esc and Enter actions
-# Most actions are delegated to N_Action, I_Action, and S_Action
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Handle Esc and Enter actions                                                 #
+# Most actions are delegated to N_Action, I_Action, and S_Action               #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
+
+DEBUG = yes
 
 # Actions to be made in command mode
 CommandMap =
@@ -8,14 +14,16 @@ CommandMap =
   'aa'            : 'i_addAllCurrentWinBookmark'
   'aA'            : 'i_addAllWinBookmark'
 
+  'al'            : 'i_addLinkBookmark'
+  'as'            : 'i_addSelectionBookmark'
+  'ahn'           : 't_addHNBookmark'
+
+
   's'             : 'i_storeWinSession'
   'S'             : 'i_storeChromeSession'
   'rs'            : 'i_removeSession'
 
   'r'             : 'i_recoverBookmark'
-
-  'al'            : 'i_addLinkBookmark'
-  'as'            : 'i_addSelectionBookmark'
 
 E_Action =
   esc: ->
@@ -55,8 +63,12 @@ E_Action =
         command  = tokenArr[0][1..]
         args     = tokenArr[1..]
 
+        if DEBUG
+          console.log command
+          console.log args
+
         if CommandMap[modifierString + command]
-          @callAction(CommandMap[modifierString + command], args)
+          @callAction(CommandMap[modifierString + command], [args])
         else if @state.sessionMap[command]
           @callAction('n_openSession', [command, modifierString])
 

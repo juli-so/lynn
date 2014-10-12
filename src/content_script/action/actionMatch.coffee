@@ -1,11 +1,17 @@
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Match keys to actions                                                        #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Note: Some chrome shortcuts, namely                                          #
+#   c/c-s + t/n/w                                                              #
+#   will not be sent to keydown handler                                        #
+# See http://src.chromium.org/viewvc/chrome?revision=127787&view=revision      #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
+
 DEBUG = true
-
-# Match keys to actions
-
-# Note: Some chrome shortcuts, namely 
-#   c/c-s + t/n/w
-#   will not be sent to keydown handlers
-# See http://src.chromium.org/viewvc/chrome?revision=127787&view=revision
 
 Key =
   '8'  : 'backspace'
@@ -139,6 +145,7 @@ ActionMatch =
       when 'i_' then I_Action[actionName[2..]]
       when 'e_' then E_Action[actionName[2..]]
       when 's_' then S_Action[actionName[2..]]
+      when 't_' then T_Action[actionName[2..]]
       else _.noop
 
   # ------------------------------------------------------------

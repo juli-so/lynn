@@ -74,7 +74,7 @@ InputHandler =
 
   # ------------------------------------------------------------
 
-  addBookmarkHelper: (input) ->
+  h_addBookmark: (input) ->
     useSuggestedTag = input[0] isnt '!'
 
     # '!' is also filtered when not using suggested tag
@@ -104,22 +104,22 @@ InputHandler =
     @setState { nodeArr, input, useSuggestedTag }
 
   s_addBookmark: (input) ->
-    @callHandlerHelper('addBookmarkHelper', input)
+    @callHandlerHelper('h_addBookmark', input)
 
   s_addMultipleBookmark: (input) ->
-    @callHandlerHelper('addBookmarkHelper', input)
+    @callHandlerHelper('h_addBookmark', input)
 
   s_addAllCurrentWinBookmark: (input) ->
-    @callHandlerHelper('addBookmarkHelper', input)
+    @callHandlerHelper('h_addBookmark', input)
 
   s_addAllWinBookmark: (input) ->
-    @callHandlerHelper('addBookmarkHelper', input)
+    @callHandlerHelper('h_addBookmark', input)
 
   s_addLinkBookmark: (input) ->
-    @callHandlerHelper('addBookmarkHelper', input)
+    @callHandlerHelper('h_addBookmark', input)
 
   s_addSelectionBookmark: (input) ->
-    @callHandlerHelper('addBookmarkHelper', input)
+    @callHandlerHelper('h_addBookmark', input)
 
   # ------------------------------------------------------------
 

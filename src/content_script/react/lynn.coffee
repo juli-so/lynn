@@ -181,8 +181,8 @@ Lynn = React.createClass
   # ------------------------------------------------------------
   # Helping functions for setting states
 
-  callAction: (actionName, params) ->
-    ActionMatch.findAction(actionName).apply(@, params)
+  callAction: (actionName, args) ->
+    ActionMatch.findAction(actionName).apply(@, args)
 
   callHandlerHelper: (helperName, input) ->
     InputHandler[helperName].call(@, input)

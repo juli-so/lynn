@@ -1,12 +1,15 @@
-# Special Actions, mostly confirming Intereactive Actions
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Special Actions, mostly confirming Intereactive Actions                      #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
 
 S_Action =
-
   # ------------------------------------------------------------
   # Bookmarks
   # ------------------------------------------------------------
 
-  addBookmarkHelper: ->
+  h_addBookmark: ->
     if @hasNoSelection()
       node = @getCurrentNode()
 
@@ -56,22 +59,22 @@ S_Action =
         input: input
 
   addBookmark: ->
-    @callAction('s_addBookmarkHelper')
+    @callAction('s_h_addBookmark')
 
   addMultipleBookmark: ->
-    @callAction('s_addBookmarkHelper')
+    @callAction('s_h_addBookmark')
 
   addAllCurrentWinBookmark: ->
-    @callAction('s_addBookmarkHelper')
+    @callAction('s_h_addBookmark')
 
   addAllWinBookmark: ->
-    @callAction('s_addBookmarkHelper')
+    @callAction('s_h_addBookmark')
 
   addLinkBookmark: ->
-    @callAction('s_addBookmarkHelper')
+    @callAction('s_h_addBookmark')
 
   addSelectionBookmark: ->
-    @callAction('s_addBookmarkHelper')
+    @callAction('s_h_addBookmark')
 
   # ------------------------------------------------------------
 
@@ -86,7 +89,7 @@ S_Action =
         indexArr: @state.selectedArr
 
     currentNode = @getCurrentNode()
-    @callAction('n_openHelper', [{ active: no }, no, no])
+    @callAction('n_h_open', [{ active: no }, no, no])
 
     @callAction('n_hide')
 

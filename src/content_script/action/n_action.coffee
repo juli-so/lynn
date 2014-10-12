@@ -1,4 +1,8 @@
-# Normal actions
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Normal actions                                                               #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
 
 N_Action =
   log: ->
@@ -239,7 +243,7 @@ N_Action =
   # Opening bookmarks
   # ------------------------------------------------------------
   
-  openHelper: (option, newWin, needHide, nodeArr = null) ->
+  h_open: (option, newWin, needHide, nodeArr = null) ->
     message =
       req: if newWin then 'openInNewWin' else 'open'
       option: option
@@ -260,16 +264,16 @@ N_Action =
       @setState { selectedArr: [] }
 
   open: ->
-    @callAction('n_openHelper', [{ active:    yes }, no , yes])
+    @callAction('n_h_open', [{ active:    yes }, no , yes])
 
   openInBackground: ->
-    @callAction('n_openHelper', [{ active:    no  }, no , no ])
+    @callAction('n_h_open', [{ active:    no  }, no , no ])
 
   openInNewWin: ->
-    @callAction('n_openHelper', [{ incognito: no  }, yes, yes])
+    @callAction('n_h_open', [{ incognito: no  }, yes, yes])
 
   openInNewIncognitoWin: ->
-    @callAction('n_openHelper', [{ incognito: yes }, yes, yes])
+    @callAction('n_h_open', [{ incognito: yes }, yes, yes])
 
   # ------------------------------------------------------------
   # Remove bookmarks
@@ -514,7 +518,7 @@ N_Action =
         when 'c-'     then [{ incognito: no  }, yes, yes, nodeArr]
         when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArr]
 
-      @callAction('n_openHelper', openArgs)
+      @callAction('n_h_open', openArgs)
     else
       _.forEach sessionRecord.session, (nodeArr) =>
         openArgs = switch modifierString
@@ -523,5 +527,5 @@ N_Action =
           when 'c-'     then [{ incognito: no  }, yes, yes, nodeArr]
           when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArr]
 
-        @callAction('n_openHelper', openArgs)
+        @callAction('n_h_open', openArgs)
 
