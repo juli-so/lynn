@@ -13,7 +13,7 @@ N_Action =
 
     timeOutFunc = =>
       @setState { visible: no }
-      @callAction('n_reset', clearCache)
+      @callAction('n_reset', [clearCache])
 
     setTimeout(timeOutFunc, 200)
 
