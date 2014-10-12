@@ -61,14 +61,22 @@ E_Action =
 
         tokenArr = @state.input.split(' ')
         command  = tokenArr[0][1..]
-        args     = tokenArr[1..]
+        flags    = []
+        args     = []
+
+        _.forEach tokenArr[1..], (token) ->
+          if token[0] is '-'
+            flags.push(token)
+          else
+            args.push(token)
 
         if DEBUG
           console.log command
+          console.log flags
           console.log args
 
         if CommandMap[modifierString + command]
-          @callAction(CommandMap[modifierString + command], [args])
+          @callAction(CommandMap[modifierString + command], [args, flags])
         else if @state.sessionMap[command]
           @callAction('n_openSession', [command, modifierString])
 

@@ -88,7 +88,9 @@ I_Action =
 
   # ------------------------------------------------------------
 
-  addLinkBookmark: ->
+  # Depending whether -r flag is present
+  # Load title from remote or current a.href
+  addLinkBookmark: (args, flags) ->
     @callAction('n_storeCache')
   
     @callAction('n_hide', [no])
@@ -108,31 +110,42 @@ I_Action =
       else
         href = e.target.href
 
-      $.ajax
-        url: href
-        success: (data) =>
-          parser = new DOMParser()
-          doc = parser.parseFromString(data, 'text/html')
-          title = doc.getElementsByTagName('title')[0].text
+      if _.contains(flags, '-r')
+        $.ajax
+          url: href
+          success: (data) =>
+            parser = new DOMParser()
+            doc = parser.parseFromString(data, 'text/html')
+            title = doc.getElementsByTagName('title')[0].text
 
-          # Recursively go up until reaching <a>
-          element = e.target
-          while element.nodeName isnt 'A'
-            element = element.parentNode
+            # Recursively go up until reaching <a>
+            element = e.target
+            while element.nodeName isnt 'A'
+              element = element.parentNode
 
-          node =
-            title: title
-            url: element.href
-            tagArr: []
-            suggestedTagArr: []
+            node =
+              title: title
+              url: element.href
+              tagArr: []
+              suggestedTagArr: []
 
-          Listener.listenOnce 'suggestTag', { bookmark: node }, (message) =>
-            node = _.assign(node, { suggestedTagArr: message.tagArr })
-            @setState { nodeArr: [node] }
+            Listener.listenOnce 'suggestTag', { bookmark: node }, (message) =>
+              node = _.assign(node, { suggestedTagArr: message.tagArr })
+              @setState { nodeArr: [node] }
+      else
+        node =
+          title: e.target.text
+          url: e.target.href
+          tagArr: []
+          suggestedTagArr: []
+
+        Listener.listenOnce 'suggestTag', { bookmark: node }, (message) =>
+          node = _.assign(node, { suggestedTagArr: message.tagArr })
+          @setState { nodeArr: [node] }
 
   # ------------------------------------------------------------
 
-  h_addSelection: (selector = 'a') ->
+  h_addSelection: (selector = 'a', remote = no) ->
     @callAction('n_storeCache')
 
     @callAction('n_hide', [no])
@@ -144,22 +157,53 @@ I_Action =
       docFrag = document.getSelection().getRangeAt(0).cloneContents()
       linkArr = docFrag.querySelectorAll(selector)
 
-      nodeArr = _.map linkArr, (link) ->
-        title: link.text
-        url: link.href
-        tagArr: []
-        suggestedTagArr: []
+      # Sometimes there is a strange function at the end of list
+      linkArr = _.filter linkArr, (link) -> link.nodeName is 'A'
 
-      @callAction('n_show')
-      @setState
-        input: ''
-        mode: 'command'
-        specialMode: 'addSelectionBookmark'
-        nodeArr: nodeArr
-        selectedArr: [0...nodeArr.length]
+      if remote
+        @callAction('n_show')
+        @setState
+          input: ''
+          mode: 'command'
+          specialMode: 'addSelectionBookmark'
+          selectedArr: [0...linkArr.length]
 
-  addSelectionBookmark: ->
-    @callAction('i_h_addSelection')
+        console.log linkArr
+        _.forEach linkArr, (link, index) =>
+          $.ajax
+            url: link.href
+            success: (data) =>
+              parser = new DOMParser()
+              doc = parser.parseFromString(data, 'text/html')
+              title = doc.getElementsByTagName('title')[0].text
+
+              node =
+                title: title
+                url: link.href
+                tagArr: []
+                suggestedTagArr: []
+
+              # No suggest tag now
+              @setOneNode(index, node)
+      else
+        nodeArr = _.map linkArr, (link) ->
+          title: link.text
+          url: link.href
+          tagArr: []
+          suggestedTagArr: []
+
+        @callAction('n_show')
+        @setState
+          input: ''
+          mode: 'command'
+          specialMode: 'addSelectionBookmark'
+          nodeArr: nodeArr
+          selectedArr: [0...nodeArr.length]
+
+  # Depending whether -r flag is present
+  # Load title from remote or current a.href
+  addSelectionBookmark: (args, flags) ->
+    @callAction('i_h_addSelection', ['a', _.contains(flags, '-r')])
 
   # ------------------------------------------------------------
   # Recover bookmarks

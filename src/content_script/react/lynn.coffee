@@ -193,3 +193,8 @@ Lynn = React.createClass
         state[key] = _.assign(@state[key], val)
 
     @setState(state)
+
+  setOneNode: (index, node) ->
+    nodeArr = @state.nodeArr
+    nodeArr[index] = node
+    @setState { nodeArr }
