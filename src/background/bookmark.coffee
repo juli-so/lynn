@@ -261,7 +261,10 @@ Bookmark =
   find: (query, pool = @allNode) ->
     # Special cases
     return [] if _.isEmpty(query)
-    return @lastAddedNodeArr if query is '#last'
+
+    if query is '#l' and not @tagNodeMap['#l'] or
+       query is '#last'
+      return @lastAddedNodeArr
 
     # When query is just '#' or '@'
     # Show all bookmarks with any of these kinds of tags
