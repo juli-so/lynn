@@ -1,11 +1,14 @@
 # For all following methods
 # When they get called, their @ refer to Lynn
 InputHandler =
+  default: (input) ->
+    @setState { input }
+
   matchHandler: (mode, specialMode) ->
     if specialMode is 'no'
-      @[mode]
+      @[mode] || @default
     else
-      @['s_' + specialMode]
+      @['s_' + specialMode] || @default
 
   # ------------------------------------------------------------
 
@@ -122,12 +125,6 @@ InputHandler =
     @callHandlerHelper('h_addBookmark', input)
 
   # ------------------------------------------------------------
-
-  s_storeWinSession: (input) ->
-    @setState { input }
-    
-  s_storeChromeSession: (input) ->
-    @setState { input }
 
   s_removeSession: (input) ->
     @setState { input }
