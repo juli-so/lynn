@@ -135,3 +135,27 @@ InputHandler =
       Message.postMessage
         req: 'searchSession'
         input: input
+
+  # ------------------------------------------------------------
+
+  s_insertMarkDown: (input) ->
+    @setState { input }
+
+    if @hasSelection()
+      nodeArr = @state.nodeArr
+
+      if input is ''
+        _.forEach nodeArr, (node) ->
+          delete node.md
+
+        @setState { nodeArr }
+      else
+        if _.contains(input, ',')
+          tokenArr = input.split(',')
+        else
+          tokenArr = input.split(' ')
+
+        _.forEach nodeArr, (node, index) ->
+          node.md = tokenArr[index].trim() || node.title
+
+        @setState { nodeArr }

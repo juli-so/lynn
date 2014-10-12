@@ -65,7 +65,9 @@ Lynn = React.createClass
         # Shortcut when lynn is shown
         if @state.visible
           actionName = ActionMatch.findActionName(event, @state.mode, @state.specialMode)
-          event.preventDefault() if actionName isnt 'noop'
+          if actionName isnt 'noop'
+            event.preventDefault()
+            event.stopPropagation()
 
           @callAction(actionName)
 

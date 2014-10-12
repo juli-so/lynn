@@ -168,3 +168,36 @@ S_Action =
 
         @callAction('n_hide')
 
+  # ------------------------------------------------------------
+  # Others
+  # ------------------------------------------------------------
+
+  insertMarkDown: ->
+    if @hasNoSelection()
+      node = @state.nodeArr[0]
+      mdText = "[#{@state.input}](#{node.url})"
+    else
+      # Comma separated style
+      if @state.input is ''
+        mdTextArr = _.map @state.nodeArr, (node, index) ->
+          node.title + ":\n" + "[#{index + 1}]: #{node.url}"
+        mdText = mdTextArr.join('\n')
+
+      # Reference style list
+      else
+        mdTextArr = _.map @state.nodeArr, (node) ->
+          "[#{node.md}](#{node.url})"
+        mdText = mdTextArr.join(', ')
+
+    mdText = mdText.trim()
+    @callAction('n_hide')
+
+    $(document).bind 'click.insertMarkDown', (e) =>
+      e.preventDefault()
+      $(document).unbind('click.insertMarkDown')
+
+      element = e.target
+
+      if element.nodeName is 'TEXTAREA' or 'INPUT'
+        element.value += mdText
+

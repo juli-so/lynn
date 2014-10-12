@@ -25,6 +25,8 @@ CommandMap =
 
   'r'             : 'i_recoverBookmark'
 
+  'md'            : 'i_insertMarkDown'
+
 E_Action =
   esc: ->
     if @state.specialMode isnt 'no'

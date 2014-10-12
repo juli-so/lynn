@@ -319,3 +319,29 @@ I_Action =
         input: input
         specialMode: 'editTag'
         nodeArr: nodeArr
+
+  # ------------------------------------------------------------
+  # Others
+  # ------------------------------------------------------------
+
+  # When inserting multiple bookmarks
+  insertMarkDown: (args, flags) ->
+    @callAction('n_storeCache')
+
+    if @hasNoSelection()
+      node = @getCurrentNode()
+
+      @setState
+        input: node.title
+        specialMode: 'insertMarkDown'
+        nodeArr: [node]
+
+      @callAction('n_selectAllInput')
+    else
+      nodeArr = @getSelectedNodeArr()
+
+      @setState
+        input: ''
+        specialMode: 'insertMarkDown'
+        nodeArr: nodeArr
+        selectedArr: [0...nodeArr.length]

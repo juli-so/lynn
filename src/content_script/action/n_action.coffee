@@ -411,7 +411,7 @@ N_Action =
     @callAction('n_recoverFromCache', [currentCache])
 
   # ------------------------------------------------------------
-  # Caret movement and word processing
+  # Caret movement, selection, and word processing
   # ------------------------------------------------------------
 
   setCaretToStart: ->
@@ -461,6 +461,9 @@ N_Action =
       afterCaretArr[0...spaceTokenNum + 1].join(' ').length
 
     Util.setCaretRange(position, position)
+
+  selectAllInput: ->
+    Util.setCaretRange(0, @state.input.length)
 
   deletePrevWord: ->
     input = @state.input
@@ -528,4 +531,5 @@ N_Action =
           when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArr]
 
         @callAction('n_h_open', openArgs)
+
 
