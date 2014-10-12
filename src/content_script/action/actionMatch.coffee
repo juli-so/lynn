@@ -96,6 +96,12 @@ ActionMatch =
     # Log for debugging
     return 'n_log'        if keyString is 'c-p'
 
+    # Exit
+    return 'n_hide'       if keyString is 'c-q'
+
+    # Reset
+    return 'n_reset'       if keyString is 'c-c'
+
     # E_Action
     return 'e_esc'        if keyString is 'esc'
     return 'e_enter'      if keyString is 'enter'
