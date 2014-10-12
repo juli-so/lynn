@@ -82,14 +82,16 @@ I_Action =
 
         @setState { nodeArr }
 
+  # ------------------------------------------------------------
+
   addLinkBookmark: ->
     @callAction('n_storeCache')
   
     @callAction('n_hide')
 
-    $(document).click (e) =>
+    $(document).bind 'click.addLinkBookmark', (e) =>
       e.preventDefault()
-      $(document).unbind('click')
+      $(document).unbind 'click.addLinkBookmark'
 
       @callAction('n_show')
       @setState
@@ -124,7 +126,32 @@ I_Action =
             node = _.assign(node, { suggestedTagArr: message.tagArr })
             @setState { nodeArr: [node] }
 
-        @setState { nodeArr: [node] }
+  # ------------------------------------------------------------
+
+  addSelectionBookmark: ->
+    @callAction('n_storeCache')
+
+    @callAction('n_hide')
+
+    $(document).bind 'mouseup.addSelectionBookmark', (e) =>
+      e.preventDefault()
+      $(document).unbind 'mouseup.addSelectionBookmark'
+
+      docFrag = document.getSelection().getRangeAt(0).cloneContents()
+      linkArr = docFrag.querySelectorAll('a')
+
+      nodeArr = _.map linkArr, (link) ->
+        title: link.text
+        url: link.href
+        tagArr: []
+        suggestedTagArr: []
+
+      @callAction('n_show')
+      @setState
+        mode: 'command'
+        specialMode: 'addSelectionBookmark'
+        nodeArr: nodeArr
+        selectedArr: [0...nodeArr.length]
 
   # ------------------------------------------------------------
   # Recover bookmarks

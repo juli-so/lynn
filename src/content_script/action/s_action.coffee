@@ -70,6 +70,9 @@ S_Action =
   addLinkBookmark: ->
     @callAction('s_addBookmarkHelper')
 
+  addSelectionBookmark: ->
+    @callAction('s_addBookmarkHelper')
+
   # ------------------------------------------------------------
 
   recoverBookmark: ->

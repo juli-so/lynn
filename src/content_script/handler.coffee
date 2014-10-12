@@ -118,6 +118,9 @@ InputHandler =
   s_addLinkBookmark: (input) ->
     @callHandlerHelper('addBookmarkHelper', input)
 
+  s_addSelectionBookmark: (input) ->
+    @callHandlerHelper('addBookmarkHelper', input)
+
   # ------------------------------------------------------------
 
   s_storeWinSession: (input) ->
