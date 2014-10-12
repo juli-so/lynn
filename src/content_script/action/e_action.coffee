@@ -16,7 +16,6 @@ CommandMap =
 
   'al'            : 'i_addLinkBookmark'
   'as'            : 'i_addSelectionBookmark'
-  'ahn'           : 't_addHNBookmark'
 
 
   's'             : 'i_storeWinSession'
@@ -26,6 +25,10 @@ CommandMap =
   'r'             : 'i_recoverBookmark'
 
   'md'            : 'i_insertMarkDown'
+
+  # Site specific
+  'ahn'           : 't_addHNBookmark'
+  'phn'           : 't_postHN'
 
 E_Action =
   esc: ->

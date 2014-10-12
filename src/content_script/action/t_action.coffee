@@ -25,3 +25,19 @@ T_Action =
         specialMode: 'addSelectionBookmark'
         nodeArr: nodeArr
         selectedArr: [0...nodeArr.length]
+
+  postHN: ->
+    Listener.listenOnce 'queryTab', {}, (message) =>
+      node = Util.tabToNode(message.current)
+
+      url = "http://news.ycombinator.com/submitlink?u=#{node.url}&t=#{node.title}"
+      
+      console.log url
+      Message.postMessage
+        req: 'open'
+        option:
+          active: yes
+        node:
+          url: url
+
+      @callAction('n_hide')

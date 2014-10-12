@@ -250,11 +250,11 @@ N_Action =
 
     if _.isNull(nodeArr)
       if @hasNoSelection()
-        message['node'] = @getCurrentNode()
+        message.node = @getCurrentNode()
       else
-        message['nodeArr'] = @getSelectedNodeArr()
+        message.nodeArr = @getSelectedNodeArr()
     else
-      message['nodeArr'] = nodeArr
+      message.nodeArr = nodeArr
 
     Message.postMessage(message)
 
