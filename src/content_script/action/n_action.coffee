@@ -8,12 +8,12 @@ N_Action =
   # App-wise actions
   # ------------------------------------------------------------
 
-  hide: ->
+  hide: (clearCache = yes) ->
     @setState { animation: 'fadeOutUp' }
 
     timeOutFunc = =>
       @setState { visible: no }
-      @callAction('n_reset')
+      @callAction('n_reset', clearCache)
 
     setTimeout(timeOutFunc, 200)
 
@@ -30,7 +30,7 @@ N_Action =
 
   # ------------------------------------------------------------
 
-  reset: ->
+  reset: (clearCache = yes) ->
     @setState
       input: ''
 
@@ -48,7 +48,7 @@ N_Action =
       currentNodeIndex: 0
       currentPageIndex: 0
 
-    @callAction('n_clearCache')
+    @callAction('n_clearCache') if clearCache
 
   clearInput: ->
     if @state.mode is 'query'

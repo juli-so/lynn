@@ -87,7 +87,7 @@ I_Action =
   addLinkBookmark: ->
     @callAction('n_storeCache')
   
-    @callAction('n_hide')
+    @callAction('n_hide', [no])
 
     $(document).bind 'click.addLinkBookmark', (e) =>
       e.preventDefault()
@@ -131,7 +131,7 @@ I_Action =
   addSelectionBookmark: ->
     @callAction('n_storeCache')
 
-    @callAction('n_hide')
+    @callAction('n_hide', [no])
 
     $(document).bind 'mouseup.addSelectionBookmark', (e) =>
       e.preventDefault()
@@ -148,6 +148,7 @@ I_Action =
 
       @callAction('n_show')
       @setState
+        input: ''
         mode: 'command'
         specialMode: 'addSelectionBookmark'
         nodeArr: nodeArr
