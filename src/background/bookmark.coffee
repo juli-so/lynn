@@ -18,12 +18,10 @@ Bookmark =
   # Init
   # ------------------------------------------------------------
 
-  # does not include directories
+  # Does not include directories
   init: (callback = _.noop) ->
     initNode = (node) =>
-      node.isBookmark = node.url?
-
-      if node.isBookmark
+      if node.url
         @allNode[node.id] = node
       else
         _.forEach(node.children, initNode)
@@ -63,10 +61,6 @@ Bookmark =
       initOther()
 
   # ------------------------------------------------------------
-  # Init end
-  # ------------------------------------------------------------
-
-  # ------------------------------------------------------------
   # Tag operation
   # ------------------------------------------------------------
 
@@ -79,7 +73,7 @@ Bookmark =
   addTag: (node, tag) ->
     return false if @isntTag(tag)
 
-    # in case the node is sent from front end
+    # In case the node is sent from front end
     node = @allNode[node.id]
 
     if _.contains(node.tagArr, tag)
@@ -93,7 +87,7 @@ Bookmark =
   delTag: (node, tag) ->
     return false if @isntTag(tag)
 
-    # in case the node is sent from front end
+    # In case the node is sent from front end
     node = @allNode[node.id]
 
     if _.contains(node.tagArr, tag)
@@ -103,17 +97,17 @@ Bookmark =
     else
       false
 
-  # when removing a bookmark
-  # all its tags should also be removed
+  # When removing a bookmark
+  # All its tags should also be removed
   delAllTag: (node) ->
-    # in case the node is sent from front end
+    # In case the node is sent from front end
     node = @allNode[node.id]
 
     _.forEach node.tagArr, (tag) =>
       _.pull(@tagNodeMap[tag], '' + node.id)
     _.remove(node.tagArr)
 
-  # remove meaningless entries in nodeTagMap and tagNodeMap
+  # Remove meaningless entries in nodeTagMap and tagNodeMap
   pruneTag: ->
     _.forEach @nodeTagMap, (tagArr, index) =>
       delete @nodeTagMap[index] unless @allNode[index]
@@ -138,10 +132,6 @@ Bookmark =
       tagNodeMap: []
 
   # ------------------------------------------------------------
-  # Tag operation end
-  # ------------------------------------------------------------
-
-  # ------------------------------------------------------------
   # Find and Filter
   # ------------------------------------------------------------
 
@@ -164,7 +154,7 @@ Bookmark =
 
     _.compact(_.at(pool, idList))
 
-  # find node that has ALL the tags in tagArr
+  # Find node that has ALL the tags in tagArr
   findByTagArr: (tagArr, pool = @allNode) ->
     if _.isEmpty(tagArr)
       result = pool
@@ -176,7 +166,7 @@ Bookmark =
 
     _.toArray(result)
 
-  # find node that has AT LEAST ONE tag in tagArr
+  # Find node that has AT LEAST ONE tag in tagArr
   findByTagRange: (tagArr, pool = @allNode) ->
     if _.isEmpty(tagArr)
       result = pool
@@ -195,7 +185,7 @@ Bookmark =
       _.filter pool, (node) =>
         Util.ciContains(node.title, fragment)
 
-  # find node that has ALL fragments in fragmentArr
+  # Find node that has ALL fragments in fragmentArr
   findByTitleArr: (fragmentArr, isCaseSensitive = no, pool = @allNode) ->
     if _.isEmpty(fragmentArr)
       result = pool
@@ -207,7 +197,7 @@ Bookmark =
 
     _.toArray(result)
 
-  # find node that has AT LEAST ONE fragment
+  # Find node that has AT LEAST ONE fragment
   findByTitleRange: (fragmentArr, isCaseSensitive = no, pool = @allNode) ->
     if _.isEmpty(fragmentArr)
       result = pool
@@ -305,36 +295,42 @@ Bookmark =
     @findByTitleArr(keywordArr, no, pool)
 
   # ------------------------------------------------------------
-  # Find and Filter end
-  # ------------------------------------------------------------
-
-  # ------------------------------------------------------------
   # Bookmark operation
   # ------------------------------------------------------------
 
-  create: (bookmark, tagArr) ->
-    bookmark = _.assign(bookmark, { parentId: '232' })
+  # Do not care who (user or by import) created it
+  # Just add node & tag locally and update lastAdded list
+  _h_create: (node, tagArr) ->
+    node.tagArr = @nodeTagMap[node.id] = []
+    @allNode[node.id] = node
 
-    chrome.bookmarks.create bookmark, (result) =>
-      result.isBookmark = yes
-      result.tagArr = @nodeTagMap[result.id] = []
-      @allNode[result.id] = result
+    _.forEach tagArr, (tag) =>
+      @addTag(node, tag)
+    @storeTag()
 
-      _.forEach tagArr, (tag) =>
-        @addTag(result, tag)
-      @storeTag()
+    bmCopy = _.cloneDeep(@allNode[node.id])
 
-      bmCopy = _.cloneDeep(@allNode[result.id])
-
-      @lastAddedNodeArr.unshift(bmCopy)
-      while @lastAddedNodeArr.length > @MAX_LAST_ADD_NUM
-        @lastAddedNodeArr.pop()
-      chrome.storage.sync.set({ lastAddedNodeArr: @lastAddedNodeArr })
+    # Handle lastAdded
+    @lastAddedNodeArr.unshift(bmCopy)
+    while @lastAddedNodeArr.length > @MAX_LAST_ADD_NUM
+      @lastAddedNodeArr.pop()
+    chrome.storage.sync.set({ lastAddedNodeArr: @lastAddedNodeArr })
     
-  move: ->
-  update: ->
+  createLocal: (id, tagArr) ->
+    chrome.bookmarks.get id, (storObj) =>
+      node = storObj[0]
 
-  remove: (id) ->
+      @_h_create(node, tagArr)
+
+  create: (node, tagArr) ->
+    node = _.assign(node, { parentId: '232' })
+
+    chrome.bookmarks.create node, (node) =>
+      @_h_create(node, tagArr)
+    
+  # ------------------------------------------------------------
+
+  _h_remove: (id, localOnly) ->
     if _.isNumber(id)
       id = Util.numToString(id)
 
@@ -344,13 +340,19 @@ Bookmark =
       @lastDeletedNodeArr.pop()
     chrome.storage.sync.set({ lastDeletedNodeArr: @lastDeletedNodeArr })
 
-    chrome.bookmarks.remove id, =>
-      _.forEach @allNode[id].tagArr, (tag) =>
+    unless localOnly
+      chrome.bookmarks.remove id, =>
+        _.forEach @allNode[id].tagArr, (tag) =>
 
-      @delAllTag({ id })
-      delete @allNode[id]
+        @delAllTag({ id })
+        delete @allNode[id]
 
-      @storeTag()
+        @storeTag()
+
+  removeLocal: (id) -> @_h_remove(id, yes)
+  remove:      (id) -> @_h_remove(id, no )
+
+  # ------------------------------------------------------------
 
   recover: (indexOrIndexArr) ->
     if _.isNumber(indexOrIndexArr)
@@ -370,7 +372,3 @@ Bookmark =
 
       @lastDeletedNodeArr = _.difference(@lastDeletedNodeArr, bmArr)
       chrome.storage.sync.set({ lastDeletedNodeArr: @lastDeletedNodeArr })
-
-  # ------------------------------------------------------------
-  # Bookmark operation end
-  # ------------------------------------------------------------

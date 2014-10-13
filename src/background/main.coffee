@@ -9,3 +9,4 @@ Message.init()
 Tag.init()
 
 Bookmark.init()
+Sync.init()

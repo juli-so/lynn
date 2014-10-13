@@ -4,7 +4,7 @@
 #
 ##############################################################################
 
-log = (item) -> console.log(item)
+log = -> console.log.apply(console, arguments)
 c = console
 
 logArr = (strArr) ->
