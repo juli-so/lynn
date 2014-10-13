@@ -26,8 +26,6 @@
           "lib/lodash.min.js",
           "bin/content_script/lodashMixin.js",
 
-          "bin/lib/clipboard.js",
-
           "lib/jquery.min.js",
           "lib/react.js",
 
@@ -61,6 +59,7 @@
         "bin/background/action.js",
         "bin/background/message.js",
         "bin/background/bookmark.js",
+        "bin/background/sync.js",
         "bin/background/log.js",
         "bin/background/main.js"
       ]
