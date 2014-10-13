@@ -14,7 +14,7 @@ DEBUG = yes
 
 Sync =
   importing: no
-  importCreatedTagArrMap: {} # createdId -> tagArr
+  importCreatedTagArrMap: {} # title + url -> importTagRecord
   createdIdArr: []
   removedIdArr: []
 
@@ -35,8 +35,11 @@ Sync =
 
       # Add/remove tags associated with bookmarks affected
       _.forEach @createdIdArr, (createdId) =>
-        tagArr = importCreatedTagArrMap[createdId]
-        Bookmark.createLocal(createdId, tagArr)
+        chrome.bookmarks.get createdId, (bmObj) =>
+          node = bmObj[0]
+          tagArr = @importCreatedTagArrMap[node.title + node.url].tagArr || []
+          log "Added tagArr: ", tagArr
+          Bookmark.createLocal(createdId, tagArr)
 
       _.forEach @removedIdArr, (removedId) =>
         Bookmark.removeLocal(removedId)
@@ -82,7 +85,7 @@ Sync =
 
   _syncRecordFromStorage: ->
     chrome.storage.sync.get null, (storObj) =>
-      @importCreatedTagArrMap = storObj.importCreatedTagArrMap
+      @importCreatedTagArrMap = storObj.importCreatedTagArrMap || {}
 
   setupDB: ->
     key = "William Gibson - Official Websitehttp://www.williamgibsonbooks.com/"
@@ -90,8 +93,7 @@ Sync =
       tagArr: ['#Gibson', '#William']
       importLeft: 1
 
-    importCreatedTagArrMap = {}
-    importCreatedTagArrMap[key] = value
+    @importCreatedTagArrMap[key] = value
 
-    chrome.storage.sync.set { importCreatedTagArrMap }
+    chrome.storage.sync.set { importCreatedTagArrMap: @importCreatedTagArrMap }
 
