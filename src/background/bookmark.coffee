@@ -14,6 +14,9 @@ Bookmark =
 
   synoTagRecordArr: []
 
+  # Just for testing purpose, will be removed
+  lynnId: -1
+
   # ------------------------------------------------------------
   # Init
   # ------------------------------------------------------------
@@ -55,7 +58,8 @@ Bookmark =
 
     # '1' for 'Bookmarks Bar' in chrome by default
     # Later might let user specify root
-    chrome.bookmarks.getSubTree '1', (nodeArr) ->
+    chrome.bookmarks.getSubTree '1', (nodeArr) =>
+      @lynnId = nodeArr[0].children[0].id
       initNode(nodeArr[0])
       initTag()
       initOther()
@@ -323,7 +327,7 @@ Bookmark =
       @_h_create(node, tagArr)
 
   create: (node, tagArr) ->
-    node = _.assign(node, { parentId: '232' })
+    node = _.assign(node, { parentId: @lynnId })
 
     chrome.bookmarks.create node, (node) =>
       @_h_create(node, tagArr)
