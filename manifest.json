@@ -61,7 +61,9 @@
         "bin/background/bookmark.js",
         "bin/background/sync.js",
         "bin/background/log.js",
-        "bin/background/main.js"
+        "bin/background/main.js",
+
+        "bin/background/test.js"
       ]
     },
 
