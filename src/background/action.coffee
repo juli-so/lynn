@@ -58,12 +58,10 @@ Action =
     if msg.node
       _.forEach msg.node.pendingTagArr, (tag) ->
         Bookmark.addTag(msg.node, tag)
-        true # do not exit early
     else
       _.forEach msg.nodeArr, (node) ->
         _.forEach node.pendingTagArr, (tag) ->
           Bookmark.addTag(node, tag)
-          true # do not exit early
 
     Bookmark.storeTag()
 
@@ -72,7 +70,6 @@ Action =
       Bookmark.delAllTag(msg.node)
       _.forEach msg.node.pendingTagArr, (tag) ->
         Bookmark.addTag(msg.node, tag)
-        true # do not exit early
     else
       _.forEach msg.nodeArr, (node) ->
         Bookmark.delAllTag(node)

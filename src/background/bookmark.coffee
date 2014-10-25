@@ -75,31 +75,23 @@ Bookmark =
     not @isTag(tag)
   
   addTag: (node, tag) ->
-    return false if @isntTag(tag)
+    if @isTag(tag)
+      # In case the node is sent from front end
+      node = @allNode[node.id]
 
-    # In case the node is sent from front end
-    node = @allNode[node.id]
-
-    if _.contains(node.tagArr, tag)
-      false
-    else
-      node.tagArr.push(tag)
-      @tagNodeMap[tag] or= []
-      @tagNodeMap[tag].push(node.id)
-      true
+      if not _.contains(node.tagArr, tag)
+        node.tagArr.push(tag)
+        @tagNodeMap[tag] or= []
+        @tagNodeMap[tag].push(node.id)
 
   delTag: (node, tag) ->
-    return false if @isntTag(tag)
+    if @isTag(tag)
+      # In case the node is sent from front end
+      node = @allNode[node.id]
 
-    # In case the node is sent from front end
-    node = @allNode[node.id]
-
-    if _.contains(node.tagArr, tag)
-      _.pull(node.tagArr, tag)
-      _.pull(@tagNodeMap[tag], node.id)
-      true
-    else
-      false
+      if _.contains(node.tagArr, tag)
+        _.pull(node.tagArr, tag)
+        _.pull(@tagNodeMap[tag], node.id)
 
   # When removing a bookmark
   # All its tags should also be removed
@@ -289,9 +281,6 @@ Bookmark =
 
       return [] if _.isEmpty(suggestedTagArr)
 
-      log 'In find'
-      log suggestedTagArr
-
       pool = @_toNO(@findByTagRange(suggestedTagArr))
       return [] if _.isEmpty(pool)
 
@@ -338,20 +327,24 @@ Bookmark =
     if _.isNumber(id)
       id = Util.numToString(id)
 
+    # Update last deleted
     bm = _.cloneDeep(@allNode[id])
     @lastDeletedNodeArr.unshift(bm)
     while @lastDeletedNodeArr.length > @MAX_RECOVER_NUM
       @lastDeletedNodeArr.pop()
     chrome.storage.sync.set({ lastDeletedNodeArr: @lastDeletedNodeArr })
 
-    unless localOnly
-      chrome.bookmarks.remove id, =>
-        _.forEach @allNode[id].tagArr, (tag) =>
+    remove = =>
+      @delAllTag({ id })
+      delete @allNode[id]
 
-        @delAllTag({ id })
-        delete @allNode[id]
+      @pruneTag()
+      @storeTag
 
-        @storeTag()
+    if localOnly
+      remove()
+    else
+      chrome.bookmarks.remove(id, remove)
 
   removeLocal: (id) -> @_h_remove(id, yes)
   remove:      (id) -> @_h_remove(id, no )
