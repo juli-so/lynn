@@ -41,3 +41,7 @@ T_Action =
           url: url
 
       @callAction('n_hide')
+
+  addSOBookmark: (args) ->
+    @callAction('i_h_addSelection', ['div.summary > h3 > a'])
+

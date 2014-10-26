@@ -30,6 +30,8 @@ CommandMap =
   'ahn'           : 't_addHNBookmark'
   'phn'           : 't_postHN'
 
+  'aso'           : 't_addSOBookmark'
+
 E_Action =
   esc: ->
     if @state.specialMode isnt 'no'
