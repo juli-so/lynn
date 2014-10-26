@@ -139,9 +139,7 @@ Bookmark =
   # ------------------------------------------------------------
 
   findByTag: (tag, pool = @allNode) ->
-    matchedTagArr = _.filter Object.keys(@tagNodeMap), (t) ->
-      t.toLowerCase() is tag.toLowerCase()
-
+    matchedTagArr = _.filter(Object.keys(@tagNodeMap), _.ciEquals(tag))
     idList = _(matchedTagArr)
                .map((matchedTag) => @tagNodeMap[matchedTag])
                .flatten()
@@ -179,7 +177,7 @@ Bookmark =
         _.contains(node.title, fragment)
     else
       _.filter pool, (node) =>
-        Util.ciContains(node.title, fragment)
+        _.ciContains(node.title, fragment)
 
   # Find node that has ALL fragments in fragmentArr
   findByTitleArr: (fragmentArr, isCaseSensitive = no, pool = @allNode) ->
@@ -210,7 +208,7 @@ Bookmark =
         _.contains(node.url, fragment)
     else
       _.filter pool, (node) =>
-        Util.ciContains(node.url, fragment)
+        _.ciContains(node.url, fragment)
 
   # ------------------------------------------------------------
 
@@ -222,7 +220,7 @@ Bookmark =
     allTagName = Object.keys(@tagNodeMap)
 
     suggestedTagArr = _.filter allTagName, (tag) =>
-      Util.ciContains(tag, tagFragment)
+      _.ciContains(tag, tagFragment)
 
     # Synotag processing
     # If found a match with a dominant tag, use that tag
@@ -282,10 +280,15 @@ Bookmark =
       return [] if _.isEmpty(suggestedTagArr)
 
       pool = @_toNO(@findByTagRange(suggestedTagArr))
+      console.log(pool)
       return [] if _.isEmpty(pool)
 
     # Filter with Keyword
-    @findByTitleArr(keywordArr, no, pool)
+    matchArr = @findByTitleArr(keywordArr, no, pool)
+
+    log keywordArr, tagArr
+    # Rank by relevance
+    Rank.rank(keywordArr, tagArr, matchArr)
 
   # ------------------------------------------------------------
   # Bookmark operation

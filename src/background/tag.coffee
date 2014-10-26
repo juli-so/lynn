@@ -39,7 +39,7 @@ Tag =
     tagArr = []
 
     _.forEach @titleContainsMap, (tag, matchString) =>
-      if Util.ciContains(title, matchString)
+      if _.ciContains(title, matchString)
         tagArr.push(tag)
 
     _.forEach @hostnameExactMap, (tag, matchString) =>
@@ -47,7 +47,7 @@ Tag =
         tagArr.push(tag)
 
     _.forEach @hostnameContainsMap, (tag, matchString) =>
-      if Util.ciContains(hostname, matchString)
+      if _.ciContains(hostname, matchString)
         tagArr.push(tag)
 
     tagArr
