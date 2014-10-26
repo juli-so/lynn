@@ -6,12 +6,12 @@
 
 T_Action =
   addHNBookmark: (args) ->
-    if not args
+    if _.isEmpty(args)
       @callAction('i_h_addSelection', ['td.title > a'])
     else
       docFrag = document.querySelector('tbody')
       # Here args is the indexes of all entries the user want to bookmark
-      indexArr = _.map(args, (x) -> x - 2)
+      indexArr = _.map(args, (x) -> x - 1)
       linkArr = _.at(docFrag.querySelectorAll('td.title > a'), indexArr)
 
       nodeArr = _.map linkArr, (link) ->
