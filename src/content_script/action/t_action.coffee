@@ -45,3 +45,6 @@ T_Action =
   addSOBookmark: (args) ->
     @callAction('i_h_addSelection', ['div.summary > h3 > a'])
 
+  addGHBookmark: (args) ->
+    @callAction('i_h_addSelection', ['h3.repo-list-name > a'])
+

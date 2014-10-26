@@ -32,6 +32,8 @@ CommandMap =
 
   'aso'           : 't_addSOBookmark'
 
+  'agh'           : 't_addGHBookmark'
+
 E_Action =
   esc: ->
     if @state.specialMode isnt 'no'
