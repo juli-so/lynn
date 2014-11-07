@@ -1,8 +1,9 @@
-bin/*
-tags
-bower_components/*
-node_modules/*
-vendor/*
 .*
+*.js
 
+bin/
+tags
+bower_components/
+node_modules/
+vendor/
 optionPage/*.html
