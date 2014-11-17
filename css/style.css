@@ -18,7 +18,10 @@
   }
 }
 
-p, div, span, input
+p,
+div,
+span,
+input
 {
   box-sizing: border-box;
   margin: 0;
@@ -80,8 +83,15 @@ p, div, span, input
   font-family: inherit;
   font-size: 20px;
 
-  /* Input box remove blue border in windows */
-  outline: 0;
+  /* Remove input box border */
+  outline: none;
+  box-shadow: none;
+}
+
+/* Remove input box border */
+#lynn_console input:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 .lynn_console_status {
