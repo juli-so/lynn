@@ -190,6 +190,12 @@ ActionMatch =
       'c-a':              'n_setCaretToStart'
       'c-e':              'n_setCaretToEnd'
 
+      'c-backspace':      'n_deletePrevWord'
+      'c-delete':         'n_deleteNextWord'
+
+      'c-leftArrow':      'n_setCaretToPrevWord'
+      'c-rightArrow':     'n_setCaretToNextWord'
+
       'c-r':              'n_remove'
 
     actionMap[keyString] || 'noop'
