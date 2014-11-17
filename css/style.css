@@ -70,10 +70,9 @@ input
 }
 
 #lynn_console {
+  width: 650px;
   height: 50px;
 
-  /* Total width: 500px */
-  width: 600px;
   padding-left: 20px;
 
   /* Get rid of input border */
@@ -94,15 +93,11 @@ input
   box-shadow: none;
 }
 
-.lynn_console_status {
-  width: 50px;
-  padding-left: 50px;
-}
-
 .lynn_console_status_icon {
-  position: relative;
-  top: 2px;
-  left: 4px;
+  /* Consistent position on different sites */
+  position: absolute;
+  top: 11px;
+  font-size: 28px;
 }
 
 
@@ -209,5 +204,16 @@ input
 /* Explicitly set placeholder color */
 input::-webkit-input-placeholder {
   color: #bbb;
+}
+
+/* Remove input box border */
+#lynn_console {
+  outline: none;
+  box-shadow: none;
+}
+
+#lynn_console input:focus {
+  outline: none;
+  box-shadow: none;
 }
 
