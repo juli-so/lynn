@@ -1,29 +1,4 @@
-/* Loading fonts */
-
-@font-face {
-    font-family: 'OpenSans';
-    src: url('chrome-extension://__MSG_@@extension_id__/vendor/font/OpenSans-Regular-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-/* lynn */
-
-#lynn p,
-#lynn div,
-#lynn span,
-#lynn input {
-  box-sizing: border-box;
-}
-
-#lynn {
-  position: fixed;
-  top: 100px;
-  left: 50%;
-  margin-left: -350px;
-  z-index: 99999;
-  -webkit-animation-duration: 0.2s;
-}
+/* Commonly used class */
 
 .hidden {
   display: none;
@@ -33,177 +8,196 @@
   opacity: 0;
 }
 
-/* lynn top */
 
-#lynn #lynn_top {
-  margin: 0;
-  border: 2px #ddd solid;
-  background-color: #fff;
+/* lynn */
+
+/* Hide for less than 600px wide viewport */
+@media (max-width: 600px) {
+  #lynn{
+    display: none;
+  }
 }
 
-#lynn_top input#lynn_console {
-  width: 640px;
-  height: 50px;
-  padding: 12px 20px;
-  border: 0;
+p, div, span, input
+{
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
+}
 
+#lynn_container {
+  width: 700px;
+}
+
+#lynn {
+  /* Horizontal center & vertical offset */
+  position: fixed;
+
+  top: 130px;
+  width: 700px;
+  left: 50%;
+  margin-left: -350px;
+
+  /* Above everything */
+  z-index: 99999;
+
+  /* For fade in effect in animate.js */
+  -webkit-animation-duration: .2s;
+
+  /* Background */
+  background-color: #fff;
+
+  /* To make sure exactly 700px available for inner elements */
+  box-sizing: content-box;
+  border: 2px #ddd solid;
+
+  /* Default font */
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+  color: black;
+
+  /* Default spacing */
+  line-height: normal;
+}
+
+
+/* lynn top */
+
+#lynn_top {
+  height: 50px;
+}
+
+#lynn_console {
+  height: 50px;
+
+  /* Total width: 500px */
+  width: 600px;
+  padding-left: 20px;
+
+  /* Get rid of input border */
+  border: 0;
+
+  /* Input font */
+  font-family: inherit;
   font-size: 20px;
-  font-weight: normal;
-  font-family: 'Helvetica Neue';
 
-  box-shadow: none;
-
-  /* input box remove blue border in windows */
+  /* Input box remove blue border in windows */
   outline: 0;
 }
 
-#lynn_top input#lynn_console:focus {
-  border: 0;
-  box-shadow: none;
+.lynn_console_status {
+  width: 50px;
+  padding-left: 50px;
 }
 
-#lynn_top .lynn_console_status {
-  display: inline-block;
-  vertical-align: top;
-
-  width: 60px;
-  height: 50px;
+.lynn_console_status_icon {
+  position: relative;
+  top: 2px;
+  left: 4px;
 }
 
-#lynn_top .lynn_console_status_icon {
-  display: inline-block;
-  text-align: center;
-
-  width: 60px;
-  height: 50px;
-
-  padding-top: 12px;
-}
 
 /* lynn mid */
-#lynn #lynn_mid {
-  border-top: 0;
-  border-bottom: 0;
-  border-left: 2px #ddd solid;
-  border-right: 2px #ddd solid;
-  margin: 0;
-  background-color: #fff;
+
+#lynn_mid {
+  border-top: 2px #ddd solid;
 }
 
-#lynn #lynn_mid .lynn_suggestion {
-  width: 700px;
+.lynn_suggestion {
+  color: #777;
 
-  font-family: 'OpenSans', Georgia;
-  color: #777777;
+  padding: 13px 20px;
 
-  padding: 12px 20px;
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
   border-bottom: 2px #ddd solid;
-  margin: 0;
+}
 
-  text-align: left;
-
+/* Need an id here to prevent overriding */
+#lynn_mid .lynn_suggestion {
   -webkit-animation-duration: 0.2s;
 }
 
-#lynn #lynn_mid .lynn_mainline,
-#lynn #lynn_mid .lynn_tagline,
-#lynn #lynn_mid .lynn_tag,
-#lynn #lynn_mid .lynn_pending_tag {
-  margin: 0;
-  border: 0;
-}
-
-#lynn_mid .lynn_suggestion_selected {
+.lynn_suggestion_selected {
   background-color: lightgray;
 }
 
-#lynn_mid .lynn_suggestion_current {
+.lynn_suggestion_current {
   background-color: lightblue;
 }
 
-#lynn_mid .lynn_mainline {
+.lynn_mainline {
   font-size: 16px;
 }
 
-#lynn_mid .lynn_tagline {
+.lynn_tagline {
   text-align: right;
   font-size: 16px;
+
+  padding-top: 2px;
 }
 
-#lynn #lynn_mid .lynn_tag {
-  margin-left: 5px;
+.lynn_tagline > span {
+  padding-left: 5px;
+}
+
+.lynn_tag {
   color: green;
 }
 
-#lynn #lynn_mid .lynn_suggested_tag {
-  margin-left: 5px;
+.lynn_suggested_tag {
   color: gray;
 }
 
-#lynn #lynn_mid .lynn_pending_tag {
-  margin-left: 5px;
+.lynn_pending_tag {
   color: red;
 }
 
-#lynn #lynn_mid .lynn_special_tag {
-  margin-left: 5px;
+.lynn_special_tag {
   color: blue;
 }
 
+
 /* lynn bot */
-#lynn #lynn_bot {
-  border: 2px #ddd solid;
-  border-top: none;
-  margin: 0;
-  background-color: #fff;
 
-  font-family: 'Arial';
-  color: #222;
+#lynn_bot {
+  height: 40px;
+
+  font-size: 14px;
 }
 
-#lynn_bot .lynn_bot_left {
+#lynn_bot > span {
   display: inline-block;
   vertical-align: top;
+
+  padding-top: 13px;
+}
+
+.lynn_bot_left {
   width: 120px;
-  height: 40px;
 
-  font-size: 14px;
-
-  padding: 12px;
   padding-left: 20px;
-
-  text-align: left;
 }
 
-#lynn_bot .lynn_bot_mid {
-  display: inline-block;
-  vertical-align: top;
-  width: 480px;
-  height: 40px;
-
-  font-size: 14px;
-  padding: 12px;
+.lynn_bot_mid {
+  width: 460px;
 
   text-align: center;
 }
 
 #lynn_bot .lynn_bot_right {
-  display: inline-block;
-  vertical-align: top;
-  width: 100px;
-  height: 40px;
+  width: 120px;
 
   text-align: right;
-  font-size: 14px;
 
-  padding: 12px;
-
-  text-align: right;
+  padding-right: 20px;
 }
 
-
 /* lynn end */
+
+/*
+ * Prevent rules being overridden
+ */
+
+/* Explicitly set placeholder color */
+input::-webkit-input-placeholder {
+  color: #bbb;
+}
+
