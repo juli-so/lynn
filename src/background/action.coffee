@@ -187,7 +187,7 @@ Action =
     nodeArr: Bookmark.lastDeletedNodeArr
 
   recoverBookmark: (msg) ->
-    if msg.index
+    if _.isNumber(msg.index)
       Bookmark.recover(msg.index)
     else
       Bookmark.recover(msg.indexArr)
