@@ -58,10 +58,17 @@ InputHandler =
     nodeArr = @state.nodeArr
 
     if @hasNoSelection()
-      nodeArr[@getCurrentNodeFullIndex()].pendingTagArr = tagArr
+      # Remove dups
+      currentTagArr = nodeArr[@getCurrentNodeFullIndex()].tagArr
+      tagArrToAdd = _.filter tagArr, (tag) -> tag not in currentTagArr
+
+      nodeArr[@getCurrentNodeFullIndex()].pendingTagArr = tagArrToAdd
     else
       _.forEach @state.selectedArr, (selectedIndex) =>
-        nodeArr[selectedIndex].pendingTagArr = tagArr
+        # Remove dups
+        tagArrToAdd = _.filter tagArr, (tag) ->
+          tag not in nodeArr[selectedIndex].tagArr
+        nodeArr[selectedIndex].pendingTagArr = tagArrToAdd
 
     @setState
       nodeArr: nodeArr
@@ -73,10 +80,17 @@ InputHandler =
     nodeArr = @state.nodeArr
 
     if @hasNoSelection()
-      nodeArr[@getCurrentNodeFullIndex()].pendingTagArr = tagArr
+      # Remove dups
+      currentTagArr = nodeArr[@getCurrentNodeFullIndex()].tagArr
+      tagArrToAdd = _.filter tagArr, (tag) -> tag not in currentTagArr
+
+      nodeArr[@getCurrentNodeFullIndex()].pendingTagArr = tagArrToAdd
     else
       _.forEach @state.selectedArr, (index) =>
-        nodeArr[index].pendingTagArr = tagArr
+        # Remove dups
+        tagArrToAdd = _.filter tagArr, (tag) ->
+          tag not in nodeArr[index].tagArr
+        nodeArr[index].pendingTagArr = tagArrToAdd
 
     @setState
       nodeArr: nodeArr
