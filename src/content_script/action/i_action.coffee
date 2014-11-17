@@ -288,6 +288,7 @@ I_Action =
       currentNode = @getCurrentNode()
 
       input = @getCurrentNode().tagArr.join(' ')
+      # Separate input from current tags, if present
       if not _.isEmpty(@getCurrentNode().tagArr)
         input += ' '
 
@@ -307,7 +308,9 @@ I_Action =
       commonTagArr =
         _.intersection.apply(null, _.pluck(selectedNodeArr, 'tagArr'))
 
-      input = commonTagArr.join(' ') + ' '
+      input = commonTagArr.join(' ')
+      if not _.isEmpty(commonTagArr)
+        input += ' '
 
       nodeArr = @state.nodeArr
       _.forEach @state.selectedArr, (index) =>
