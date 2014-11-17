@@ -485,6 +485,9 @@ N_Action =
     @setState { input }
     Util.setCaretRange(position, position)
 
+    # Fake a event.target.value to trigger handler
+    @onConsoleChange({ target: { value: input }})
+
   deleteNextWord: ->
     input = @state.input
     [start, end] = Util.getCaretPosition()
@@ -504,6 +507,9 @@ N_Action =
 
     @setState { input }
     Util.setCaretRange(start, start)
+
+    # Fake a event.target.value to trigger handler
+    @onConsoleChange({ target: { value: input }})
 
   # ------------------------------------------------------------
   # Session
