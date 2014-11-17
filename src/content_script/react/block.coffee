@@ -29,12 +29,11 @@ Top = React.createClass
         value: @props.input
         onChange: @props.onConsoleChange
 
-      span className: 'lynn_console_status',
-        span
-          className: 'lynn_console_status_icon fa fa-2x ' + switch @props.mode
-            when 'query'   then 'fa-search'
-            when 'fast'    then 'fa-bolt'
-            when 'command' then 'fa-terminal'
+      span
+        className: 'lynn_console_status_icon fa fa-2x fa-fw ' + switch @props.mode
+          when 'query'   then 'fa-search'
+          when 'fast'    then 'fa-bolt'
+          when 'command' then 'fa-terminal'
 
   componentDidUpdate: (prevProps, prevState) ->
     # focus input when toggled from invisible to visible
