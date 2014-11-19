@@ -11,6 +11,33 @@
 
 /* lynn */
 
+/*
+ * Prevent rules being overridden
+ */
+
+/* Explicitly set placeholder color */
+input::-webkit-input-placeholder {
+  color: #bbb;
+}
+
+/* Remove input box border */
+#lynn_console {
+  padding: 0;
+  margin: 0;
+
+  outline: none;
+  box-shadow: none;
+}
+
+#lynn_console input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/*
+ * Main CSS
+ */
+
 /* Hide for less than 700px wide viewport */
 @media (max-width: 700px) {
   #lynn{
@@ -50,6 +77,9 @@
 
   /* Default spacing */
   line-height: normal;
+
+  /* Default alignment */
+  text-align: left;
 }
 
 
@@ -189,24 +219,4 @@
 }
 
 /* lynn end */
-
-/*
- * Prevent rules being overridden
- */
-
-/* Explicitly set placeholder color */
-input::-webkit-input-placeholder {
-  color: #bbb;
-}
-
-/* Remove input box border */
-#lynn_console {
-  outline: none;
-  box-shadow: none;
-}
-
-#lynn_console input:focus {
-  outline: none;
-  box-shadow: none;
-}
 
