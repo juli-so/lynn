@@ -203,6 +203,10 @@ ActionMatch =
 
   matchInFastMode: (keyString) ->
     actionMap =
+      # Directly switching to Command Mode
+      # Shift since semicolon requires Shift
+      's-semicolon':      'n_nextMode'
+
       # Opening bookmarks
       'o':                'n_open'
       's-o':              'n_openInBackground'
