@@ -18,16 +18,6 @@
   }
 }
 
-p,
-div,
-span,
-input
-{
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 #lynn_container {
   width: 700px;
 }
@@ -36,7 +26,7 @@ input
   /* Horizontal center & vertical offset */
   position: fixed;
 
-  top: 130px;
+  top: 10%;
   width: 700px;
   left: 50%;
   margin-left: -350px;
@@ -70,6 +60,8 @@ input
 }
 
 #lynn_console {
+  box-sizing: border-box;
+
   width: 650px;
   height: 50px;
 
@@ -170,13 +162,14 @@ input
 
 #lynn_bot > span {
   display: inline-block;
+  box-sizing: border-box;
   vertical-align: top;
 
   padding-top: 13px;
 }
 
 .lynn_bot_left {
-  width: 120px;
+  width: 140px;
 
   padding-left: 20px;
 }
@@ -188,7 +181,7 @@ input
 }
 
 #lynn_bot .lynn_bot_right {
-  width: 120px;
+  width: 100px;
 
   text-align: right;
 
