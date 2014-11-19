@@ -246,8 +246,7 @@ Bookmark =
     # Special cases
     return [] if _.isEmpty(query)
 
-    if query is '#l' and not @tagNodeMap['#l'] or
-       query is '#last'
+    if query is '#last'
       return @lastAddedNodeArr
 
     # When query is just '#' or '@'
