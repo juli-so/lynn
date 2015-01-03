@@ -341,7 +341,7 @@ Bookmark =
       delete @allNode[id]
 
       @pruneTag()
-      @storeTag
+      @storeTag()
 
     if localOnly
       remove()
