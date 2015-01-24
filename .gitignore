@@ -2,6 +2,7 @@
 *.js
 
 bin/
+tmp/
 tags
 bower_components/
 node_modules/
