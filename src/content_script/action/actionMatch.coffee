@@ -187,9 +187,6 @@ ActionMatch =
 
   matchInQueryMode: (keyString) ->
     actionMap =
-      'c-a':              'n_setCaretToStart'
-      'c-e':              'n_setCaretToEnd'
-
       'c-backspace':      'n_deletePrevWord'
       'c-delete':         'n_deleteNextWord'
 
