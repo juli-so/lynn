@@ -14,7 +14,7 @@ logArr = (strArr) ->
   log(logStr)
 
 makeCharString = (charNum, char = ' ') ->
-  new Arr(charNum + 1).join(char)
+  new Array(charNum + 1).join(char)
 
 makeUniform = (str, length, char=' ') ->
   diff = length - str.length

@@ -17,8 +17,13 @@ MixinObj =
   ciContains: (str, start) ->
     _.contains(str.toLowerCase(), start.toLowerCase())
 
+  # Check if arr contains element that ciEquals to str
   ciArrContains: (arr, str) ->
     _.any arr, (e) => @ciEquals(e, str)
+
+  # Find first element in arr that ciEquals to str
+  ciArrFind: (arr, str) ->
+    _.find arr, (e) => @ciEquals(e, str)
   
 # Currify and mixin
 
