@@ -18,18 +18,17 @@
         "matches": ["<all_urls>"],
         "css": [
           "css/style.css",
-          "css/font.css",
           "vendor/css/animate.min.css",
           "vendor/css/font-awesome.css"
         ],
         "js": [
           "lib/lodash.min.js",
-          "bin/content_script/lodashMixin.js",
+          "bin/shared/lodashMixin.js",
+          "bin/shared/util.js",
 
           "lib/jquery.min.js",
           "lib/react.js",
 
-          "bin/content_script/util.js",
           "bin/content_script/hint.js",
           "bin/content_script/action/actionMatch.js",
           "bin/content_script/action/n_action.js",
@@ -51,9 +50,9 @@
     "background": {
       "scripts": [
         "lib/lodash.min.js",
-        "bin/background/lodashMixin.js",
+        "bin/shared/lodashMixin.js",
+        "bin/shared/util.js",
 
-        "bin/background/util.js",
         "bin/background/wintab.js",
         "bin/background/tag.js",
         "bin/background/action.js",
