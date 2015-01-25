@@ -40,6 +40,10 @@ Bookmark =
   # Tag
   # ------------------------------------------------------------
 
+  _storeTag: ->
+    chrome.storage.local.set
+      allTag: @allTag
+
   _pushTag: (id, tag) ->
     @allTag[id].push(tag)
 
@@ -54,6 +58,7 @@ Bookmark =
 
     if hasNode and tagValid and noDup
       @_pushTag(id, tag)
+      @_storeTag()
 
   # Only delete if tag is valid and present
   # Case-insensitive. E.g: del '#ha' will delete '#HA'
@@ -66,6 +71,7 @@ Bookmark =
       # Find ciEqual tag to delete
       tagToDel = _.ciArrFind(@allTag[id], tag)
       @_pullTag(id, tagToDel)
+      @_storeTag()
       
   # ------------------------------------------------------------
   # Search
@@ -124,6 +130,7 @@ Bookmark =
 
   # ------------------------------------------------------------
   # Find by query
+  # Returns a ranked nodeArr
   # ------------------------------------------------------------
 
   _allUniqTag: ->
@@ -185,5 +192,9 @@ Bookmark =
     chrome.bookmarks.create node, (node) =>
       node.tagArr = @allTag[node.id] = tagArr
       @allNode[node.id] = node
-
+      @_storeTag()
     
+  remove: (id) ->
+    chrome.bookmarks.remove id, =>
+      delete @allNode[id]
+      delete @allTag[id]
