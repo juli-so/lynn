@@ -183,7 +183,7 @@ Bookmark =
       Rank.rank(kwArr, tagArr, result)
 
   # ------------------------------------------------------------
-  # Create / Remove
+  # Create / Remove / Recover
   # ------------------------------------------------------------
 
   create: (node, tagArr, parentId = '1') ->

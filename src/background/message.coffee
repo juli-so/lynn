@@ -1,5 +1,8 @@
-# Handles messages from frontend by taking action & sending back messages
-# Actions are defined in action.coffee
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Handle messages by taking actions & sending back messages                    #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
 
 Message =
   init: ->

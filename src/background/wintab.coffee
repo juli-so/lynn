@@ -2,6 +2,7 @@
 #                                                                              #
 # Store window and tab info here for easier retrieval                          #
 #                                                                              #
+# - NC = Non-Chrome                                                            #
 # - All WinTab methods are bound to itself for easier chaining                 #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
@@ -26,8 +27,9 @@ WinTab =
   _isNCTab: (tab) ->
     not _.startsWith(tab.url, 'chrome')
 
+  # Have at least one tab that is NC
   _isNCWin: (window) ->
-    _.some(window.tabs, @_isNCTab)
+    _.any(window.tabs, @_isNCTab)
 
   _g_NCWinArr: ->
     _.filter(@winArr, @_isNCWin)
@@ -38,8 +40,6 @@ WinTab =
   _update: (winArr) ->
     @winArr = winArr
     @currWin = _.find(winArr, 'focused')
-
-  _log: ->
 
   # ------------------------------------------------------------
   # Init & Listen
