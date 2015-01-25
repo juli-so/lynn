@@ -30,7 +30,7 @@
           "lib/react.js",
 
           "bin/content_script/hint.js",
-          "bin/content_script/action/actionMatch.js",
+          "bin/content_script/action/match_action.js",
           "bin/content_script/action/n_action.js",
           "bin/content_script/action/i_action.js",
           "bin/content_script/action/e_action.js",
