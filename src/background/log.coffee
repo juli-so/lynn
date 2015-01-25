@@ -1,17 +1,14 @@
-# #############################################################################
-# 
-# Test Utility for easier testing in chrome
-#
-##############################################################################
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# For easier testing in Chrome                                                 #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
 
 log = -> console.log.apply(console, arguments)
-c = console
 
-logArr = (strArr) ->
-  logStr = _.reduce(strArr, (prev, next) ->
-    prev + next
-  )
-  log(logStr)
+# ------------------------------------------------------------
+# Helper
+# ------------------------------------------------------------
 
 makeCharString = (charNum, char = ' ') ->
   new Array(charNum + 1).join(char)
@@ -26,62 +23,33 @@ pad = (str, length, char = ' ') ->
 logNodeTag = (node, charNum, char = ' ') ->
   if node.tagArr.length > 0
     nodeStr = node.tagArr.join(' ')
-    log(pad(nodeStr, charNum))
+    log("%c" + pad(nodeStr, charNum), "color: green")
   else
-    log(pad('Node Arr: Empty', charNum))
+    log("%c" + pad('∅', charNum), "color: red")
 
-logNodeArr = (nodeArr, property = 'all') ->
-  log('==================================================')
-  switch property
-    when 'all'
-      c.group('###Log all###')
-      _.forEach(nodeArr, (node) ->
-        c.group('Bookmark : ' + makeUniform(node.id, 4) + ' | ' + node.title)
-        c.log("%c  " + node.url, "color: darkblue")
-        logNodeTag(node, 2)
-        c.groupEnd()
-      )
-      c.groupEnd()
-    when 'tag'
-      log('###Log tag###')
-      _.forEach(nodeArr, (node) ->
-        log('  ' + node.title)
-        logNodeTag(node, 4)
-      )
-    when 'title'
-      log('###Log title###')
-      _.forEach(nodeArr, (node) ->
-        log('  ' + node.title)
-      )
-    when 'id'
-      log('###Log id###')
-      _.forEach(nodeArr, (node) ->
-        log('  ' + makeUniform(node.id, 4) + ' | ' + node.title)
-      )
-    when 'url'
-      log('###Log url###')
-      _.forEach(nodeArr, (node) ->
-        log(makeUniform(node.id, 4) + ' | ' + node.title)
-        if node.isBookmark
-          log('  ' + node.url)
-        else
-          log('  Directory')
-      )
-    when 'children'
-      log('###Log children###')
-      _.forEach(nodeArr, (node) ->
-        if node.isBookmark
-          log('  Bookmark')
-        else
-          log('  ' + node.children.length + ' children')
-          _.forEach(node.children, (child) ->
-            if child.isBookmark
-              log('    Bookmark : ' + makeUniform(child.id, 4) + ' | ' + child.title)
-            else
-              log('    Directory: ' + makeUniform(child.id, 4) + ' | ' + child.title)
-          )
-      )
+# ------------------------------------------------------------
+# Main
+# ------------------------------------------------------------
+
+nodeLog = (nodeArrOrObject) ->
+  c = console
+
+  if _.isObject(nodeArrOrObject)
+    nodeArr = _.values(nodeArrOrObject)
+  else
+    nodeArr = nodeArrOrObject
+
   log('==================================================')
 
-#Aliases 
-lna = logNodeArr
+  _.forEach(nodeArr, (node) ->
+    c.group("Bookmark " + node.id)
+    c.log("%c" + pad(node.title, 2), "font-weight: bold")
+    c.log("%c" + pad(node.url  , 2), "font-weight: bold")
+    logNodeTag(node, 2)
+    c.groupEnd()
+  )
+
+  log('==================================================')
+
+nl = nodeLog
+
