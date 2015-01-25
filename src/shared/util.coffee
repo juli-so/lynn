@@ -31,6 +31,7 @@ Util =
   numToString: (num) ->
     '' + num
 
+  # Used when re-creating bookmark during bookmark recovery
   toSimpleBookmark: (bookmark) ->
     title: bookmark.title
     url: bookmark.url

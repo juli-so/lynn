@@ -8,5 +8,6 @@ WinTab.init()
 Message.init()
 Tag.init()
 
-Bookmark.init()
-Sync.init()
+CStorage.init ->
+  Bookmark.init()
+  Sync.init()

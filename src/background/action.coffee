@@ -184,7 +184,7 @@ Action =
 
   queryDeletedBookmark: (msg) ->
     res: 'queryDeletedBookmark'
-    nodeArr: Bookmark.lastDeletedNodeArr
+    nodeArr: CStorage.bgState.lastDeletedNodeArr
 
   recoverBookmark: (msg) ->
     if _.isNumber(msg.index)
