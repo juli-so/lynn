@@ -15,7 +15,7 @@ Action =
 
   search: (msg) ->
     res: 'search'
-    result: _.values(Bookmark.find(msg.input))
+    result: Bookmark.find(msg.input)
   
   # ------------------------------------------------------------
 

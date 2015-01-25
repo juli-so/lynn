@@ -25,18 +25,18 @@ HALFMATCH_POINT = 5
 MISMATCH_POINT  = -2
 
 Rank =
-  rank: (keywordArr, tagArr, nodeArr) ->
+  rank: (kwArr, tagArr, nodeArr) ->
     sortFunc = (node) =>
-      -@getRelavance(keywordArr, tagArr, node)
+      -@getRelavance(kwArr, tagArr, node)
     _.sortBy(nodeArr, sortFunc)
 
-  getRelavance: (keywordArr, tagArr, node) ->
-    keywordPoint = 0
-    _.forEach keywordArr, (kw) ->
+  getRelavance: (kwArr, tagArr, node) ->
+    kwPoint = 0
+    _.forEach kwArr, (kw) ->
       if _.ciContains(node.title, kw)
-        keywordPoint += MATCH_POINT
+        kwPoint += MATCH_POINT
       else
-        keywordPoint += MISMATCH_POINT
+        kwPoint += MISMATCH_POINT
 
     tagPoint = 0
     _.forEach node.tagArr, (tag) ->
@@ -47,5 +47,5 @@ Rank =
       else
         tagPoint += MISMATCH_POINT
 
-    keywordPoint + tagPoint
+    kwPoint + tagPoint
 

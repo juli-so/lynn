@@ -75,6 +75,11 @@ Bookmark =
   # * All find returns an object { nodeId: node }
   # ------------------------------------------------------------
 
+  # To Node Object
+  # Change nodeArr to { node.id: node } object to allow chaining
+  _toNO: (nodeArr) ->
+    _.zipObject(_.pluck(nodeArr, 'id'), nodeArr)
+
   fbTag: (tag, pool = @allNode) ->
     _.pick pool, (node, index) -> _.ciArrContains(node.tagArr, tag)
 
@@ -87,6 +92,19 @@ Bookmark =
     else
       newPool = @fbTag(tagArr.shift(), pool)
       @fbTagArr(tagArr, newPool)
+
+  # Find node that has at least one tag in tagArr
+  fbTagRange: (tagArr, pool = @allNode) ->
+    if _.isEmpty(tagArr)
+      return pool
+
+    nodeArr = _(tagArr)
+                .map((tag) => _.values(@fbTag(tag, pool)))
+                .flatten()
+                .uniq()
+                .value()
+
+    @_toNO(nodeArr)
 
   fbTitle: (title, ci = yes, pool = @allNode) ->
     if ci
@@ -104,6 +122,22 @@ Bookmark =
       newPool = @fbTitle(titleArr.shift(), ci, pool)
       @fbTitleArr(titleArr, newPool)
 
+  # ------------------------------------------------------------
+  # Find by query
+  # ------------------------------------------------------------
+
+  _allUniqTag: ->
+    _(@allTag).values()
+              .flatten()
+              .uniq()
+              .value()
+
+  _suggestTag: (tagFragment) ->
+    return [] if Util.isntTag(tagFragment)
+
+    _.filter @_allUniqTag(), (tag) ->
+      _.ciContains(tag, tagFragment)
+
   find: (query, pool = @allNode) ->
     return [] if _.isEmpty(query)
 
@@ -112,7 +146,7 @@ Bookmark =
     if query is '#' or query is '@'
       prefix = query
 
-      _.pick pool, (node) ->
+      _.filter pool, (node) ->
         _.any node.tagArr, (tag) ->
           _.startsWith(tag, prefix)
 
@@ -128,4 +162,28 @@ Bookmark =
         else
           kwArr.push(token)
 
-      @fbTitleArr(kwArr, yes, @fbTagArr(tagArr))
+      # Find all entries that has at least one suggested tag
+      if not _.isEmpty(tagArr)
+        suggestedTagArr = _.uniq(_.flatten(_.map(tagArr, @_suggestTag.bind(@))))
+
+        return [] if _.isEmpty(suggestedTagArr)
+
+        result = _.values(@fbTitleArr(kwArr, yes, @fbTagRange(suggestedTagArr)))
+
+      else
+        result = _.values(@fbTitleArr(kwArr, yes, pool))
+
+      Rank.rank(kwArr, tagArr, result)
+
+  # ------------------------------------------------------------
+  # Create / Remove
+  # ------------------------------------------------------------
+
+  create: (node, tagArr, parentId = '1') ->
+    node = _.assign(node, { parentId })
+
+    chrome.bookmarks.create node, (node) =>
+      node.tagArr = @allTag[node.id] = tagArr
+      @allNode[node.id] = node
+
+    
