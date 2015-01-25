@@ -65,7 +65,7 @@ E_Action =
           when 'c-s-'   then @callAction('n_openInNewIncognitoWin')
       # Command mode
       else
-        if not Util.startsWith(@state.input, ':')
+        if not _.startsWith(@state.input, ':')
           return
 
         tokenArr = @state.input.split(' ')

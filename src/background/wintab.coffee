@@ -24,7 +24,7 @@ WinTab =
   # ------------------------------------------------------------
 
   _isNCTab: (tab) ->
-    not Util.startsWith(tab.url, 'chrome')
+    not _.startsWith(tab.url, 'chrome')
 
   _isNCWin: (window) ->
     _.some(window.tabs, @_isNCTab)
