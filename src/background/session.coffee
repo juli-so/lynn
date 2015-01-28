@@ -5,44 +5,39 @@
 # ---------------------------------------------------------------------------- #
 
 Session =
-  sessionMap: {}
-
-  init: ->
-    chrome.storage.local.get 'sessionMap', (storObj) =>
-      @sessionMap = storObj.sessionMap || {}
-
   search: (input) ->
-    sessionRecord = _.find @sessionMap, (s, sName) ->
+    sessionMap = CStorage.getState('sessionMap')
+    sessionRecord = _.find sessionMap, (s, sName) ->
       _.ciStartsWith(sName, input)
 
     sessionRecord || []
 
   storeWin: (sessionName, cb) ->
+    sessionMap = CStorage.getState('sessionMap')
     currentWinTabArr = WinTab.g_currWinTabArr()
 
-    @sessionMap[sessionName] =
+    sessionMap[sessionName] =
       type: 'window'
       session: currentWinTabArr
 
-    chrome.storage.local.set { sessionMap: @sessionMap }, ->
-      cb()
+    CStorage.setState('sessionMap', sessionMap, cb)
 
   storeAll: (sessionName, cb) ->
+    sessionMap = CStorage.getState('sessionMap')
     allTabArr = Win.g_allTabArr()
     session = _.values(_.groupBy(allTabArr, 'windowId'))
 
-    @sessionMap[sessionName] =
+    sessionMap[sessionName] =
       type: 'chrome'
       session: session
 
-    chrome.storage.local.set { sessionMap: @sessionMap }, ->
-      cb()
+    CStorage.setState('sessionMap', sessionMap, cb)
 
   remove: (input, cb) ->
-    sessionName = _.findKey @sessionMap, (s, sName) ->
+    sessionMap = CStorage.getState('sessionMap')
+    sessionName = _.findKey sessionMap, (s, sName) ->
       _.ciStartsWith(sName, input)
 
     if sessionName
-      delete @sessionMap[sessionName]
-      chrome.storage.local.set { sessionMap: @sessionMap }, ->
-        cb()
+      delete sessionMap[sessionName]
+      CStorage.setState('sessionMap', sessionMap, cb)

@@ -18,9 +18,15 @@ Action =
   
   # ------------------------------------------------------------
 
-  getSyncStor: (msg, done) ->
-    chrome.storage.sync.get null, (storObj) ->
-      done({ storObj })
+  # If no input option is given return all option
+  getOption: (msg) ->
+    res: 'getOption'
+    option: CStorage.getOption(msg.option || null)
+
+  # If no input state is given return all state
+  getState: (msg) ->
+    res: 'getState'
+    state: CStorage.getState(msg.state || null)
 
   # ------------------------------------------------------------
   # Open bookmarks
@@ -142,7 +148,7 @@ Action =
 
   queryDeletedBookmark: (msg) ->
     res: 'queryDeletedBookmark'
-    nodeArr: CStorage.bgState.lastDeletedNodeArr
+    nodeArr: CStorage.getState('lastDeletedNodeArr')
 
   recoverBookmark: (msg) ->
     if _.isNumber(msg.index)

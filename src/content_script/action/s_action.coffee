@@ -145,7 +145,7 @@ S_Action =
 
     if not _.isEmpty(sessionName) and not CommandMap[sessionName]
       Listener.listenOnce 'storeWinSession', { sessionName }, (message) =>
-        Message.postMessage { req: 'getSyncStor' }
+        Message.postMessage { req: 'getState' }
 
         @callAction('n_hide')
 
@@ -154,7 +154,7 @@ S_Action =
 
     if not _.isEmpty(sessionName)
       Listener.listenOnce 'removeSession', { sessionName }, (message) =>
-        Message.postMessage { req: 'getSyncStor' }
+        Message.postMessage { req: 'getState' }
 
         Listener.stopListen('searchSession')
 
@@ -165,7 +165,7 @@ S_Action =
 
     if not _.isEmpty(sessionName) and not CommandMap[sessionName]
       Listener.listenOnce 'storeChromeSession', { sessionName }, (message) =>
-        Message.postMessage { req: 'getSyncStor' }
+        Message.postMessage { req: 'getState' }
 
         @callAction('n_hide')
 

@@ -46,14 +46,22 @@ Lynn = React.createClass
     Listener.listen 'search', (message) =>
       @setState nodeArr: message.result
 
-    Listener.listen 'getSyncStor', (message) =>
-      @setState
-        option: message.storObj.option || @state.option
-        sessionMap: message.storObj.sessionMap || @state.sessionMap
-        synoTagRecordArr:
-          message.storObj.synoTagRecordArr || @state.synoTagRecordArr
+    # ----------------------------------------------------------
+    # Load & listen to background state & option
+    # ----------------------------------------------------------
 
-    Message.postMessage { req: 'getSyncStor' }
+    Listener.listen 'getOption', (message) =>
+      option = message.option
+
+    Listener.listen 'getState' , (message) =>
+      state = message.state
+      @setState
+        sessionMap: state.sessionMap
+
+    Message.postMessage { req: 'getOption' }
+    Message.postMessage { req: 'getState'  }
+
+    # ----------------------------------------------------------
 
     # keydown events
     $(window).keydown (event) =>

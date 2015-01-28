@@ -196,8 +196,9 @@ Bookmark =
     
   remove: (id) ->
     chrome.bookmarks.remove id, =>
-      lastDeletedNodeArr = CStorage.bgState.lastDeletedNodeArr || []
-      MAX_RECOVER_NUM = CStorage.bgOption.MAX_RECOVER_NUM
+      lastDeletedNodeArr = CStorage.getState('lastDeletedNodeArr')
+      MAX_RECOVER_NUM    = CStorage.getOption('MAX_RECOVER_NUM')
+
       lastDeletedNodeArr.unshift(@allNode[id])
       lastDeletedNodeArr = lastDeletedNodeArr[0...MAX_RECOVER_NUM]
       CStorage.setState('lastDeletedNodeArr', lastDeletedNodeArr)
@@ -207,7 +208,7 @@ Bookmark =
 
   # Recover deleted bookmarks
   recover: (indexOrIndexArr) ->
-    lastDeletedNodeArr = CStorage.bgState.lastDeletedNodeArr
+    lastDeletedNodeArr = CStorage.getState('lastDeletedNodeArr')
 
     if _.isNumber(indexOrIndexArr)
       index = indexOrIndexArr

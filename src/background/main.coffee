@@ -5,10 +5,9 @@
 # ---------------------------------------------------------------------------- #
 
 WinTab.init()
-Session.init()
 Message.init()
 Tag.init()
 
-CStorage.init ->
+CStorage.sync ->
   Bookmark.init()
   #Sync.init()

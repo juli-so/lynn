@@ -1,35 +1,68 @@
 # ---------------------------------------------------------------------------- #
 #                                                                              #
 # Store / Get state & option to chrome.storage                                 #
-# For background only                                                          #
+#                                                                              #
+# Option is shared between front/back                                          #
+# Front-end state is handled by React                                          #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
 CStorage =
-  bgOption: {}
-  bgState : {}
+  option: {}
+  state : {}
+
+  # Defaults for Option/State when they are first created
+  defaultOption: {
+    MAX_RECOVER_NUM: 10
+  }
+
+  defaultState: {
+    lastDeletedNodeArr: []
+    sessionMap: {}
+  }
 
   # Use callback to ensure sequence of operation
-  init: (callback) ->
+  sync: (cb) ->
     chrome.storage.local.get null, (storObj) =>
-      @bgOption = storObj['bgOption'] || {}
-      @bgState  = storObj['bgState' ] || {}
-      callback()
+      @option = storObj['option'] || {}
+      @state  = storObj['state' ] || {}
+      cb()
 
   clear: ->
     setObj =
-      bgOption: {}
-      bgState : {}
+      option: {}
+      state : {}
 
     chrome.storage.local.set setObj, =>
-      @bgOption = {}
-      @bgState  = {}
+      @option = {}
+      @state  = {}
 
-  setOption: (option, val) ->
-    @bgOption[option] = val
-    chrome.storage.local.set { bgOption: @bgOption }
+  setOption: (option, val, cb) ->
+    @option[option] = val
+    chrome.storage.local.set { option: @option }, ->
+      if cb
+        cb()
 
-  setState: (state, val) ->
-    @bgState[state] = val
-    chrome.storage.local.set { bgState: @bgState }
+  setState: (state, val, cb) ->
+    @state[state] = val
+    chrome.storage.local.set { state: @state }, ->
+      if cb
+        cb()
+
+  # Return all options if 'null' is passed
+  # Return default values for unspecified options 
+  getOption: (option) ->
+    if _.isNull(option)
+      _.defaults(@option, @defaultOption)
+    else
+      @option[option] || @defaultOption[option]
+
+  # Return all state if 'null' is passed
+  # Return default values for unspecified states
+  getState: (state) ->
+    if _.isNull(state)
+      _.defaults(@state, @defaultState)
+    else
+      @state[state] || @defaultState[state]
+  
 
