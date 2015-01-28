@@ -4,8 +4,7 @@
 #                                                                              #
 # All methods                                                                  #
 #   - take an argument 'message'                                               #
-#   - take an optional argument 'port', used to post message back when needed  #
-#   - returns a message object that'll be posted back after its execution      #
+#   - take an optional argument 'done' so action can end async                 #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
@@ -19,11 +18,9 @@ Action =
   
   # ------------------------------------------------------------
 
-  getSyncStor: (msg, port) ->
+  getSyncStor: (msg, done) ->
     chrome.storage.sync.get null, (storObj) ->
-      port.postMessage
-        res: 'getSyncStor'
-        storObj: storObj
+      done({ storObj })
 
   # ------------------------------------------------------------
   # Open bookmarks
@@ -93,57 +90,18 @@ Action =
   # Sessions
   # ------------------------------------------------------------
 
-  searchSession: (msg, port) ->
-    chrome.storage.sync.get 'sessionMap', (storObj) ->
-      { sessionMap } = storObj
-
-      sessionRecord = _.find sessionMap, (s, sName) ->
-        Util.ciStartsWith(sName, msg.input)
-      sessionRecord or= []
-
-      port.postMessage
-        res: 'searchSession'
-        sessionRecord: sessionRecord
+  searchSession: (msg) ->
+    res: 'searchSession'
+    sessionRecord: Session.search(msg.input)
   
-  storeWinSession: (msg, port) ->
-    chrome.storage.sync.get 'sessionMap', (storObj) ->
-      { sessionMap } = storObj
-      currentWinTabArr = WinTab.g_currWinTabArr()
-      simplifiedTabArr = _.map currentWinTabArr, (tab) ->
-        title: tab.title
-        url: tab.url
+  storeWinSession: (msg, done) ->
+    Session.storeWin(msg.sessionName, done)
 
-      sessionMap[msg.sessionName] =
-        type: 'window'
-        session: simplifiedTabArr
+  storeChromeSession: (msg, done) ->
+    Session.storeAll(msg.sessionName, done)
 
-      chrome.storage.sync.set { sessionMap }, ->
-        port.postMessage { res: 'storeWinSession' }
-
-  storeChromeSession: (msg, port) ->
-    chrome.storage.sync.get 'sessionMap', (storObj) ->
-      { sessionMap } = storObj
-      tabArr = WinTab.g_allTabArr()
-      session = _.values(_.groupBy(tabArr, 'windowId'))
-
-      sessionMap[msg.sessionName] =
-        type: 'chrome'
-        session: session
-
-      chrome.storage.sync.set { sessionMap }, ->
-        port.postMessage { res: 'storeChromeSession' }
-
-  removeSession: (msg, port) ->
-    chrome.storage.sync.get 'sessionMap', (storObj) ->
-      { sessionMap } = storObj
-
-      sessionName = _.findKey sessionMap, (s, sName) ->
-        Util.ciStartsWith(sName, msg.sessionName)
-
-      if sessionName
-        delete sessionMap[sessionName]
-        chrome.storage.sync.set { sessionMap }, ->
-          port.postMessage { res: 'removeSession' }
+  removeSession: (msg, done) ->
+    Session.remove(msg.sessionName, done)
 
   # ------------------------------------------------------------
   # Adding / Removing Bookmark

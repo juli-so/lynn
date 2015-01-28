@@ -23,7 +23,7 @@
         ],
         "js": [
           "lib/lodash.min.js",
-          "bin/shared/lodashMixin.js",
+          "bin/shared/lodash_mixin.js",
           "bin/shared/util.js",
 
           "lib/jquery.min.js",
@@ -50,11 +50,12 @@
     "background": {
       "scripts": [
         "lib/lodash.min.js",
-        "bin/shared/lodashMixin.js",
+        "bin/shared/lodash_mixin.js",
         "bin/shared/util.js",
 
         "bin/background/c_storage.js",
         "bin/background/wintab.js",
+        "bin/background/session.js",
         "bin/background/tag.js",
         "bin/background/action.js",
         "bin/background/message.js",
