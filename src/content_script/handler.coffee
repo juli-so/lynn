@@ -105,18 +105,6 @@ InputHandler =
     tagArr = _.filter input.split(' '), (token) ->
       Util.isTag(token)
 
-    # SynoTag
-    # Only change when SynoTag has a dominant tag
-    tagArr = _.map tagArr, (tag) =>
-      matchRecord = _.find @state.synoTagRecordArr, (synoTagRecord) ->
-        _.any synoTagRecord.memberArr, (member) ->
-          _.ciEquals(member, tag)
-
-      if matchRecord and matchRecord.dominant
-        matchRecord.dominant
-      else
-        tag
-
     # Make the current tags in input field shown on node
     nodeArr = @state.nodeArr
     if @hasNoSelection()

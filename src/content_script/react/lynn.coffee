@@ -23,7 +23,6 @@ Lynn = React.createClass
 
     nodeArr: []
     selectedArr: []
-    synoTagArr: []
 
     useSuggestedTag: yes
 
@@ -40,7 +39,6 @@ Lynn = React.createClass
       MAX_SUGGESTION_NUM: 8
 
     sessionMap: {}
-    synoTagRecordArr: []
 
   componentWillMount: ->
     Listener.listen 'search', (message) =>
