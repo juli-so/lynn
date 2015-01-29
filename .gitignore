@@ -7,4 +7,4 @@ tags
 bower_components/
 node_modules/
 vendor/
-optionPage/*.html
+option_page/*.html
