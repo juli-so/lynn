@@ -6,8 +6,8 @@
 
 WinTab.init()
 Message.init()
-Tag.init()
 
 CStorage.sync ->
   Bookmark.init()
+  Tag.init()
   #Sync.init()

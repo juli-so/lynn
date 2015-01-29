@@ -1,53 +1,62 @@
-# manages
-#   * auto-tagging
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Tag management                                                               #
+#                                                                              #
+# * Auto-tagging                                                               #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
 
-# autoTaggingMap is saved in syncStor
-# it has the following structure
-# autoTaggingMap = {
-#   '#tag1': { 
-#     matchProp: 'title'
-#     matchType: 'exact'
-#     matchString: 'amazon.com'
-#   }
+# --------------------------------------------------------------
+# Auto-tagging
+# --------------------------------------------------------------
 #
-#   '#tag2': ...
+# autoTaggingMap = {
+#   #tag: {
+#     matchProp: 'title'
+#     matchType: 'contains'
+#     matchStr : 'amazon'
+#   }
 # }
+#
 # matchProp is 'title' | 'hostname'
-# matchType is 'contains' for 'title' (case-insensitive)
+# matchType is 'contains'           for 'title' (case-insensitive)
 #              'contains' | 'exact' for 'hostname'
+#
+# --------------------------------------------------------------
 
 Tag =
-  init: ->
-    chrome.storage.sync.get 'autoTaggingMap', (storObj) =>
-      autoTaggingMap = storObj.autoTaggingMap
-      @titleContainsMap = {}
-      @hostnameExactMap = {}
-      @hostnameContainsMap = {}
+  # For auto-tagging
+  titleContainsMap: {}
+  hostnameExactMap: {}
+  hostnameContainsMap: {}
 
-      _.forEach autoTaggingMap, (taggingRule, tag) =>
-        { matchProp, matchType, matchString } = taggingRule
-        if matchProp is 'title'
-          @titleContainsMap[matchString] = tag
-        else # match against hostname
-          if matchType is 'exact'
-            @hostnameExactMap[matchString] = tag
-            @hostnameExactMap['www.' + matchString] = tag
-          else
-            @hostnameContainsMap[matchString] = tag
+  init: ->
+    autoTaggingMap = CStorage.getState('autoTaggingMap')
+
+    _.forEach autoTaggingMap, (taggingRule, tag) =>
+      { matchProp, matchType, matchStr } = taggingRule
+      if matchProp is 'title'
+        @titleContainsMap[matchStr] = tag
+      else # match against hostname
+        if matchType is 'exact'
+          @hostnameExactMap[matchStr] = tag
+          @hostnameExactMap['www.' + matchStr] = tag
+        else
+          @hostnameContainsMap[matchStr] = tag
 
   autoTag: (title, hostname) ->
     tagArr = []
 
-    _.forEach @titleContainsMap, (tag, matchString) =>
-      if _.ciContains(title, matchString)
+    _.forEach @titleContainsMap, (tag, matchStr) =>
+      if _.ciContains(title, matchStr)
         tagArr.push(tag)
 
-    _.forEach @hostnameExactMap, (tag, matchString) =>
-      if matchString is hostname
+    _.forEach @hostnameExactMap, (tag, matchStr) =>
+      if matchStr is hostname
         tagArr.push(tag)
 
-    _.forEach @hostnameContainsMap, (tag, matchString) =>
-      if _.ciContains(hostname, matchString)
+    _.forEach @hostnameContainsMap, (tag, matchStr) =>
+      if _.ciContains(hostname, matchStr)
         tagArr.push(tag)
 
     tagArr

@@ -19,6 +19,7 @@ CStorage =
   defaultState: {
     lastDeletedNodeArr: []
     sessionMap: {}
+    autoTaggingMap: {}
   }
 
   # Use callback to ensure sequence of operation
