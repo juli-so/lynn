@@ -17,6 +17,8 @@ Hint =
     'removeSession'              : 'Enter name of the session to remove'
     'recoverBookmark'            : 'No need to enter anything'
 
+    'deleteCurrentPageBookmark'  : 'Press Enter to confirm deletion'
+
   botStringSpecialModeMap:
     'tag'                        : 'Tag'
     'editTag'                    : 'Edit Tag'
@@ -33,3 +35,5 @@ Hint =
     'storeChromeSession'         : 'Add these bookmarks to session: '
     'removeSession'              : 'Remove session: '
     'recoverBookmark'            : 'Recover deleted bookmarks'
+
+    'deleteCurrentPageBookmark'  : 'Remove current page bookmark'

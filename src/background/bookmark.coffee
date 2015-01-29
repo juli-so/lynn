@@ -128,6 +128,21 @@ Bookmark =
       newPool = @fbTitle(titleArr.shift(), ci, pool)
       @fbTitleArr(titleArr, newPool)
 
+  fbURL: (url, ci = yes, pool = @allNode) ->
+    if _.isEmpty(url)
+      return pool
+
+    if ci
+      _.pick pool, (node, index) -> _.ciContains(node.url, url)
+    else
+      _.pick pool, (node, index) -> _.contains(node.url, url)
+
+  fbExactURL: (url, pool = @allNode) ->
+    if _.isEmpty(url)
+      return pool
+
+    _.pick pool, (node, index) -> _.isEqual(node.url, url)
+
   # ------------------------------------------------------------
   # Find by query
   # Returns a ranked nodeArr

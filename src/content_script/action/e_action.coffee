@@ -5,7 +5,7 @@
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
-DEBUG = yes
+DEBUG = no
 
 # Actions to be made in command mode
 CommandMap =
@@ -25,6 +25,8 @@ CommandMap =
   'r'             : 'i_recoverBookmark'
 
   'md'            : 'i_insertMarkDown'
+
+  'd'             : 'i_deleteCurrentPageBookmark'
 
   # Site specific
   'ahn'           : 't_addHNBookmark'

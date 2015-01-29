@@ -17,13 +17,13 @@ I_Action =
       specialMode: 'addBookmark'
       input: ''
 
-    Listener.listenOnce 'queryTab', {}, (message) =>
-      node = Util.tabToNode(message.current)
+    Listener.listenOnce 'queryTab', {}, (msg) =>
+      node = Util.tabToNode(msg.current)
 
       @setState { nodeArr: [node] }
 
-      Listener.listenOnce 'suggestTag', { bookmark: node } , (message) =>
-        node = _.assign(node, { suggestedTagArr: message.tagArr })
+      Listener.listenOnce 'suggestTag', { bookmark: node } , (msg) =>
+        node = _.assign(node, { suggestedTagArr: msg.tagArr })
         @setState { nodeArr: [node] }
 
   addMultipleBookmark: ->
@@ -33,15 +33,15 @@ I_Action =
       specialMode: 'addMultipleBookmark'
       input: ''
 
-    Listener.listenOnce 'queryTab', {}, (message) =>
-      nodeArr = Util.tabToNode(message.tabArr)
+    Listener.listenOnce 'queryTab', {}, (msg) =>
+      nodeArr = Util.tabToNode(msg.tabArr)
 
       @setState { nodeArr }
 
       reqObj = { bookmarkArr: nodeArr }
-      Listener.listenOnce 'suggestTag', reqObj, (message) =>
+      Listener.listenOnce 'suggestTag', reqObj, (msg) =>
         _.forEach nodeArr, (node, index) =>
-          node.suggestedTagArr = message.tagArrArr[index]
+          node.suggestedTagArr = msg.tagArrArr[index]
 
         @setState { nodeArr }
 
@@ -52,17 +52,17 @@ I_Action =
       specialMode: 'addAllCurrentWinBookmark'
       input: ''
 
-    Listener.listenOnce 'queryTab', {}, (message) =>
-      currentWinTabArr = message.currentWinTabArr
+    Listener.listenOnce 'queryTab', {}, (msg) =>
+      currentWinTabArr = msg.currentWinTabArr
       nodeArr = Util.tabToNode(currentWinTabArr)
       selectedArr = [0...nodeArr.length]
 
       @setState { nodeArr, selectedArr }
 
       reqObj = { bookmarkArr: nodeArr }
-      Listener.listenOnce 'suggestTag', reqObj, (message) =>
+      Listener.listenOnce 'suggestTag', reqObj, (msg) =>
         _.forEach nodeArr, (node, index) =>
-          node.suggestedTagArr = message.tagArrArr[index]
+          node.suggestedTagArr = msg.tagArrArr[index]
 
         @setState { nodeArr }
 
@@ -73,16 +73,16 @@ I_Action =
       specialMode: 'addAllWinBookmark'
       input: ''
 
-    Listener.listenOnce 'queryTab', {}, (message) =>
-      nodeArr = Util.tabToNode(message.tabArr)
+    Listener.listenOnce 'queryTab', {}, (msg) =>
+      nodeArr = Util.tabToNode(msg.tabArr)
       selectedArr = [0...nodeArr.length]
 
       @setState { nodeArr, selectedArr }
 
       reqObj = { bookmarkArr: nodeArr }
-      Listener.listenOnce 'suggestTag', reqObj, (message) =>
+      Listener.listenOnce 'suggestTag', reqObj, (msg) =>
         _.forEach nodeArr, (node, index) =>
-          node.suggestedTagArr = message.tagArrArr[index]
+          node.suggestedTagArr = msg.tagArrArr[index]
 
         @setState { nodeArr }
 
@@ -129,8 +129,8 @@ I_Action =
               tagArr: []
               suggestedTagArr: []
 
-            Listener.listenOnce 'suggestTag', { bookmark: node }, (message) =>
-              node = _.assign(node, { suggestedTagArr: message.tagArr })
+            Listener.listenOnce 'suggestTag', { bookmark: node }, (msg) =>
+              node = _.assign(node, { suggestedTagArr: msg.tagArr })
               @setState { nodeArr: [node] }
       else
         node =
@@ -139,8 +139,8 @@ I_Action =
           tagArr: []
           suggestedTagArr: []
 
-        Listener.listenOnce 'suggestTag', { bookmark: node }, (message) =>
-          node = _.assign(node, { suggestedTagArr: message.tagArr })
+        Listener.listenOnce 'suggestTag', { bookmark: node }, (msg) =>
+          node = _.assign(node, { suggestedTagArr: msg.tagArr })
           @setState { nodeArr: [node] }
 
   # ------------------------------------------------------------
@@ -216,8 +216,24 @@ I_Action =
       specialMode: 'recoverBookmark'
       input: ''
 
-    Listener.listenOnce 'queryDeletedBookmark', {}, (message) =>
-      @setState { nodeArr: message.nodeArr }
+    Listener.listenOnce 'queryDeletedBookmark', {}, (msg) =>
+      @setState { nodeArr: msg.nodeArr }
+
+  # ------------------------------------------------------------
+  # Delete bookmark
+  # ------------------------------------------------------------
+
+  deleteCurrentPageBookmark: ->
+    @callAction('n_storeCache')
+
+    Listener.listenOnce 'deleteCurrentPageBookmark', {}, (msg) =>
+      if msg.nodeArr.length > 0
+        @setState
+          input: ''
+          specialMode: 'deleteCurrentPageBookmark'
+          nodeArr: msg.nodeArr
+      else
+        @callAction('n_reset')
 
   # ------------------------------------------------------------
   # Sessions
@@ -230,8 +246,8 @@ I_Action =
       specialMode: 'storeWinSession'
       input: ''
 
-    Listener.listenOnce 'queryTab', {}, (message) =>
-      currentWinTabArr = message.currentWinTabArr
+    Listener.listenOnce 'queryTab', {}, (msg) =>
+      currentWinTabArr = msg.currentWinTabArr
       nodeArr = _.map currentWinTabArr, (tab) ->
         title: tab.title
         url: tab.url
@@ -246,8 +262,8 @@ I_Action =
       specialMode: 'storeChromeSession'
       input: ''
 
-    Listener.listenOnce 'queryTab', {}, (message) =>
-      nodeArr = _.map message.tabArr, (tab) ->
+    Listener.listenOnce 'queryTab', {}, (msg) =>
+      nodeArr = _.map msg.tabArr, (tab) ->
         title: tab.title
         url: tab.url
         tagArr: []
@@ -261,13 +277,13 @@ I_Action =
       specialMode: 'removeSession'
       input: ''
 
-    Listener.listen 'searchSession', (message) =>
-      if message.sessionRecord.type is 'window'
+    Listener.listen 'searchSession', (msg) =>
+      if msg.sessionRecord.type is 'window'
         @setState
-          nodeArr: message.sessionRecord.session
+          nodeArr: msg.sessionRecord.session
       else
         @setState
-          nodeArr: _.flatten(message.sessionRecord.session)
+          nodeArr: _.flatten(msg.sessionRecord.session)
 
   # ------------------------------------------------------------
   # Tag

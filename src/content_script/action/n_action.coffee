@@ -5,6 +5,7 @@
 # ---------------------------------------------------------------------------- #
 
 N_Action =
+
   log: ->
     console.log @state
 
@@ -537,5 +538,3 @@ N_Action =
           when 'c-s-'   then [{ incognito: yes }, yes, yes, nodeArr]
 
         @callAction('n_h_open', openArgs)
-
-

@@ -95,6 +95,15 @@ S_Action =
     @callAction('n_hide')
 
   # ------------------------------------------------------------
+
+  deleteCurrentPageBookmark: ->
+    Message.postMessage
+      req: 'removeBookmark'
+      id: @getCurrentNode().id
+
+    @callAction('n_hide')
+
+  # ------------------------------------------------------------
   # Tag
   # ------------------------------------------------------------
 

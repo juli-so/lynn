@@ -157,6 +157,12 @@ Action =
       Bookmark.recover(msg.indexArr)
 
   # ------------------------------------------------------------
+
+  deleteCurrentPageBookmark: (msg) ->
+    res: 'deleteCurrentPageBookmark'
+    nodeArr: _.values(Bookmark.fbExactURL(WinTab.g_currTab().url))
+
+  # ------------------------------------------------------------
   # Others
   # ------------------------------------------------------------
 
