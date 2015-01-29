@@ -26,6 +26,11 @@ Bookmark =
       chrome.storage.local.get 'allTag', (storObj) =>
         @allTag = storObj.allTag || {}
 
+        # Clean tagArr with no corresponding node
+        _.forEach @allTag, (tagArr, id) =>
+          if not @allNode[id]
+            delete @allTag[id]
+
         _.forEach @allNode, (node) =>
           if @allTag[node.id]
             node.tagArr = @allTag[node.id]
@@ -40,7 +45,7 @@ Bookmark =
   # Tag
   # ------------------------------------------------------------
 
-  _storeTag: ->
+  storeTag: ->
     chrome.storage.local.set
       allTag: @allTag
 
@@ -51,18 +56,19 @@ Bookmark =
     _.pull(@allTag[id], tag)
 
   # Only add valid, case-insensitive no dup tags
-  addTag: (id, tag) ->
+  addTag: (id, tag, update = yes) ->
     hasNode  = _.has(@allNode, id)
     tagValid = Util.isTag(tag)
     noDup    = _.all @allTag[id], (t) -> not _.ciEquals(t, tag)
 
     if hasNode and tagValid and noDup
       @_pushTag(id, tag)
-      @_storeTag()
+      if update
+        @storeTag()
 
   # Only delete if tag is valid and present
   # Case-insensitive. E.g: del '#ha' will delete '#HA'
-  delTag: (id, tag) ->
+  delTag: (id, tag, update = yes) ->
     hasNode = _.has(@allNode, id)
     tagValid = Util.isTag(tag)
     tagPresent = _.ciArrContains(@allTag[id], tag)
@@ -71,7 +77,12 @@ Bookmark =
       # Find ciEqual tag to delete
       tagToDel = _.ciArrFind(@allTag[id], tag)
       @_pullTag(id, tagToDel)
-      @_storeTag()
+      if update
+        @storeTag()
+
+  delAllTag: (id) ->
+    _.clearArr(@allTag[id])
+    @storeTag()
       
   # ------------------------------------------------------------
   # Search
@@ -207,7 +218,7 @@ Bookmark =
     chrome.bookmarks.create node, (node) =>
       node.tagArr = @allTag[node.id] = tagArr
       @allNode[node.id] = node
-      @_storeTag()
+      @storeTag()
     
   remove: (id) ->
     chrome.bookmarks.remove id, =>
@@ -219,7 +230,7 @@ Bookmark =
       CStorage.setState('lastDeletedNodeArr', lastDeletedNodeArr)
 
       delete @allNode[id]
-      delete @allTag[id]
+      @delAllTag(id)
 
   # Recover deleted bookmarks
   recover: (indexOrIndexArr) ->

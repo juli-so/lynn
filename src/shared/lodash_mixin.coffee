@@ -24,6 +24,10 @@ MixinObj =
   # Find first element in arr that ciEquals to str
   ciArrFind: (arr, str) ->
     _.find arr, (e) => @ciEquals(e, str)
+
+  clearArr: (arr) ->
+    while(arr.length > 0)
+      arr.pop()
   
 # Currify and mixin
 

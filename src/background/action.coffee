@@ -60,36 +60,25 @@ Action =
   addTag: (msg) ->
     if msg.node
       _.forEach msg.node.pendingTagArr, (tag) ->
-        Bookmark.addTag(msg.node, tag)
+        Bookmark.addTag(msg.node.id, tag, false)
     else
       _.forEach msg.nodeArr, (node) ->
         _.forEach node.pendingTagArr, (tag) ->
-          Bookmark.addTag(node, tag)
+          Bookmark.addTag(node.id, tag, false)
 
     Bookmark.storeTag()
 
   editTag: (msg) ->
     if msg.node
-      Bookmark.delAllTag(msg.node)
+      Bookmark.delAllTag(msg.node.id)
       _.forEach msg.node.pendingTagArr, (tag) ->
-        Bookmark.addTag(msg.node, tag)
+        Bookmark.addTag(msg.node.id, tag, false)
     else
       _.forEach msg.nodeArr, (node) ->
-        Bookmark.delAllTag(node)
+        Bookmark.delAllTag(node.id)
         _.forEach node.tagArr.concat(node.pendingTagArr), (tag) ->
-          Bookmark.addTag(node, tag)
-          true
+          Bookmark.addTag(node.id, tag, false)
 
-    Bookmark.storeTag()
-
-  delAllTag: (msg) ->
-    if msg.node
-      Bookmark.delAllTag(msg.node)
-    else
-      _.forEach msg.nodeArr, (node) ->
-        Bookmark.delAllTag(node)
-
-  storeTag: (msg) ->
     Bookmark.storeTag()
 
   # ------------------------------------------------------------

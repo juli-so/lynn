@@ -39,7 +39,7 @@ input::-webkit-input-placeholder {
  */
 
 /* Hide for less than 700px wide viewport */
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   #lynn{
     display: none;
   }
