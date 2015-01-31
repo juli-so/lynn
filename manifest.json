@@ -11,7 +11,7 @@
       "tabs"
     ],
 
-    "options_page": "option_page/option.html",
+    "options_page": "options/site/html/option.html",
 
     "content_scripts": [
       {
