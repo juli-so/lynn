@@ -44,7 +44,8 @@ S_Action =
 
     # For multiple bookmark
     # Don't do 'if only one tag is inputted, search for it'
-    if @state.specialMode is 'addMultipleBookmark'
+    if @state.specialMode is 'addMultipleBookmark' or
+       @state.specialMode is 'addSelectionBookmark'
       @callAction('n_hide')
     # Search for tags after bookmark is added
     else
