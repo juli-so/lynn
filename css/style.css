@@ -104,9 +104,9 @@ input::-webkit-input-placeholder {
   font-family: inherit;
   font-size: 20px;
 
-  /* Remove input box border */
-  outline: none;
-  box-shadow: none;
+  /* Lock background */
+  background-color: #fff;
+
 }
 
 /* Remove input box border */
@@ -115,11 +115,15 @@ input::-webkit-input-placeholder {
   box-shadow: none;
 }
 
-.lynn_console_status_icon {
+span.lynn_console_status_icon {
   /* Consistent position on different sites */
   position: absolute;
   top: 11px;
+  right: 16px;
+
+  /* Lock icon size */
   font-size: 28px;
+  line-height: 28px;
 }
 
 
