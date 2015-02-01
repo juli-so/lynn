@@ -22,26 +22,31 @@
           "vendor/css/font-awesome.css"
         ],
         "js": [
+          "lib/jquery.min.js",
+          "lib/react.js",
           "lib/lodash.min.js",
+
           "bin/shared/lodash_mixin.js",
           "bin/shared/util.js",
 
-          "lib/jquery.min.js",
-          "lib/react.js",
+          "bin/shared/message.js",
+          "bin/shared/listener.js",
 
           "bin/content_script/hint.js",
           "bin/content_script/action/match_action.js",
+
           "bin/content_script/action/n_action.js",
           "bin/content_script/action/i_action.js",
           "bin/content_script/action/e_action.js",
           "bin/content_script/action/s_action.js",
           "bin/content_script/action/t_action.js",
-          "bin/content_script/message.js",
+
           "bin/content_script/handler.js",
-          "bin/content_script/listener.js",
+         
           "bin/content_script/react/component.js",
           "bin/content_script/react/block.js",
           "bin/content_script/react/lynn.js",
+
           "bin/content_script/main.js"
         ]
       }
@@ -55,10 +60,10 @@
 
         "bin/background/c_storage.js",
         "bin/background/wintab.js",
+        "bin/background/message.js",
         "bin/background/session.js",
         "bin/background/tag.js",
         "bin/background/action.js",
-        "bin/background/message.js",
         "bin/background/bookmark.js",
         "bin/background/rank.js",
         "bin/background/sync.js",
