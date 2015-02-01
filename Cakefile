@@ -1,15 +1,24 @@
 {exec, spawn} = require 'child_process'
+watch         = require 'watch'
+path          = require 'path'
+fs            = require 'fs'
 
 task 'build', 'building from src/ to bin/', ->
-  exec 'coffee -o bin --no-header -bc src', (err, stdout, stderr) ->
+  exec 'coffee -o bin --no-header -bc src', (err) ->
     throw err if err
     console.log 'Coffee: Lynn built'
-  exec 'coffee -o options/site/js --no-header -bc options/coffee', (err, stdout, stderr) ->
+  exec 'coffee -o options/site/js --no-header -bc options/coffee', (err) ->
     throw err if err
     console.log 'Coffee: options page built'
-  exec 'jade -o options/site/html -P options/jade', (err, stdout, stderr) ->
+  exec 'jade -o options/site/html -P options/jade', (err) ->
     throw err if err
     console.log 'Jade:   options page built'
+  fs.readdir 'options/less', (err, fArr) ->
+    throw err if err
+    fArr.forEach (f) ->
+      cssf = path.basename(f).replace('.less', '.css')
+      exec "lessc options/less/#{f} options/site/css/#{cssf}"
+    console.log 'Less:   options page built'
 
 task 'watch', 'watching src/ and build to bin/', ->
   coffeeProc = spawn 'coffee', '-o bin --no-header -bcw src'.split(' ')
@@ -27,11 +36,25 @@ task 'watch', 'watching src/ and build to bin/', ->
   jadeProc.stderr.on 'data', (data) -> process.stderr.write data
   jadeProc.on 'exit', (returnCode) -> process.exit returnCode
 
+  # First compilation
+  fs.readdir 'options/less', (err, fArr) ->
+    throw err if err
+    fArr.forEach (f) ->
+      cssf = path.basename(f).replace('.less', '.css')
+      exec "lessc options/less/#{f} options/site/css/#{cssf}"
+    console.log 'Less:   options page built'
+
+  watch.watchTree 'options/less', ignoreDotFiles: yes, (f) ->
+    if typeof f isnt 'object'
+      cssf = path.basename(f).replace('.less', '.css')
+      exec "lessc #{f} options/site/css/#{cssf}"
+      console.log "Less:   compiled #{f}"
+
+
 task 'clean', 'clean bin folder', ->
   exec 'rm -rf 
     bin/*
-    options/site/html
-    options/site/js',
+    options/site',
     (err, stdout, stderr) ->
       throw err if err
       console.log 'Done cleaning'
