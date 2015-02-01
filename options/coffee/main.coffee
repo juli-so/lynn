@@ -1,44 +1,25 @@
-save = ->
-  MAX_SUGGESTION_NUM = parseInt($('#MAX_SUGGESTION_NUM').val(), 10)
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Script for options page                                                      #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
 
-  option =
-    MAX_SUGGESTION_NUM: MAX_SUGGESTION_NUM
-
-  if isValid(option)
-    chrome.storage.sync.get 'option', (storObj) ->
-      option = _.assign(storObj.option || {}, option)
-      chrome.storage.sync.set { option }
-
-isValid = (option) ->
-  { MAX_SUGGESTION_NUM } = option
-  isValid =
-    MAX_SUGGESTION_NUM > 0
-
-  return isValid
-
-initTab = ->
+# Init menu callback so animation will play when menu items get clicked
+# Adapted from https://github.com/better-history/chrome-bootstrap
+initMenuAnimation = ->
   $('.menu a').click (ev) ->
     ev.preventDefault()
 
-    $('.mainview > *').removeClass('selected')
-    $('.menu li').removeClass('selected')
-    setTimeout (-> $('.mainview > *:not(.selected)').css('display', 'none')), 100
+    $('.selected').removeClass('selected')
 
     $(ev.currentTarget).parent().addClass('selected')
     currentView = $($(ev.currentTarget).attr('href'))
-    currentView.css('display', 'block')
-    setTimeout (-> currentView.addClass('selected')), 0
+    currentView.show()
+    currentView.addClass('selected')
 
 $(->
-  # Initiation
-  initTab()
+  initMenuAnimation()
 
-  chrome.storage.sync.get null, (storObj) ->
-    React.renderComponent Dashboard({ storObj }),
-      $('#dashboard_container')[0]
-
-    $('#MAX_SUGGESTION_NUM').val(storObj.option['MAX_SUGGESTION_NUM'])
-
-  $('#save').click ->
-    save()
+  chrome.storage.local.get ['option', 'state'], (storObj) ->
+    React.renderComponent(Dashboard(storObj), $('#dashboard_container')[0])
 )
