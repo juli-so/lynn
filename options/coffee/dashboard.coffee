@@ -3,11 +3,28 @@
 
 Dashboard = React.createClass
   render: ->
+    console.log @props
+
     div id: 'dashboard_content',
-      h2 null, 'Custom Setting'
+      div null,
+        h2 null, 'Bookmark Stats'
+
+        p null, "Total bookmark count: #{@props.stats.bmAmount}"
+        p null, "#{@props.stats.tagBmAmount} tagged,
+                 around #{@props.stats.tagPercent}%"
+        p null, "#{@props.stats.noTagBmAmount} not tagged, 
+                 around #{@props.stats.noTagPercent}%"
+
+        div className: 'five-rand',
+          span className: 'five-rand-hint', 'Five random bookmarks to explore: '
+          ul null,
+            _.map @props.stats.fiveRandBm, (bm) ->
+              li null,
+                a href: bm.url, bm.title
+
 
       div null,
-        h3 null, 'Auto-tagging'
+        h2 null, 'Auto-tagging'
         ul null,
           _.map @props.state.autoTaggingMap, (autoTagRecord, tagName) ->
             if autoTagRecord.matchProp is 'hostname'
@@ -23,18 +40,18 @@ Dashboard = React.createClass
               p null, tagName
 
       div null,
-        h3 null, 'Sessions'
+        h2 null, 'Sessions'
         _.map @props.state.sessionMap, (sessionRecord, sessionName) ->
           div null, ':', sessionName, ' to invoke: ',
             if sessionRecord.type is 'window'
-              ul { className: 'dash-list' },
+              ul className: 'dash-list',
                 _.map sessionRecord.session, (node) ->
                   li null,
-                    a { href: node.url }, node.title
+                    a href: node.url, node.title
             else
               ul null,
                 _.map sessionRecord.session, (nodeArray) ->
-                  ul { className: 'dash-list' },
+                  ul className: 'dash-list',
                     _.map nodeArray, (node) ->
                       li null,
-                        a { href: node.url }, node.title
+                        a href: node.url, node.title

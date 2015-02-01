@@ -161,3 +161,7 @@ Action =
     tabArr: WinTab.g_allTabArr()
     currentWinTabArr: WinTab.g_currWinTabArr()
 
+  stats: (msg) ->
+    res: 'stats'
+    stats: Bookmark.stats()
+

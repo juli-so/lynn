@@ -255,4 +255,22 @@ Bookmark =
 
     CStorage.setState('lastDeletedNodeArr', lastDeletedNodeArr)
 
+  # ------------------------------------------------------------
+  # Stats for options page
+  # ------------------------------------------------------------
+
+  stats: ->
+    bmAmount = _.keys(@allNode).length
+    tagBmAmount = (_.filter @allNode, (node) -> node.tagArr.length > 0).length
+    noTagBmAmount = bmAmount - tagBmAmount
+    tagPercent= _.toTwoDec(tagBmAmount / bmAmount * 100)
+    noTagPercent = 100 - tagPercent
+    fiveRandBm = _.flatten(_.times 5, => _.randPopFromArr(_.values(@allNode)))
+
+    { bmAmount, tagBmAmount, noTagBmAmount,
+      tagPercent, noTagPercent,
+      fiveRandBm }
+
+
+
 

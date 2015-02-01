@@ -17,9 +17,17 @@ initMenuAnimation = ->
     currentView.show()
     currentView.addClass('selected')
 
-$(->
+$ ->
   initMenuAnimation()
 
-  chrome.storage.local.get ['option', 'state'], (storObj) ->
-    React.renderComponent(Dashboard(storObj), $('#dashboard_container')[0])
-)
+  Message.init()
+  Listener.init()
+
+  Listener.listenOnce 'stats', {}, (msg) ->
+    chrome.storage.local.get ['option', 'state'], (storObj) ->
+      React.renderComponent(
+        Dashboard(
+          option: storObj.option
+          state:  storObj.state
+          stats:  msg.stats
+        ), $('#dashboard_container')[0])

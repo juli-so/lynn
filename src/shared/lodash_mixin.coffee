@@ -28,6 +28,13 @@ MixinObj =
   clearArr: (arr) ->
     while(arr.length > 0)
       arr.pop()
+
+  # Pick a random item from array and remove it
+  randPopFromArr: (arr) ->
+    _.pullAt(arr, Math.floor(Math.random() * arr.length))
+
+  toTwoDec: (num) ->
+    parseFloat (Math.round(num * 100) / 100).toFixed(2)
   
 # Currify and mixin
 

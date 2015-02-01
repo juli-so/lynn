@@ -1,4 +1,4 @@
-$(->
+$ ->
   Message.init()
   Listener.init()
 
@@ -7,4 +7,3 @@ $(->
   $('body').prepend($mountPoint)
 
   React.renderComponent Lynn(), $mountPoint[0]
-)
