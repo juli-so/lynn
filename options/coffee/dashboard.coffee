@@ -3,8 +3,6 @@
 
 Dashboard = React.createClass
   render: ->
-    console.log @props
-
     div id: 'dashboard_content',
       div null,
         h2 null, 'Bookmark Stats'
