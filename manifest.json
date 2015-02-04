@@ -24,7 +24,7 @@
         "js": [
           "lib/jquery.min.js",
           "lib/react.js",
-          "lib/lodash.src.js",
+          "lib/lodash.js",
 
           "bin/shared/lodash_mixin.js",
           "bin/shared/util.js",
@@ -54,7 +54,7 @@
 
     "background": {
       "scripts": [
-        "lib/lodash.src.js",
+        "lib/lodash.js",
         "bin/shared/lodash_mixin.js",
         "bin/shared/util.js",
 
