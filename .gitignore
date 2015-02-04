@@ -1,9 +1,8 @@
 .*
 
 bin/
-tmp/
 tags
-bower_components/
 node_modules/
-vendor/
+
 options/site
+
