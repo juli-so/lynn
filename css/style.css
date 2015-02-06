@@ -146,6 +146,11 @@ span.lynn_console_status_icon {
   -webkit-animation-duration: 0.2s;
 }
 
+/* Prevent font being overridden */
+#lynn_mid span.lynn_title, #lynn_mid span.lynn_tag {
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+}
+
 .lynn_suggestion_selected {
   background-color: lightgray;
 }
