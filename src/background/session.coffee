@@ -10,7 +10,7 @@ Session =
     sessionRecord = _.find sessionMap, (s, sName) ->
       _.ciStartsWith(sName, input)
 
-    sessionRecord || []
+    sessionRecord
 
   storeWin: (sessionName, cb) ->
     sessionMap = CStorage.getState('sessionMap')
@@ -24,7 +24,7 @@ Session =
 
   storeAll: (sessionName, cb) ->
     sessionMap = CStorage.getState('sessionMap')
-    allTabArr = Win.g_allTabArr()
+    allTabArr = WinTab.g_allTabArr()
     session = _.values(_.groupBy(allTabArr, 'windowId'))
 
     sessionMap[sessionName] =

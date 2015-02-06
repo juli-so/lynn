@@ -174,6 +174,14 @@ Bookmark =
   find: (query, pool = @allNode) ->
     return [] if _.isEmpty(query)
 
+    if _.startsWith(query, '$')
+      sQuery = query[1..]
+      sessionRecord = Session.search(sQuery)
+      
+      if sessionRecord
+        nodeArr = Util.tabToNode(_.flatten(sessionRecord.session))
+        return @tagify(nodeArr)
+
     # When query is just '#' or '@'
     # Show all bookmarks with any of these kinds of tags
     if query is '#' or query is '@'
@@ -271,6 +279,16 @@ Bookmark =
       tagPercent, noTagPercent,
       fiveRandBm }
 
+  # ------------------------------------------------------------
+  # Others
+  # ------------------------------------------------------------
 
+  # Make a nodeArr tagged by matching URL with stored bookmarks
+  tagify: (nodeArr) ->
+    allUrl = _.pluck(@allNode, 'url')
 
-
+    _.map nodeArr, (node) =>
+      node = Util.tabToNode(node)
+      if node.url in allUrl
+        node.tagArr = _.values(@fbURL(node.url))[0].tagArr
+      node

@@ -81,6 +81,10 @@ Action =
 
     Bookmark.storeTag()
 
+  tagify: (msg) ->
+    res: 'tagify'
+    nodeArr: Bookmark.tagify(msg.nodeArr)
+
   # ------------------------------------------------------------
   # Sessions
   # ------------------------------------------------------------
@@ -164,4 +168,3 @@ Action =
   stats: (msg) ->
     res: 'stats'
     stats: Bookmark.stats()
-

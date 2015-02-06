@@ -253,7 +253,8 @@ I_Action =
         url: tab.url
         tagArr: []
 
-      @setState { nodeArr }
+      Listener.listenOnce 'tagify', { nodeArr }, (msg) =>
+        @setState { nodeArr: msg.nodeArr }
 
   storeChromeSession: ->
     @callAction('n_storeCache')
@@ -268,7 +269,8 @@ I_Action =
         url: tab.url
         tagArr: []
 
-      @setState { nodeArr }
+      Listener.listenOnce 'tagify', { nodeArr }, (msg) =>
+        @setState { nodeArr: msg.nodeArr }
 
   removeSession: ->
     @callAction('n_storeCache')
@@ -278,12 +280,10 @@ I_Action =
       input: ''
 
     Listener.listen 'searchSession', (msg) =>
-      if msg.sessionRecord.type is 'window'
-        @setState
-          nodeArr: msg.sessionRecord.session
-      else
-        @setState
-          nodeArr: _.flatten(msg.sessionRecord.session)
+      nodeArr = _.flatten(msg.sessionRecord.session)
+
+      Listener.listenOnce 'tagify', { nodeArr }, (msg) =>
+        @setState { nodeArr: msg.nodeArr }
 
   # ------------------------------------------------------------
   # Tag

@@ -45,7 +45,11 @@ nodeLog = (nodeArrOrObject) ->
     c.group("Bookmark " + node.id)
     c.log("%c" + pad(node.title, 2), "font-weight: bold")
     c.log("%c" + pad(node.url  , 2), "font-weight: bold")
-    logNodeTag(node, 2)
+    if node.tagArr
+      logNodeTag(node, 2)
+    else
+      log("%c" + pad('∅', 2), "color: red")
+
     c.groupEnd()
   )
 
