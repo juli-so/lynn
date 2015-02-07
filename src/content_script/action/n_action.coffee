@@ -436,7 +436,7 @@ N_Action =
 
     beforeCaretArr = beforeCaret.split(' ')
 
-    spaceTokenNum = (_.last beforeCaretArr, (s) ->
+    spaceTokenNum = (_.takeRightWhile beforeCaretArr, (s) ->
       s is ""
     ).length
 
@@ -454,7 +454,7 @@ N_Action =
 
     afterCaretArr = afterCaret.split(' ')
 
-    spaceTokenNum = (_.first afterCaretArr, (s) ->
+    spaceTokenNum = (_.takeWhile afterCaretArr, (s) ->
       s is ""
     ).length
 
@@ -475,7 +475,7 @@ N_Action =
 
     beforeCaretArr = beforeCaret.split(' ')
 
-    spaceTokenNum = (_.last beforeCaretArr, (s) ->
+    spaceTokenNum = (_.takeRightWhile beforeCaretArr, (s) ->
       s is ""
     ).length
 
@@ -498,12 +498,10 @@ N_Action =
 
     afterCaretArr = afterCaret.split(' ')
 
-    spaceTokenNum = (_.first afterCaretArr, (s) ->
+    spaceTokenNum = (_.takeWhile afterCaretArr, (s) ->
       s is ""
     ).length
 
-    console.log afterCaretArr
-    console.log spaceTokenNum
     input = beforeCaret + afterCaretArr[spaceTokenNum + 1...].join(' ')
 
     @setState { input }
