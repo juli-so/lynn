@@ -5,11 +5,8 @@
 # ---------------------------------------------------------------------------- #
 
 MixinObj =
-  startsWith: (str, start) ->
-    str.lastIndexOf(start, 0) is 0
-
   ciStartsWith: (str, start) ->
-    @startsWith(str.toLowerCase(), start.toLowerCase())
+    _.startsWith(str.toLowerCase(), start.toLowerCase())
 
   ciEquals: (s1, s2) ->
     s1.toLowerCase() is s2.toLowerCase()
