@@ -13,8 +13,24 @@ Action =
   # ------------------------------------------------------------
 
   search: (msg) ->
-    res: 'search'
-    result: Bookmark.find(msg.input)
+    query = msg.input
+
+    if _.startsWith(query, '$')
+      sQuery = query[1..]
+      sessionRecord = Session.search(sQuery)
+      
+      if sessionRecord
+        nodeArr = Util.tabToNode(_.flatten(sessionRecord.session))
+        res: 'search'
+        result: Bookmark.tagify(nodeArr)
+        sName: sessionRecord.name
+      else
+        res: 'search'
+        result: []
+
+    else
+      res: 'search'
+      result: Bookmark.find(msg.input)
   
   # ------------------------------------------------------------
 

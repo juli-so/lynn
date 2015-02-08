@@ -24,6 +24,8 @@ Top = React.createClass
         size: '80'
         readOnly: true
 
+        value: @props.hint
+
       input
         ref: 'lynn_console'
       

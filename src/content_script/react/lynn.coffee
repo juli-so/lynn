@@ -10,6 +10,7 @@ Lynn = React.createClass
   getInitialState: ->
     visible: no
     input: ''
+    hint: ''
 
     mode: 'query' # query | fast | command
     # in special mode, mode and nodeArr change won't be triggered
@@ -42,7 +43,14 @@ Lynn = React.createClass
 
   componentWillMount: ->
     Listener.listen 'search', (message) =>
-      @setState nodeArr: message.result
+      if message.sName
+        @setState
+          nodeArr: message.result
+          hint: '$' + message.sName
+      else
+        @setState
+          nodeArr: message.result
+          hint: ''
 
     # ----------------------------------------------------------
     # Load & listen to background state & option
@@ -91,6 +99,7 @@ Lynn = React.createClass
         visible: @state.visible
 
         input: @state.input
+        hint: @state.hint
 
         mode: @state.mode
         specialMode: @state.specialMode

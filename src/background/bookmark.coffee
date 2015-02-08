@@ -174,14 +174,6 @@ Bookmark =
   find: (query, pool = @allNode) ->
     return [] if _.isEmpty(query)
 
-    if _.startsWith(query, '$')
-      sQuery = query[1..]
-      sessionRecord = Session.search(sQuery)
-      
-      if sessionRecord
-        nodeArr = Util.tabToNode(_.flatten(sessionRecord.session))
-        return @tagify(nodeArr)
-
     # When query is just '#' or '@'
     # Show all bookmarks with any of these kinds of tags
     if query is '#' or query is '@'

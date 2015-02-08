@@ -38,6 +38,7 @@ N_Action =
   reset: (clearCache = yes) ->
     @setState
       input: ''
+      hint: ''
 
       mode: 'query'
       specialMode: 'no'
@@ -59,6 +60,7 @@ N_Action =
     if @state.mode is 'query'
       @setState
         input: ''
+        hint: ''
 
         nodeArr: []
         selectedArr: []
@@ -120,6 +122,7 @@ N_Action =
   goQueryMode: ->
     @setState
       input: ''
+      hint: ''
       mode: 'query'
 
   # ------------------------------------------------------------

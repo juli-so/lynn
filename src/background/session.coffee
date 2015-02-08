@@ -7,16 +7,16 @@
 Session =
   search: (input) ->
     sessionMap = CStorage.getState('sessionMap')
-    sessionRecord = _.find sessionMap, (s, sName) ->
+    
+    _.find sessionMap, (s, sName) ->
       _.ciStartsWith(sName, input)
-
-    sessionRecord
 
   storeWin: (sessionName, cb) ->
     sessionMap = CStorage.getState('sessionMap')
     currentWinTabArr = WinTab.g_currWinTabArr()
 
     sessionMap[sessionName] =
+      name: sessionName
       type: 'window'
       session: currentWinTabArr
 
@@ -28,6 +28,7 @@ Session =
     session = _.values(_.groupBy(allTabArr, 'windowId'))
 
     sessionMap[sessionName] =
+      name: sessionName
       type: 'chrome'
       session: session
 
