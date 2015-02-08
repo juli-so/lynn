@@ -19,6 +19,12 @@ Top = React.createClass
 
     div { id: 'lynn_top' },
       input
+        id: 'lynn_console_hint'
+        type: 'text'
+        size: '80'
+        readOnly: true
+
+      input
         ref: 'lynn_console'
       
         id: 'lynn_console'
