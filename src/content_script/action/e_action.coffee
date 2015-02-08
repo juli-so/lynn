@@ -90,6 +90,8 @@ E_Action =
           @callAction(CommandMap[modifierString + command], [args, flags])
         else if @state.sessionMap[command]
           @callAction('n_openSession', [command, modifierString])
+        else if @state.sessionMap[@state.hint[1..]]
+          @callAction('n_openSession', [@state.hint[1..], modifierString])
 
   s_enter: ->
     @callAction('e_enter', ['s-'  ])

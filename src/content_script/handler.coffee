@@ -48,7 +48,19 @@ InputHandler =
         req: 'search'
         input: input
     else
-      @setState { input }
+      command = input[1..].split(' ')[0]
+      if not _.isEmpty(command)
+        sessionRecord = _.find @state.sessionMap, (s, sName) ->
+          _.startsWith(sName, command)
+
+      if not CommandMap[command] and sessionRecord
+        @setState
+          input: input
+          hint: ':' + sessionRecord.name
+      else
+        @setState
+          input: input
+          hint: ''
 
   # ------------------------------------------------------------
 
