@@ -137,7 +137,7 @@ Bookmark =
       @fbTitle(titleArr[0], ci, pool)
     else
       newPool = @fbTitle(titleArr.shift(), ci, pool)
-      @fbTitleArr(titleArr, newPool)
+      @fbTitleArr(titleArr, ci, newPool)
 
   fbURL: (url, ci = yes, pool = @allNode) ->
     if _.isEmpty(url)
