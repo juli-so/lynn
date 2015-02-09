@@ -1,0 +1,79 @@
+---
+# Front matter for Jekyll
+---
+
+/* Fonts */
+/* --------------------------------------------------------- */
+
+@font-face {
+  font-family: "Open Sans";
+  src: url('../fonts/OpenSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: "Open Sans Bold";
+  src: url('../fonts/OpenSans-Bold.ttf') format('truetype');
+}
+
+/* Base */
+/* --------------------------------------------------------- */
+
+body {
+  background-color: #fdfdfd;
+}
+
+/* Layout */
+/* --------------------------------------------------------- */
+.main {
+    max-width: 720px;
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    padding: 30px;
+}
+
+/* Github Markdown tweak */
+/* --------------------------------------------------------- */
+.markdown-body {
+  & {
+    color: #404040;
+  }
+
+  a         { color: #4772a3; text-decoration: none; }
+  a:hover   { color: #4772a3; text-decoration: none; }
+
+  h2 {
+    font-weight: normal;
+
+    margin-top: 40px;
+  }
+
+}
+
+/* Main */
+/* --------------------------------------------------------- */
+.header {
+  & {
+    margin-bottom: 48px;
+  }
+
+  h1 {
+    font-size: 46px;
+    font-weight: normal;
+  }
+
+  .subheading {
+    text-align: right;
+    font-size: 18px;
+    color: #444;
+  }
+
+  .subheading:before {
+    content: "——";
+    margin-right: 6px;
+  }
+}
+
+.mode {
+  text-align: center;
+}
