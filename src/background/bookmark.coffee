@@ -225,7 +225,8 @@ Bookmark =
       lastDeletedNodeArr = CStorage.getState('lastDeletedNodeArr')
       MAX_RECOVER_NUM    = CStorage.getOption('MAX_RECOVER_NUM')
 
-      lastDeletedNodeArr.unshift(@allNode[id])
+      clone = _.cloneDeep(@allNode[id])
+      lastDeletedNodeArr.unshift(clone)
       lastDeletedNodeArr = lastDeletedNodeArr[0...MAX_RECOVER_NUM]
       CStorage.setState('lastDeletedNodeArr', lastDeletedNodeArr)
 
