@@ -1,0 +1,239 @@
+/* Commonly used class */
+.hidden {
+  display: none;
+}
+
+.transparent {
+  opacity: 0;
+}
+
+#lynn {
+
+  /*
+   * Prevent rules being overridden
+   */
+
+  /* Explicitly set placeholder color */
+  input::-webkit-input-placeholder {
+    color: #bbb;
+  }
+
+  /* Remove input box border */
+  #lynn_console, #lynn_console_hint {
+    padding: 0;
+    margin: 0;
+
+    outline: none;
+    box-shadow: none;
+  }
+
+  #lynn_console input:focus, #lynn_console_hint input:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  /*
+   * Main CSS
+   */
+
+  /* Hide for less than 700px wide viewport */
+  @media (max-width: 600px) {
+    #lynn{
+      display: none;
+    }
+  }
+
+  #lynn_container {
+    width: 700px;
+  }
+
+  & {
+    /* Horizontal center & vertical offset */
+    position: fixed;
+
+    top: 10%;
+    width: 700px;
+    left: 50%;
+    margin-left: -350px;
+
+    /* Above everything */
+    z-index: 99999;
+
+    /* For fade in effect in animate.js */
+    -webkit-animation-duration: .2s;
+
+    /* Background */
+    background-color: #fff;
+
+    /* To make sure exactly 700px available for inner elements */
+    box-sizing: content-box;
+    border: 2px #ddd solid;
+
+    /* Default font */
+    font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+    color: black;
+
+    /* Default spacing */
+    line-height: normal;
+
+    /* Default alignment */
+    text-align: left;
+  }
+
+
+  /* lynn top */
+
+  #lynn_top {
+    height: 50px;
+  }
+
+  #lynn_console, #lynn_console_hint {
+    box-sizing: border-box;
+
+    width: 650px;
+    height: 50px;
+
+    padding-left: 20px;
+
+    /* Get rid of input border */
+    border: 0;
+
+    /* Input font */
+    font-family: inherit;
+    font-size: 20px;
+
+    /* Lock background */
+    background-color: #fff;
+
+  }
+
+  /* Create the hint effect */
+  #lynn_console {
+    position: relative;
+    z-index: 100000;
+
+    background: transparent;
+  }
+
+  #lynn_console_hint {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+
+    color: #999999;
+  }
+
+  span.lynn_console_status_icon {
+    /* Consistent position on different sites */
+    position: absolute;
+    top: 11px;
+    right: 16px;
+
+    /* Lock icon size */
+    font-size: 28px;
+    line-height: 28px;
+  }
+
+
+  /* lynn mid */
+
+  #lynn_mid {
+    border-top: 2px #ddd solid;
+  }
+
+  .lynn_suggestion {
+    color: #777;
+
+    padding: 13px 20px;
+
+    border-bottom: 2px #ddd solid;
+  }
+
+  /* Need an id here to prevent overriding */
+  #lynn_mid .lynn_suggestion {
+    -webkit-animation-duration: 0.2s;
+  }
+
+  /* Prevent font being overridden */
+  #lynn_mid span.lynn_title, #lynn_mid span.lynn_tag {
+    font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+  }
+
+  .lynn_suggestion_selected {
+    background-color: lightgray;
+  }
+
+  .lynn_suggestion_current {
+    background-color: lightblue;
+  }
+
+  .lynn_mainline {
+    font-size: 16px;
+  }
+
+  .lynn_tagline {
+    text-align: right;
+    font-size: 16px;
+
+    padding-top: 2px;
+  }
+
+  .lynn_tagline > span {
+    padding-left: 5px;
+  }
+
+  .lynn_tag {
+    color: green;
+  }
+
+  .lynn_suggested_tag {
+    color: gray;
+  }
+
+  .lynn_pending_tag {
+    color: red;
+  }
+
+  .lynn_special_tag {
+    color: blue;
+  }
+
+
+  /* lynn bot */
+
+  #lynn_bot {
+    height: 40px;
+
+    font-size: 14px;
+  }
+
+  #lynn_bot > span {
+    display: inline-block;
+    box-sizing: border-box;
+    vertical-align: top;
+
+    padding-top: 13px;
+  }
+
+  .lynn_bot_left {
+    width: 140px;
+
+    padding-left: 20px;
+  }
+
+  .lynn_bot_mid {
+    width: 460px;
+
+    text-align: center;
+  }
+
+  #lynn_bot .lynn_bot_right {
+    width: 100px;
+
+    text-align: right;
+
+    padding-right: 20px;
+  }
+
+}

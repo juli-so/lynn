@@ -7,6 +7,9 @@ task 'build', 'building from src/ to bin/', ->
   exec 'coffee -o bin --no-header -bc src', (err) ->
     throw err if err
     console.log 'Coffee: Lynn built'
+  exec 'lessc css/style.less css/style.css', (err) ->
+    throw err if err
+    console.log 'Less  : Lynn built'
   exec 'coffee -o options/site/js --no-header -bc options/coffee', (err) ->
     throw err if err
     console.log 'Coffee: options page built'
@@ -54,6 +57,7 @@ task 'watch', 'watching src/ and build to bin/', ->
 task 'clean', 'clean bin folder', ->
   exec 'rm -rf 
     bin/*
+    css/style.css
     options/site',
     (err, stdout, stderr) ->
       throw err if err
