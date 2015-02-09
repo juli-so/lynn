@@ -1,8 +1,9 @@
 .*
 
-bin/
-tags
-node_modules/
+css/style.css
 
+bin/
+node_modules/
 options/site
 
+tags
