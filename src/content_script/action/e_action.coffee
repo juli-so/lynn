@@ -17,7 +17,6 @@ CommandMap =
   'al'            : 'i_addLinkBookmark'
   'as'            : 'i_addSelectionBookmark'
 
-
   's'             : 'i_storeWinSession'
   'S'             : 'i_storeChromeSession'
   'rs'            : 'i_removeSession'
