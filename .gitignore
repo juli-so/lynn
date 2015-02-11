@@ -1,1 +1,11 @@
 _site/
+
+.*
+
+css/style.css
+
+bin/
+node_modules/
+options/site
+
+tags
