@@ -87,7 +87,7 @@ Bookmark =
   # ------------------------------------------------------------
   # Search
   #
-  # fb: find by
+  # fb = find by
   #
   # * All find returns an object { nodeId: node }
   # ------------------------------------------------------------
@@ -156,7 +156,7 @@ Bookmark =
 
   # ------------------------------------------------------------
   # Find by query
-  # Returns a ranked nodeArr
+  # Return a ranked nodeArr
   # ------------------------------------------------------------
 
   _allUniqTag: ->
@@ -179,34 +179,60 @@ Bookmark =
     if query is '#' or query is '@'
       prefix = query
 
-      _.filter pool, (node) ->
+      return _.filter pool, (node) ->
         _.any node.tagArr, (tag) ->
           _.startsWith(tag, prefix)
 
     # Process query and tokenize tag and keyword
+    if query[0] is '!'
+      strictSearch = yes
+      query = query[1..]
     else
-      tokenArr = query.split(' ')
-      kwArr  = []
-      tagArr = []
+      strictSearch = false
 
-      _.forEach tokenArr, (token) ->
+    tokenArr = query.split(' ')
+    kwArr  = []
+    tagArr = []
+
+    _.forEach tokenArr, (token) ->
+      # Filter out single "#"
+      if token isnt '#' and token isnt '@'
         if Util.isTag(token)
           tagArr.push(token)
         else
           kwArr.push(token)
 
-      # Find all entries that has at least one suggested tag
-      if not _.isEmpty(tagArr)
-        suggestedTagArr = _.uniq(_.flatten(_.map(tagArr, @_suggestTag.bind(@))))
+    console.log "kwArr: #{kwArr}"
+    console.log "tagArr: #{tagArr}"
 
-        return [] if _.isEmpty(suggestedTagArr)
+    # Find all entries that has at least one suggested tag
+    if not _.isEmpty(tagArr)
+      suggestedTagArr = _.uniq(_.flatten(_.map(tagArr, @_suggestTag.bind(@))))
 
-        result = _.values(@fbTitleArr(kwArr, yes, @fbTagRange(suggestedTagArr)))
+      return [] if _.isEmpty(suggestedTagArr)
 
+      # Strict search:
+      # Output bookmarks that contain all intersection tags
+      if strictSearch
+        intersection = _.intersection(tagArr, suggestedTagArr)
+        diff = _.difference(suggestedTagArr, intersection)
+        console.log "intersection: #{intersection}"
+        console.log "diff: #{diff}"
+
+        result = _.values(
+          @fbTitleArr(kwArr, yes, @fbTagArr(intersection, @fbTagRange(diff)))
+        )
+
+        nodeLog(Rank.rankStrict(kwArr, intersection, diff, result))
       else
-        result = _.values(@fbTitleArr(kwArr, yes, pool))
+        result = _.values(
+          @fbTitleArr(kwArr, yes, @fbTagRange(suggestedTagArr))
+        )
 
-      Rank.rank(kwArr, tagArr, result)
+    else
+      result = _.values(@fbTitleArr(kwArr, yes, pool))
+
+    Rank.rank(kwArr, tagArr, result)
 
   # ------------------------------------------------------------
   # Create / Remove / Recover

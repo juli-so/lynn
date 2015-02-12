@@ -6,7 +6,8 @@
 
 Util =
   isTag: (tag) ->
-    tag[0] is '#' or tag[0] is '@'
+    tag.length > 1 and
+      (tag[0] is '#' or tag[0] is '@')
 
   isntTag: (tag) ->
     not @isTag(tag)

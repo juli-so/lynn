@@ -3,6 +3,7 @@
 css/style.css
 
 bin/
+lib/
 node_modules/
 options/site
 

@@ -1,5 +1,12 @@
-# For all following methods
-# When they get called, their @ refer to Lynn
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+# Handler for input in different modes                                         #
+#                                                                              #
+# For all following methods                                                    #
+# When they get called, their @ refer to Lynn                                  #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
+
 InputHandler =
   default: (input) ->
     @setState { input }
@@ -110,6 +117,7 @@ InputHandler =
 
   # ------------------------------------------------------------
 
+  # When using '!', ignore suggested tags
   h_addBookmark: (input) ->
     useSuggestedTag = input[0] isnt '!'
 
