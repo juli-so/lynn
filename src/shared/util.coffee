@@ -5,9 +5,15 @@
 # ---------------------------------------------------------------------------- #
 
 Util =
+  # Look like a tag
+  # Used for checking whether input is valid in frontend
+  isLikeTag: (tag) ->
+    tag[0] is '#' or tag[0] is '@'
+
+  # '#' '@' tags with no text are not allowed
+  # Used for adding tags in backend
   isTag: (tag) ->
-    tag.length > 1 and
-      (tag[0] is '#' or tag[0] is '@')
+    tag.length > 1 and @isLikeTag(tag)
 
   isntTag: (tag) ->
     not @isTag(tag)
