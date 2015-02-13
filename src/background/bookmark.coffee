@@ -202,9 +202,6 @@ Bookmark =
         else
           kwArr.push(token)
 
-    console.log "kwArr: #{kwArr}"
-    console.log "tagArr: #{tagArr}"
-
     # Find all entries that has at least one suggested tag
     if not _.isEmpty(tagArr)
       suggestedTagArr = _.uniq(_.flatten(_.map(tagArr, @_suggestTag.bind(@))))
@@ -216,8 +213,6 @@ Bookmark =
       if strictSearch
         intersection = _.intersection(tagArr, suggestedTagArr)
         diff = _.difference(suggestedTagArr, intersection)
-        console.log "intersection: #{intersection}"
-        console.log "diff: #{diff}"
 
         result = _.values(
           @fbTitleArr(kwArr, yes, @fbTagArr(intersection, @fbTagRange(diff)))
