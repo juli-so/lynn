@@ -11,6 +11,11 @@
       "tabs"
     ],
 
+    "icons": {
+      "32":  "icon/lynn_32.png",
+      "128": "icon/lynn_128.png"
+    },
+
     "options_page": "options/site/html/main.html",
 
     "content_scripts": [
@@ -23,7 +28,7 @@
         ],
         "js": [
           "lib/jquery.min.js",
-          "lib/react.js",
+          "lib/react.min.js",
           "lib/lodash.js",
 
           "bin/shared/lodash_mixin.js",
