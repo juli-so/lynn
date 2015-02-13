@@ -73,7 +73,7 @@ InputHandler =
 
   s_tag: (input) ->
     tagArr = _.filter input.split(' '), (token) ->
-      Util.isLikeTag(token)
+      Util.isTag(token)
     nodeArr = @state.nodeArr
 
     if @hasNoSelection()
@@ -95,7 +95,7 @@ InputHandler =
 
   s_editTag: (input) ->
     tagArr = _.filter input.split(' '), (token) ->
-      Util.isLikeTag(token)
+      Util.isTag(token)
     nodeArr = @state.nodeArr
 
     if @hasNoSelection()
@@ -123,7 +123,7 @@ InputHandler =
 
     # '!' is also filtered when not using suggested tag
     tagArr = _.filter input.split(' '), (token) ->
-      Util.isLikeTag(token)
+      Util.isTag(token)
 
     # Make the current tags in input field shown on node
     nodeArr = @state.nodeArr

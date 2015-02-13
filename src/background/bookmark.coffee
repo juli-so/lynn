@@ -233,14 +233,12 @@ Bookmark =
   # Create / Remove / Recover
   # ------------------------------------------------------------
 
-  # Need to validate before adding tags
   create: (node, tagArr, parentId = '1') ->
     node = _.assign(node, { parentId })
 
     chrome.bookmarks.create node, (node) =>
+      node.tagArr = @allTag[node.id] = tagArr
       @allNode[node.id] = node
-      _.forEach tagArr, (tag) =>
-        @addTag(node.id, tag, no) if Util.isTag(tag)
       @storeTag()
     
   remove: (id) ->
