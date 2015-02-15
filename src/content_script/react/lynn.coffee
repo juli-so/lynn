@@ -94,7 +94,11 @@ Lynn = React.createClass
       className += 'animated ' + @state.animation
     className += ' hidden' unless @state.visible
 
-    div { id, className },
+    # Prevent font being overridden by :lang
+    # Prepare for i18n
+    lang = "en"
+
+    div { id, className, lang },
       Top
         visible: @state.visible
 
