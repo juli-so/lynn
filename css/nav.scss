@@ -1,0 +1,54 @@
+---
+# Front matter for Jekyll
+---
+
+/* Nav */
+/* --------------------------------------------------------- */
+#nav {
+  text-align: center;
+  margin-top: 80px;
+  margin-bottom: 20px;
+}
+
+#nav ul {
+  & {
+    display: inline;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  li {
+    & {
+      list-style: none;
+      display: inline;
+
+      margin: 20px;
+    }
+
+    a {
+      font-size: 20px;
+    }
+
+    a, a:focus, a:hover, a:visited {
+      text-decoration: none;
+    }
+
+    a, a:focus, a:visited {
+      color: #6f92ba;
+    }
+
+    a:hover {
+      color: #4772a3;
+    }
+  }
+
+  li.selected {
+    & {
+      padding-bottom: 2px;
+      border-bottom: 2px solid #4772a3;
+    }
+
+    a { color: #4772a3; }
+  }
+}
+

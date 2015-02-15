@@ -1,0 +1,46 @@
+---
+layout: default
+---
+
+<section id="home" class="view animated selected">
+
+  <h2>Lynn</h2>
+  <p>
+    A powerful Chrome extension offering tag support for bookmarks,
+    making it easy to manage bookmarks.
+  </p>
+
+  <h2>Feature</h2>
+  <ul>
+    <li>Find, open &amp; modify bookmarks easily with tags</li>
+    <li><b>Sublime</b>-like fuzzy search</li>
+    <li>Nearly all actions can be performed in bulk on multiple bookmarks</li>
+    <li><b>Vim</b>-like shortcuts</li>
+    <li>Group bookmarks into sessions to open altogether</li>
+    <li>Advanced feature like Markdown reference output &amp; selection multi-add bookmarks</li>
+  </ul>
+
+  <h2>Link</h2>
+  <p>
+  <a href="https://chrome.google.com/webstore/detail/lynn/addhcckhdjeddcehoelbklmanbpadggk"
+     target="_blank">
+    Chrome Store Download
+  </a>
+  </p>
+
+  <p>
+  <a href="https://github.com/octref/lynn" target="_blank">
+    Github Repo
+  </a>
+  </p>
+
+  <p>Videocast on the way</p>
+
+</section>
+
+{% for post in site.posts reversed %}
+<section id="{{ post.title }}" class="view animated">
+  <p>{{ post.content }}</p>
+</section>
+{% endfor %}
+

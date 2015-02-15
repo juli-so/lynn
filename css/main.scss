@@ -37,9 +37,10 @@ body {
 .markdown-body {
   & {
     color: #404040;
+    margin: 0 25px;
   }
 
-  a         { color: #4772a3; text-decoration: none; }
+  a         { color: #6f92ba; text-decoration: none; }
   a:hover   { color: #4772a3; text-decoration: none; }
 
   h2 {
@@ -76,4 +77,26 @@ body {
 
 .mode {
   text-align: center;
+}
+
+/* View */
+/* --------------------------------------------------------- */
+.view {
+  display: none;
+
+  -webkit-animation-duration: 0.5s;
+          animation-duration: 0.5s;
+}
+
+.selected {
+  display: block;
+}
+
+/* Doc */
+/* --------------------------------------------------------- */
+.mode table {
+  display: table;
+  width: 400px;
+  margin: 0 auto;
+  margin-bottom: 40px;
 }
