@@ -1,6 +1,6 @@
 .*
 
-css/style.css
+css/*.css
 
 bin/
 dist/

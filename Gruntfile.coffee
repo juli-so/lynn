@@ -65,7 +65,7 @@ module.exports = (grunt) ->
           atBegin: yes
 
       less_main:
-        files: ['css/style.less']
+        files: ['css/*.less']
         tasks: ['less:main']
         options:
           atBegin: yes
