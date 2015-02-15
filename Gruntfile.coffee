@@ -102,7 +102,7 @@ module.exports = (grunt) ->
         ]
 
     # ----------------------------------------------------------
-    # Clean
+    # Publish
     # ----------------------------------------------------------
     copy:
       dist:
@@ -119,13 +119,25 @@ module.exports = (grunt) ->
             'manifest.json'
           ]
         ]
-  
+
+    compress:
+      main:
+        options:
+          archive: 'lynn.zip'
+          pretty: yes
+        files: [
+          expand: yes
+          src: "**/*"
+          cwd: "dist"
+        ]
+
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-less')
   grunt.loadNpmTasks('grunt-contrib-jade')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-copy')
+  grunt.loadNpmTasks('grunt-contrib-compress')
 
   # Rename to resolve conflict
   grunt.task.renameTask('watch', 'g_watch')
@@ -134,7 +146,7 @@ module.exports = (grunt) ->
   grunt.registerTask('default', ['coffee', 'jade', 'less'])
   grunt.registerTask('watch', ['g_watch'])
   grunt.registerTask('clean', ['g_clean'])
-  grunt.registerTask('pub', ['copy'])
+  grunt.registerTask('pub', ['copy', 'compress'])
 
   grunt.event.on 'watch', (action, filepath, target) ->
     grunt.log.writeln(target + ':' + filepath + ' has ' + action)
