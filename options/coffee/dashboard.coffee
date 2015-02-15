@@ -21,21 +21,23 @@ Dashboard = React.createClass
                 a href: bm.url, bm.title
 
 
-      div null,
-        h2 null, 'Auto-tagging'
-        ul null,
-          _.map @props.state.autoTaggingMap, (autoTagRecord, tagName) ->
-            if autoTagRecord.matchProp is 'hostname'
-              if autoTagRecord.matchType is 'exact'
-                prereq = 'If hostname is exactly ' + autoTagRecord.matchStr
-              else
-                prereq = 'If hostname contains ' + autoTagRecord.matchStr
-            else
-              prereq = 'If bookmark title contains ' + autoTagRecord.matchStr
+#     # Disable temporarily, pub when option can be set
+#     div null,
+#       h2 null, 'Auto-tagging'
+#       ul null,
+#         _.map @props.state.autoTaggingMap, (autoTagRecord, tagName) ->
+#           if autoTagRecord.matchProp is 'hostname'
+#             if autoTagRecord.matchType is 'exact'
+#               prereq = 'If hostname is exactly ' + autoTagRecord.matchStr
+#             else
+#               prereq = 'If hostname contains ' + autoTagRecord.matchStr
+#           else
+#             prereq = 'If bookmark title contains ' + autoTagRecord.matchStr
 
-            autoTagDescription = prereq + ' -> '
-            li null, autoTagDescription,
-              p null, tagName
+#           autoTagDescription = prereq + ' -> '
+#           li null, autoTagDescription,
+#             p null, tagName
+
 
       div null,
         h2 null, 'Sessions'
