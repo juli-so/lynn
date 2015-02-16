@@ -18,7 +18,7 @@ I_Action =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (msg) =>
-      node = Util.tabToNode(msg.current)
+      node = Util.tabToNode(msg.currTab)
 
       @setState { nodeArr: [node] }
 
@@ -34,7 +34,7 @@ I_Action =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (msg) =>
-      nodeArr = Util.tabToNode(msg.tabArr)
+      nodeArr = Util.tabToNode(msg.allTabArr)
 
       @setState { nodeArr }
 
@@ -53,8 +53,7 @@ I_Action =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (msg) =>
-      currentWinTabArr = msg.currentWinTabArr
-      nodeArr = Util.tabToNode(currentWinTabArr)
+      nodeArr = Util.tabToNode(msg.currWinTabArr)
       selectedArr = [0...nodeArr.length]
 
       @setState { nodeArr, selectedArr }
@@ -74,7 +73,7 @@ I_Action =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (msg) =>
-      nodeArr = Util.tabToNode(msg.tabArr)
+      nodeArr = Util.tabToNode(msg.allTabArr)
       selectedArr = [0...nodeArr.length]
 
       @setState { nodeArr, selectedArr }
@@ -246,9 +245,11 @@ I_Action =
       specialMode: 'storeWinSession'
       input: ''
 
+    # Visually display nodes, but save tabs to session
     Listener.listenOnce 'queryTab', {}, (msg) =>
-      currentWinTabArr = msg.currentWinTabArr
-      nodeArr = _.map currentWinTabArr, (tab) ->
+      @setActionTmp('currWinTabArr', msg.currWinTabArr)
+
+      nodeArr = _.map msg.currWinTabArr, (tab) ->
         title: tab.title
         url: tab.url
         tagArr: []
@@ -263,8 +264,13 @@ I_Action =
       specialMode: 'storeChromeSession'
       input: ''
 
+    # Visually display nodes, but save tabs to session
     Listener.listenOnce 'queryTab', {}, (msg) =>
-      nodeArr = _.map msg.tabArr, (tab) ->
+      @setActionTmp
+        currWinId: msg.currTab.windowId
+        allTabArr: msg.allTabArr
+
+      nodeArr = _.map msg.allTabArr, (tab) ->
         title: tab.title
         url: tab.url
         tagArr: []

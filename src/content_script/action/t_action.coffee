@@ -27,12 +27,11 @@ T_Action =
         selectedArr: [0...nodeArr.length]
 
   postHN: ->
-    Listener.listenOnce 'queryTab', {}, (message) =>
+    Listener.listenOnce 'queryTab', {}, (msg) =>
       node = Util.tabToNode(message.current)
 
       url = "http://news.ycombinator.com/submitlink?u=#{node.url}&t=#{node.title}"
-      
-      console.log url
+
       Message.postMessage
         req: 'open'
         option:

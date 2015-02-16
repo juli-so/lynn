@@ -163,10 +163,24 @@ S_Action =
     sessionName = @state.input.split(' ')[0]
 
     if not _.isEmpty(sessionName) and not CommandMap[sessionName]
-      Listener.listenOnce 'storeWinSession', { sessionName }, (message) =>
+      tabArr = @state.actionTmp['currWinTabArr']
+      Listener.listenOnce 'storeWinSession', { sessionName, tabArr }, (message) =>
         Message.postMessage { req: 'getState' }
 
         @callAction('n_hide')
+
+  storeChromeSession: ->
+    sessionName = @state.input.split(' ')[0]
+
+    if not _.isEmpty(sessionName) and not CommandMap[sessionName]
+      tabArr    = @state.actionTmp['allTabArr']
+      currWinId = @state.actionTmp['currWinId']
+
+      msgObj = { sessionName, tabArr, currWinId }
+      Listener.listenOnce 'storeChromeSession', msgObj, (message) =>
+          Message.postMessage { req: 'getState' }
+
+          @callAction('n_hide')
 
   removeSession: ->
     sessionName = @state.input.split(' ')[0]
@@ -176,15 +190,6 @@ S_Action =
         Message.postMessage { req: 'getState' }
 
         Listener.stopListen('searchSession')
-
-        @callAction('n_hide')
-
-  storeChromeSession: ->
-    sessionName = @state.input.split(' ')[0]
-
-    if not _.isEmpty(sessionName) and not CommandMap[sessionName]
-      Listener.listenOnce 'storeChromeSession', { sessionName }, (message) =>
-        Message.postMessage { req: 'getState' }
 
         @callAction('n_hide')
 

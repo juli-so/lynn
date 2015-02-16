@@ -7,19 +7,16 @@
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 #                                                                              #
-# Note: Do not use chrome.windows.getCurrent to get current window.            #
-# From https://developer.chrome.com/extensions/windows                         #
+# Note: Do not use chrome.windows.getCurrent to get current window             #
+#                  chrome.tabs.getCurrent    to get current tab                #
 #                                                                              #
-#   The current window is the window that contains the code that is currently  #
-#   executing. It's important to realize that this can be different from the   #
-#   topmost or focused window.                                                 #
+#   The current window/tab is the window/tab that contains the code that is    #
+#   currently executing. It's important to realize that this can be different  #
+#   from the topmost or focused window/tab.                                    #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
 WinTab =
-  winArr: []
-  currWin: {}
-
   # ------------------------------------------------------------
   # Helper
   # ------------------------------------------------------------
@@ -31,80 +28,50 @@ WinTab =
   _isNCWin: (window) ->
     _.any(window.tabs, @_isNCTab)
 
-  _g_NCWinArr: ->
-    _.filter(@winArr, @_isNCWin)
-
-  _c_g_AllWin: (cb) ->
-    chrome.windows.getAll { populate: yes }, (winArr) -> cb(winArr)
-
-  _update: (winArr) ->
-    @winArr = winArr
-    @currWin = _.find(winArr, 'focused')
-
   # ------------------------------------------------------------
-  # Init & Listen
+  # Tab Getter
   # ------------------------------------------------------------
 
-  init: ->
-    @_c_g_AllWin (winArr) =>
-      @_update()
-      @listen()
+  getCurrTab: (cb) ->
+    chrome.tabs.query { currentWindow: yes }, (tabArr) ->
+      cb(_.find(tabArr, 'active'))
 
-  listen: ->
-    c_win = chrome.windows
-    c_tab = chrome.tabs
+  getAllTab: (NC = yes, cb = _.noop) ->
+    chrome.windows.getAll { populate: yes }, (winArr) =>
+      currWin = _.find(winArr, 'focused')
+      currTab = _.find(currWin.tabs, 'active')
 
-    # ----------------------------------------------------------
-    # Window events
-    # ----------------------------------------------------------
+      # Tabs in currWin always go first
+      orderedWinArr = _.without(winArr, currWin)
+      orderedWinArr.unshift(currWin)
 
-    c_win.onCreated.addListener (win) =>
-      @_c_g_AllWin(@_update)
+      allTabArr        = _.flatten(_.pluck(orderedWinArr, 'tabs'))
+      currWinTabArr    = currWin.tabs
+      nonCurrWinTabArr = _.difference(allTabArr, currWinTabArr)
 
-    # Will not be triggered if the removed window is the last one
-    c_win.onRemoved.addListener (winId) =>
-      @_c_g_AllWin(@_update)
+      # Filter out loading pages
+      loadingComplete  = (tab) -> tab.status is 'complete'
+      allTabArr        = _.filter(allTabArr,        loadingComplete)
+      currWinTabArr    = _.filter(currWinTabArr,    loadingComplete)
+      nonCurrWinTabArr = _.filter(nonCurrWinTabArr, loadingComplete)
 
-    c_win.onFocusChanged.addListener (winId) =>
-      @_c_g_AllWin(@_update)
+      if NC
+        allTabArr        = _.filter(allTabArr,        @_isNCTab)
+        currWinTabArr    = _.filter(currWinTabArr,    @_isNCTab)
+        nonCurrWinTabArr = _.filter(nonCurrWinTabArr, @_isNCTab)
 
-    # ----------------------------------------------------------
-    # Tab events
-    # ----------------------------------------------------------
+      cb({ currTab, allTabArr, currWinTabArr, nonCurrWinTabArr })
 
-    c_tab.onCreated.addListener (tab) =>
-      @_c_g_AllWin(@_update)
-
-    c_tab.onUpdated.addListener (tabId, changeInfo, tab) =>
-      @_c_g_AllWin(@_update)
-
-    c_tab.onRemoved.addListener (tab) =>
-      @_c_g_AllWin(@_update)
+  getCurrWinTabArr: (NC = yes, cb = _.noop) ->
+    chrome.tabs.query { currentWindow: yes, status: "complete" }, (tabArr) ->
+      tabArr = _.filter(tabArr, @_isNCTab) if NC
+      cb(tabArr)
 
   # ------------------------------------------------------------
-  # Getters
+  # Win Getter
   # ------------------------------------------------------------
 
-  g_currWinTabArr: (NC = yes) ->
-    if NC
-      _.filter(@currWin.tabs, @_isNCTab)
-    else
-      @currWin.tabs
 
-  # Even if currTab is a NC tab, return it.
-  g_currTab: ->
-    _.find(@g_currWinTabArr(no), 'active')
-
-
-  g_allTabArr: (NC = yes) ->
-    orderedWinArr = _.without(@winArr, @currWin)
-    orderedWinArr.unshift(@currWin)
-
-    allTabArr = _.flatten(_.pluck(orderedWinArr, 'tabs'))
-    if NC
-      _.filter(allTabArr, @_isNCTab)
-    else
-      allTabArr
-
+# Allow FP chaining
 _.bindAll(WinTab)
 

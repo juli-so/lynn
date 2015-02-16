@@ -11,21 +11,24 @@ Session =
     _.find sessionMap, (s, sName) ->
       _.ciStartsWith(sName, input)
 
-  storeWin: (sessionName, cb) ->
+  storeWin: (sessionName, tabArr, cb) ->
     sessionMap = CStorage.getState('sessionMap')
-    currentWinTabArr = WinTab.g_currWinTabArr()
 
     sessionMap[sessionName] =
       name: sessionName
       type: 'window'
-      session: currentWinTabArr
+      session: tabArr
 
     CStorage.setState('sessionMap', sessionMap, cb)
 
-  storeAll: (sessionName, cb) ->
+  storeAll: (sessionName, tabArr, currWinId, cb) ->
     sessionMap = CStorage.getState('sessionMap')
-    allTabArr = WinTab.g_allTabArr()
-    session = _.values(_.groupBy(allTabArr, 'windowId'))
+
+    tabArrGroups = _.groupBy(tabArr, 'windowId')
+    currWinTabArr = tabArrGroups[currWinId]
+    
+    session = _.without(_.values(tabArrGroups), currWinTabArr)
+    session.unshift(currWinTabArr)
 
     sessionMap[sessionName] =
       name: sessionName

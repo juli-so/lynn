@@ -41,6 +41,9 @@ Lynn = React.createClass
 
     sessionMap: {}
 
+    # A storage space used to pass items from I_Action to S_Action
+    actionTmp: {}
+
   componentWillMount: ->
     Listener.listen 'search', (message) =>
       if message.sName
@@ -148,6 +151,7 @@ Lynn = React.createClass
 
   # ------------------------------------------------------------
   # Helper functions for getting data
+  # ------------------------------------------------------------
 
   getCurrentNodeFullIndex: ->
     @state.currentPageIndex * @state.option.MAX_SUGGESTION_NUM +
@@ -201,6 +205,7 @@ Lynn = React.createClass
 
   # ------------------------------------------------------------
   # Helping functions for setting states
+  # ------------------------------------------------------------
 
   callAction: (actionName, args) ->
     ActionMatch.findAction(actionName).apply(@, args)
@@ -219,3 +224,22 @@ Lynn = React.createClass
     nodeArr = @state.nodeArr
     nodeArr[index] = node
     @setState { nodeArr }
+
+  # ------------------------------------------------------------
+  # Utilizing @state.actionTmp
+  # ------------------------------------------------------------
+
+  setActionTmp: (arg1, arg2) ->
+    if _.isObject(arg1)
+      assignObj = arg1
+    else
+      key = arg1
+      val = arg2
+      assignObj = {}
+
+      assignObj[key] = val
+
+    @setState { actionTmp: _.assign(@state.actionTmp, assignObj) }
+
+  clearActionTmp: () ->
+    @setState { actionTmp: {} }

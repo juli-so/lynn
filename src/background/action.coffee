@@ -110,10 +110,10 @@ Action =
     sessionRecord: Session.search(msg.input)
   
   storeWinSession: (msg, done) ->
-    Session.storeWin(msg.sessionName, done)
+    Session.storeWin(msg.sessionName, msg.tabArr, done)
 
   storeChromeSession: (msg, done) ->
-    Session.storeAll(msg.sessionName, done)
+    Session.storeAll(msg.sessionName, msg.tabArr, msg.currWinId, done)
 
   removeSession: (msg, done) ->
     Session.remove(msg.sessionName, done)
@@ -167,19 +167,16 @@ Action =
 
   # ------------------------------------------------------------
 
-  deleteCurrentPageBookmark: (msg) ->
-    res: 'deleteCurrentPageBookmark'
-    nodeArr: _.values(Bookmark.fbExactURL(WinTab.g_currTab().url))
+  deleteCurrentPageBookmark: (msg, done) ->
+    WinTab.getCurrTab (tab) ->
+      done({ nodeArr: _.values(Bookmark.fbExactURL(tab.url)) })
 
   # ------------------------------------------------------------
   # Others
   # ------------------------------------------------------------
 
-  queryTab: (msg) ->
-    res: 'queryTab'
-    current: WinTab.g_currTab()
-    tabArr: WinTab.g_allTabArr()
-    currentWinTabArr: WinTab.g_currWinTabArr()
+  queryTab: (msg, done) ->
+    WinTab.getAllTab(yes, done)
 
   stats: (msg) ->
     res: 'stats'
