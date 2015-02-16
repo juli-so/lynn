@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------------------- #
 #                                                                              #
-# Store window and tab info here for easier retrieval                          #
+# Helper for getting Win/Tab information from chrome                           #
 #                                                                              #
 # - NC = Non-Chrome                                                            #
 # - All WinTab methods are bound to itself for easier chaining                 #
@@ -70,6 +70,12 @@ WinTab =
   # ------------------------------------------------------------
   # Win Getter
   # ------------------------------------------------------------
+
+  getCurrWin: (cb) ->
+    chrome.windows.getCurrent({ populate: yes }, cb)
+
+  getAllWin: (cb) ->
+    chrome.windows.getAll({ populate: yes }, cb)
 
 
 # Allow FP chaining
