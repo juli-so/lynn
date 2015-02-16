@@ -34,7 +34,7 @@ I_Action =
       input: ''
 
     Listener.listenOnce 'queryTab', {}, (msg) =>
-      nodeArr = Util.tabToNode(msg.allTabArr)
+      nodeArr = Util.tabToNode(msg.currWinTabArr)
 
       @setState { nodeArr }
 
