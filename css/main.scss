@@ -20,6 +20,7 @@
 
 body {
   background-color: #fdfdfd;
+  overflow: scroll;
 }
 
 /* Layout */
@@ -83,6 +84,7 @@ body {
 /* --------------------------------------------------------- */
 .view {
   display: none;
+  overflow: auto;
 
   -webkit-animation-duration: 0.5s;
           animation-duration: 0.5s;
@@ -99,4 +101,16 @@ body {
   width: 400px;
   margin: 0 auto;
   margin-bottom: 40px;
+}
+
+/* Locale */
+#locale {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+
+  height: 32px;
+  width: 32px;
+
+  -webkit-animation-duration: 0.5s;
 }

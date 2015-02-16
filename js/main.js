@@ -1,5 +1,6 @@
 $(function() {
   
+  // Tab
   $('#nav ul li a').click(function(e) {
     e.preventDefault();
 
@@ -24,7 +25,22 @@ $(function() {
     }
   });
 
+  // Locale
+  $('#locale').click(function(e) {
+    e.preventDefault();
+
+    if ($('#nav a[href="#doc"]').length) {
+      $('#nav a[href="#doc"]').attr('href', '#doc-cn').click();
+    } else {
+      $('#nav a[href="#doc-cn"]').attr('href', '#doc').click();
+    }
+
+    var item = $(this);
+    item.addClass('flip');
+    setTimeout(function() {
+      item.removeClass('flip');
+    }, 500);
+
+  });
 });
-
-
 
