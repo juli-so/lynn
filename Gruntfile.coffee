@@ -145,7 +145,6 @@ module.exports = (grunt) ->
             'bin/background/action.js',
             'bin/background/bookmark.js',
             'bin/background/rank.js',
-            'bin/background/sync.js',
             'bin/background/log.js',
             'bin/background/main.js',
           ]
