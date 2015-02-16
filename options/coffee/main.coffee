@@ -23,11 +23,12 @@ $ ->
   Message.init()
   Listener.init()
 
-  Listener.listenOnce 'stats', {}, (msg) ->
-    chrome.storage.local.get ['option', 'state'], (storObj) ->
-      React.renderComponent(
-        Dashboard(
-          option: storObj.option
-          state:  storObj.state
-          stats:  msg.stats
-        ), $('#dashboard_container')[0])
+  Listener.listenOnce 'stats', {}, (statsMsg) ->
+    Listener.listenOnce 'getOption', {}, (optionMsg) ->
+      Listener.listenOnce 'getState', {}, (stateMsg) ->
+        React.renderComponent(
+          Dashboard(
+            option: optionMsg.option
+            state:  stateMsg.state
+            stats:  statsMsg.stats
+          ), $('#dashboard_container')[0])

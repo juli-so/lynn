@@ -103,7 +103,7 @@ module.exports = (grunt) ->
         ]
 
     # ----------------------------------------------------------
-    # Publish
+    # Post-processing
     # ----------------------------------------------------------
     copy:
       dist:
@@ -124,6 +124,49 @@ module.exports = (grunt) ->
         dest: 'dist/manifest.json'
 
     uglify:
+      dev:
+        files:
+          'js/shared.js': [
+            'bin/shared/lodash_mixin.js',
+            'bin/shared/util.js'
+          ]
+
+          'js/messaging.js': [
+            'bin/messaging/message.js',
+            'bin/messaging/listener.js'
+          ]
+
+          'js/background.js': [
+            'bin/background/c_storage.js',
+            'bin/background/wintab.js',
+            'bin/background/message.js',
+            'bin/background/session.js',
+            'bin/background/tag.js',
+            'bin/background/action.js',
+            'bin/background/bookmark.js',
+            'bin/background/rank.js',
+            'bin/background/log.js',
+            'bin/background/main.js',
+          ]
+
+          'js/content_script.js': [
+            'bin/content_script/hint.js',
+            'bin/content_script/action/match_action.js',
+
+            'bin/content_script/action/n_action.js',
+            'bin/content_script/action/i_action.js',
+            'bin/content_script/action/e_action.js',
+            'bin/content_script/action/s_action.js',
+            'bin/content_script/action/t_action.js',
+
+            'bin/content_script/handler.js',
+           
+            'bin/content_script/react/component.js',
+            'bin/content_script/react/block.js',
+            'bin/content_script/react/lynn.js',
+
+            'bin/content_script/main.js'
+          ]
       dist:
         files:
           'dist/js/shared.js': [
@@ -193,10 +236,10 @@ module.exports = (grunt) ->
   grunt.task.renameTask('watch', 'g_watch')
   grunt.task.renameTask('clean', 'g_clean')
 
-  grunt.registerTask('default', ['coffee', 'jade', 'less'])
+  grunt.registerTask('default', ['coffee', 'jade', 'less', 'uglify:dev'])
   grunt.registerTask('watch', ['g_watch'])
   grunt.registerTask('clean', ['g_clean'])
-  grunt.registerTask('pub', ['default', 'uglify', 'copy', 'compress'])
+  grunt.registerTask('dist', ['default', 'uglify:dist', 'copy', 'compress'])
 
   grunt.event.on 'watch', (action, filepath, target) ->
     grunt.log.writeln(target + ':' + filepath + ' has ' + action)

@@ -3,6 +3,7 @@
 css/*.css
 
 bin/
+js/
 dist/
 node_modules/
 options/site
