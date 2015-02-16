@@ -1,5 +1,6 @@
 { div, span, a, p, ol, ul, li } = React.DOM
 { h1, h2, h3, h4, h5, h6 }      = React.DOM
+{ hr }                          = React.DOM
 
 Dashboard = React.createClass
   render: ->
@@ -51,7 +52,7 @@ Dashboard = React.createClass
             else
               ul null,
                 _.map sessionRecord.session, (nodeArray) ->
-                  ul className: 'dash-list',
+                  ul className: 'dash-list', hr {},
                     _.map nodeArray, (node) ->
                       li null,
                         a href: node.url, node.title
