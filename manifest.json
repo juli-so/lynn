@@ -27,15 +27,15 @@
           "vendor/css/font-awesome.css"
         ],
         "js": [
+          "lib/lodash.js",
           "lib/jquery.min.js",
           "lib/react.min.js",
-          "lib/lodash.js",
 
           "bin/shared/lodash_mixin.js",
           "bin/shared/util.js",
 
-          "bin/shared/message.js",
-          "bin/shared/listener.js",
+          "bin/messaging/message.js",
+          "bin/messaging/listener.js",
 
           "bin/content_script/hint.js",
           "bin/content_script/action/match_action.js",
@@ -60,6 +60,7 @@
     "background": {
       "scripts": [
         "lib/lodash.js",
+
         "bin/shared/lodash_mixin.js",
         "bin/shared/util.js",
 

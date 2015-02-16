@@ -111,7 +111,6 @@ module.exports = (grunt) ->
           expand: yes
           dest: 'dist/'
           src: [
-            'bin/**',
             'lib/**',
             'vendor/**',
             'icon/**',
@@ -120,9 +119,58 @@ module.exports = (grunt) ->
             'manifest.json'
           ]
         ]
+      manifest:
+        src: 'manifest-dist.json'
+        dest: 'dist/manifest.json'
+
+    uglify:
+      dist:
+        files:
+          'dist/js/shared.js': [
+            'bin/shared/lodash_mixin.js',
+            'bin/shared/util.js'
+          ]
+
+          'dist/js/messaging.js': [
+            'bin/messaging/message.js',
+            'bin/messaging/listener.js'
+          ]
+
+          'dist/js/background.js': [
+            'bin/background/c_storage.js',
+            'bin/background/wintab.js',
+            'bin/background/message.js',
+            'bin/background/session.js',
+            'bin/background/tag.js',
+            'bin/background/action.js',
+            'bin/background/bookmark.js',
+            'bin/background/rank.js',
+            'bin/background/sync.js',
+            'bin/background/log.js',
+            'bin/background/main.js',
+          ]
+
+          'dist/js/content_script.js': [
+            'bin/content_script/hint.js',
+            'bin/content_script/action/match_action.js',
+
+            'bin/content_script/action/n_action.js',
+            'bin/content_script/action/i_action.js',
+            'bin/content_script/action/e_action.js',
+            'bin/content_script/action/s_action.js',
+            'bin/content_script/action/t_action.js',
+
+            'bin/content_script/handler.js',
+           
+            'bin/content_script/react/component.js',
+            'bin/content_script/react/block.js',
+            'bin/content_script/react/lynn.js',
+
+            'bin/content_script/main.js'
+          ]
 
     compress:
-      main:
+      dist:
         options:
           archive: 'lynn.zip'
           pretty: yes
@@ -131,6 +179,7 @@ module.exports = (grunt) ->
           src: "**/*"
           cwd: "dist"
         ]
+    
 
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-less')
@@ -139,6 +188,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-compress')
+  grunt.loadNpmTasks('grunt-contrib-uglify')
 
   # Rename to resolve conflict
   grunt.task.renameTask('watch', 'g_watch')
@@ -147,7 +197,7 @@ module.exports = (grunt) ->
   grunt.registerTask('default', ['coffee', 'jade', 'less'])
   grunt.registerTask('watch', ['g_watch'])
   grunt.registerTask('clean', ['g_clean'])
-  grunt.registerTask('pub', ['copy', 'compress'])
+  grunt.registerTask('pub', ['default', 'uglify', 'copy', 'compress'])
 
   grunt.event.on 'watch', (action, filepath, target) ->
     grunt.log.writeln(target + ':' + filepath + ' has ' + action)

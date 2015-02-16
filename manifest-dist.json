@@ -1,0 +1,54 @@
+{
+    "manifest_version": 2,
+
+    "name": "lynn",
+    "version": "0.1.2",
+    "description": "A bookmark app.",
+
+    "permissions": [
+      "bookmarks",
+      "storage",
+      "tabs"
+    ],
+
+    "icons": {
+      "32":  "icon/lynn_32.png",
+      "128": "icon/lynn_128.png"
+    },
+
+    "options_page": "options/site/html/main.html",
+
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "css": [
+          "css/style.css",
+          "vendor/css/animate.min.css",
+          "vendor/css/font-awesome.css"
+        ],
+        "js": [
+          "lib/lodash.js",
+          "lib/jquery.min.js",
+          "lib/react.min.js",
+
+          "js/shared.js",
+          "js/messaging.js",
+          "js/content_script.js"
+        ]
+      }
+    ],
+
+    "background": {
+      "scripts": [
+        "lib/lodash.js",
+
+        "js/shared.js",
+        "js/background.js"
+      ]
+    },
+
+    "web_accessible_resources": [
+      "vendor/font/fontawesome-webfont.woff",
+      "vendor/font/OpenSans-Regular-webfont.woff"
+    ]
+}
