@@ -167,7 +167,6 @@ I_Action =
           specialMode: 'addSelectionBookmark'
           selectedArr: [0...linkArr.length]
 
-        console.log linkArr
         _.forEach linkArr, (link, index) =>
           $.ajax
             url: link.href
