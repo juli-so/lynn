@@ -3,9 +3,10 @@ lynn
 
 Vim-like bookmarking wih tags.
 
+[Website](https://octref.github.io/lynn/)
+
 ### Status
 Preparing a videocast.  
-Around 5 bug fixes/features before publishing.  
 
 ### Try it
 You can access it here: [Chrome Store](https://chrome.google.com/webstore/detail/lynn/addhcckhdjeddcehoelbklmanbpadggk)
