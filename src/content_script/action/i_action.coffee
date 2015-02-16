@@ -286,6 +286,7 @@ I_Action =
       input: ''
 
     Listener.listen 'searchSession', (msg) =>
+      @setState { hint: msg.sessionRecord.name }
       nodeArr = _.flatten(msg.sessionRecord.session)
 
       Listener.listenOnce 'tagify', { nodeArr }, (msg) =>

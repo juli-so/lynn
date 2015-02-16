@@ -32,6 +32,7 @@ Lynn = React.createClass
 
     cache:
       input: ''
+      hint: ''
       nodeArr: []
       selectedArr: []
 

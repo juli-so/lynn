@@ -392,6 +392,7 @@ N_Action =
     @setState
       cache:
         input: ''
+        hint: ''
         nodeArr: []
         selectedArr: []
 
@@ -399,11 +400,13 @@ N_Action =
     if cache
       @setState
         input: cache.input
+        hint: cache.hint
         nodeArr: cache.nodeArr
         selectedArr: cache.selectedArr
     else
       @setState
         input: @state.cache.input
+        hint: @state.cache.hint
         nodeArr: @state.cache.nodeArr
         selectedArr: @state.cache.selectedArr
 
