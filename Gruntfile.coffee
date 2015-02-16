@@ -96,9 +96,10 @@ module.exports = (grunt) ->
         options:
           force: yes
         src: [
-          "bin/*",
+          "bin",
           "css/*.css",
-          "options/site/*"
+          "options/site",
+          "dist"
         ]
 
     # ----------------------------------------------------------
