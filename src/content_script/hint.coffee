@@ -18,6 +18,7 @@ Hint =
     'recoverBookmark'            : 'No need to enter anything'
 
     'deleteCurrentPageBookmark'  : 'Press Enter to confirm deletion'
+    'insertMarkDown'             : 'Enter link names here'
 
   botStringSpecialModeMap:
     'tag'                        : 'Tag'
@@ -37,3 +38,4 @@ Hint =
     'recoverBookmark'            : 'Recover deleted bookmarks'
 
     'deleteCurrentPageBookmark'  : 'Remove current page bookmark'
+    'insertMarkDown'             : 'Output as Markdown links'
