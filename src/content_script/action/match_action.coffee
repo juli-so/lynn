@@ -172,9 +172,9 @@ ActionMatch =
 
       # Selection
       'c-h':              'n_select'
-      'c-leftArrow':      'n_select'
+      'leftArrow':        'n_select'
       'c-l':              'n_unselect'
-      'c-rightArrow':     'n_unselect'
+      'rightArrow':       'n_unselect'
 
       'c-a':              'n_toggleAllSelectionInCurrentPage'
       'c-s-a':            'n_toggleAll'
