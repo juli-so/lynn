@@ -24,10 +24,10 @@
         "css": [
           "css/lynn.css",
           "vendor/css/animate.min.css",
-          "vendor/css/font-awesome.css"
+          "vendor/css/font-awesome.min.css"
         ],
         "js": [
-          "lib/lodash.js",
+          "lib/lodash.min.js",
           "lib/jquery.min.js",
           "lib/react.min.js",
 
@@ -40,7 +40,7 @@
 
     "background": {
       "scripts": [
-        "lib/lodash.js",
+        "lib/lodash.min.js",
 
         "js/shared.js",
         "js/background.js"
