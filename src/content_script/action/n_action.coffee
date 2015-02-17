@@ -13,7 +13,7 @@ N_Action =
   # App-wise actions
   # ------------------------------------------------------------
 
-  hide: (clearCache = yes) ->
+  hide: (clearCache = yes, clearActionTmp = yes) ->
     @setState { animation: 'fadeOutUp' }
 
     timeOutFunc = =>
@@ -35,7 +35,7 @@ N_Action =
 
   # ------------------------------------------------------------
 
-  reset: (clearCache = yes) ->
+  reset: (clearCache = yes, clearActionTmp = yes) ->
     @setState
       input: ''
       hint: ''
@@ -55,6 +55,7 @@ N_Action =
       currentPageIndex: 0
 
     @callAction('n_clearCache') if clearCache
+    @clearActionTmp() if clearActionTmp
 
   clearInput: ->
     if @state.mode is 'query'

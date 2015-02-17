@@ -202,17 +202,17 @@ S_Action =
       node = @state.nodeArr[0]
       mdText = "[#{@state.input}](#{node.url})"
     else
-      # Comma separated style
-      if @state.input is ''
-        mdTextArr = _.map @state.nodeArr, (node, index) ->
-          node.title + ":\n" + "[#{index + 1}]: #{node.url}"
-        mdText = mdTextArr.join('\n')
-
       # Reference style list
+      if _.contains(@state.actionTmp['flags'], '-r')
+        mdTextArr = _.map @state.nodeArr, (node, index) ->
+          "[#{index + 1}]: #{node.url}"
+        mdText = mdTextArr.join('\n')
+      # Comma separated style
       else
-        mdTextArr = _.map @state.nodeArr, (node) ->
-          "[#{node.md}](#{node.url})"
+        mdTextArr = _.map @state.nodeArr, (node, index) ->
+          "[#{node.md || "link #{index + 1}"}](#{node.url})"
         mdText = mdTextArr.join(', ')
+
 
     mdText = mdText.trim()
     @callAction('n_hide')

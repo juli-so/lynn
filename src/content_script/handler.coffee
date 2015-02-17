@@ -174,8 +174,8 @@ InputHandler =
       nodeArr = @state.nodeArr
 
       if input is ''
-        _.forEach nodeArr, (node) ->
-          delete node.md
+        _.forEach nodeArr, (node, index) ->
+          node.md = "link #{index + 1}"
 
         @setState { nodeArr }
       else
@@ -185,6 +185,6 @@ InputHandler =
           tokenArr = input.split(' ')
 
         _.forEach nodeArr, (node, index) ->
-          node.md = tokenArr[index].trim() || node.title
+          node.md = tokenArr[index].trim() || "link #{index + 1}"
 
         @setState { nodeArr }

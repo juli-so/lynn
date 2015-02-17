@@ -353,6 +353,8 @@ I_Action =
   insertMarkDown: (args, flags) ->
     @callAction('n_storeCache')
 
+    @setActionTmp('flags', flags)
+
     if @hasNoSelection()
       node = @getCurrentNode()
 
@@ -370,3 +372,4 @@ I_Action =
         specialMode: 'insertMarkDown'
         nodeArr: nodeArr
         selectedArr: [0...nodeArr.length]
+
