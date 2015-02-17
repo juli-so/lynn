@@ -3,13 +3,11 @@ lynn
 
 Vim-like bookmarking wih tags.
 
-[Website](https://octref.github.io/lynn/)
+[Website](https://octref.github.io/lynn/)  
+[Chrome Store](https://chrome.google.com/webstore/detail/lynn/addhcckhdjeddcehoelbklmanbpadggk)
 
 ### Status
 Preparing a videocast.  
-
-### Try it
-You can access it here: [Chrome Store](https://chrome.google.com/webstore/detail/lynn/addhcckhdjeddcehoelbklmanbpadggk)
 
 ### Development
 lynn is being tested.
@@ -22,7 +20,33 @@ To get the development version:
 4. Navigate to chrome://extensions and load lynn from there  
 5. Ctrl-B. Enjoy.
 
+### Tech Details
+Lynn is written using Jade / Less / Coffee.  
+The UI is built on React.  
+Lodash helped a lot with processing Bookmarks.
+
 
 ### Version
-0.1.0 | 2014/06/03  
+- 0.2.0 | 2014-02-17  
+Completely rewritten. Implemented most features I want for beta release.
+- 0.1.0 | 2014-06-03  
 Happy birthday!
+
+### Credit
+Inspired by:
+
+- [Vim](http://www.vim.org/)
+- [Sublime Text](http://sublimetext.com)
+- [Vimium](https://github.com/philc/vimium)  
+
+Lynn is impossible without those wonderful libraries:
+
+- [Lodash](https://lodash.com)
+- [React](http://facebook.github.io/react/)
+- [jQuery](http://jquery.com/)
+- [FontAwesome](http://fontawesome.io/)
+- [Animate.css](https://github.com/daneden/animate.css)
+- [chrome-bootstrap](https://github.com/better-history/chrome-bootstrap)
+
+### License
+MIT
