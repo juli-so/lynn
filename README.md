@@ -7,6 +7,12 @@ Vim-like bookmarking wih tags.
 [Website & Doc](https://octref.github.io/lynn/)  
 [Chrome Store](https://chrome.google.com/webstore/detail/lynn/addhcckhdjeddcehoelbklmanbpadggk)
 
+### Screenshot
+
+![Shot1](screenshot/shot1.png)
+![Shot2](screenshot/shot2.png)
+![Shot3](screenshot/shot3.png)
+
 ### Development
 lynn is being tested.
 
