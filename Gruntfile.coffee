@@ -241,13 +241,14 @@ module.exports = (grunt) ->
   grunt.registerTask('build', ['default'])
   grunt.registerTask('watch', ['g_watch'])
   grunt.registerTask('clean', ['g_clean'])
-  grunt.registerTask('dist', ['default', 'uglify', 'copy', 'compress', 'clean'])
+  grunt.registerTask('dist', ['default', 'uglify', 'copy', 'compress'])
 
   # Shorter alias
   grunt.registerTask('b', ['build'])
   grunt.registerTask('w', ['watch'])
   grunt.registerTask('c', ['clean'])
   grunt.registerTask('d', ['dist' ])
+  grunt.registerTask('dc', ['dist', 'clean' ])
 
   grunt.event.on 'watch', (action, filepath, target) ->
     grunt.log.writeln(target + ':' + filepath + ' has ' + action)
