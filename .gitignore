@@ -1,11 +1,22 @@
 .*
 
-css/*.css
-
-bin/
-js/
-dist/
 node_modules/
-options/site
+
+# Compiled
+
+js/
+css/
+lib/
+vendor/
+option_page/site
+
+lynn.zip
+
+# Dist
+
+dist/
+
+# Assets
+icon/
 
 tags
