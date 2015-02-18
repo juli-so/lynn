@@ -38,7 +38,8 @@ Top = React.createClass
         onChange: @props.onConsoleChange
 
       span
-        className: 'lynn_console_status_icon fa fa-2x fa-fw ' + switch @props.mode
+        id: 'lynn_console_status_icon'
+        className: 'fa fa-2x fa-fw ' + switch @props.mode
           when 'query'   then 'fa-search'
           when 'fast'    then 'fa-bolt'
           when 'command' then 'fa-terminal'
