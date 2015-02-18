@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
 
-    "name": "lynn",
+    "name": "Lynn",
     "version": "0.2.7",
-    "description": "A bookmark app.",
+    "description": "Vim-like bookmarking with tags",
 
     "permissions": [
       "bookmarks",
