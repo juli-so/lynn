@@ -2,7 +2,7 @@
     "manifest_version": 2,
 
     "name": "Lynn",
-    "version": "0.2.7",
+    "version": "0.2.8",
     "description": "Vim-like bookmarking with tags",
 
     "permissions": [
