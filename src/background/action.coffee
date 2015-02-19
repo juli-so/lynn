@@ -44,6 +44,12 @@ Action =
     res: 'getState'
     state: CStorage.getState(msg.state || null)
 
+  setOption: (msg, done) ->
+    CStorage.setOption(msg.optionObj, done)
+
+  setState: (msg, done) ->
+    CStorage.setState(msg.stateObj, done)
+
   # ------------------------------------------------------------
   # Open bookmarks
   # ------------------------------------------------------------

@@ -19,7 +19,7 @@ Session =
       type: 'window'
       session: tabArr
 
-    CStorage.setState('sessionMap', sessionMap, cb)
+    CStorage.setState({ sessionMap }, cb)
 
   storeAll: (sessionName, tabArr, currWinId, cb) ->
     sessionMap = CStorage.getState('sessionMap')
@@ -35,7 +35,7 @@ Session =
       type: 'chrome'
       session: session
 
-    CStorage.setState('sessionMap', sessionMap, cb)
+    CStorage.setState({ sessionMap }, cb)
 
   remove: (input, cb) ->
     sessionMap = CStorage.getState('sessionMap')
@@ -44,4 +44,4 @@ Session =
 
     if sessionName
       delete sessionMap[sessionName]
-      CStorage.setState('sessionMap', sessionMap, cb)
+      CStorage.setState({ sessionMap }, cb)

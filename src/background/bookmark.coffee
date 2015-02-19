@@ -249,7 +249,7 @@ Bookmark =
       clone = _.cloneDeep(@allNode[id])
       lastDeletedNodeArr.unshift(clone)
       lastDeletedNodeArr = lastDeletedNodeArr[0...MAX_RECOVER_NUM]
-      CStorage.setState('lastDeletedNodeArr', lastDeletedNodeArr)
+      CStorage.setState({ lastDeletedNodeArr })
 
       delete @allNode[id]
       @delAllTag(id)
@@ -275,7 +275,7 @@ Bookmark =
 
       lastDeletedNodeArr = _.difference(lastDeletedNodeArr, bmArr)
 
-    CStorage.setState('lastDeletedNodeArr', lastDeletedNodeArr)
+    CStorage.setState({ lastDeletedNodeArr })
 
   # ------------------------------------------------------------
   # Stats for options page
