@@ -1,7 +1,7 @@
 doctype html
 html(lang='en')
 
-include head.jade
+include head
 
 body.chrome-bootstrap
   block navigation
@@ -14,6 +14,8 @@ body.chrome-bootstrap
       ul.menu
         li.selected
           a(href="#dashboard") Dashboard
+        li
+          a(href="#general") General
   
     .mainview.view
       #dashboard.selected
@@ -21,9 +23,8 @@ body.chrome-bootstrap
           h1 Dashboard
         #dashboard_container.content
 
-      #test
+      #general
         header
-          h1 Test
+          h1 General Options
+        #general_container.content
 
-        .content
-          p hi

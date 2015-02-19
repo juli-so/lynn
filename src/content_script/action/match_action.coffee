@@ -80,9 +80,12 @@ Key =
 
 # Matching shortcut keycode to action names
 ActionMatch =
+  loadMainShortcut: (MAIN_SHORTCUT) ->
+    @MAIN_SHORTCUT = MAIN_SHORTCUT
+
   # App-invoking shortcut
   isInvoked: (event) ->
-    @getKeyString(event) is 'c-b'
+    @getKeyString(event) is "c-#{@MAIN_SHORTCUT}"
   
   getKeyString: (event) ->
     ctrl = ''

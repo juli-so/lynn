@@ -48,6 +48,7 @@ main_src =
 option_page_src =
   'option_page/site/js/option.js': [
     'option_page/coffee/dashboard.coffee',
+    'option_page/coffee/general.coffee',
     'option_page/coffee/main.coffee'
   ]
 
@@ -57,7 +58,7 @@ option_page_src =
 
 jade_option_page =
   'option_page/site/html/option.html': [
-    'option_page/jade/**/*.jade'
+    'option_page/jade/main.jade'
   ]
 
 # --------------------------------------------------------------

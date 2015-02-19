@@ -37,8 +37,7 @@ Lynn = React.createClass
       selectedArr: []
 
     # loaded from storage
-    option:
-      MAX_SUGGESTION_NUM: 8
+    option: {}
 
     sessionMap: {}
 
@@ -62,6 +61,8 @@ Lynn = React.createClass
 
     Listener.listen 'getOption', (message) =>
       option = message.option
+      @setState { option }
+      ActionMatch.loadMainShortcut(option['MAIN_SHORTCUT'])
 
     Listener.listen 'getState' , (message) =>
       state = message.state
