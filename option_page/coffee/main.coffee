@@ -64,5 +64,3 @@ $ ->
   Listener.init()
 
   render()
-
-  $('.menu a[href=#general]').click()
