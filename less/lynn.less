@@ -6,27 +6,23 @@
 }
 
 /* Commonly used class */
-.hidden {
+.lynn_hidden {
   display: none;
 }
 
-.transparent {
-  opacity: 0;
-}
-
-.resetBox {
+.lynn_resetBox {
   margin: 0;
   padding: 0;
 }
 
-.resetBorder {
+.lynn_resetBorder {
   border: 0;
 }
 
 div#lynn_container div#lynn {
 
   & {
-    .resetBox;
+    .lynn_resetBox;
 
     /* Horizontal center & vertical offset */
     position: fixed;
@@ -71,7 +67,7 @@ div#lynn_container div#lynn {
 
   /* Remove input box border */
   #lynn_console, #lynn_console_hint {
-    .resetBox;
+    .lynn_resetBox;
 
     outline: none;
     box-shadow: none;
@@ -96,14 +92,14 @@ div#lynn_container div#lynn {
   /* lynn top */
 
   #lynn_top {
-    .resetBox;
-    .resetBorder;
+    .lynn_resetBox;
+    .lynn_resetBorder;
 
     height: 50px;
   }
 
   #lynn_console, #lynn_console_hint {
-    .resetBox;
+    .lynn_resetBox;
     box-sizing: border-box;
 
     width: 640px;
@@ -158,15 +154,15 @@ div#lynn_container div#lynn {
   /* lynn mid */
 
   #lynn_mid {
-    .resetBox;
-    .resetBorder;
+    .lynn_resetBox;
+    .lynn_resetBorder;
 
     border-top: 2px #ddd solid;
   }
 
   .lynn_suggestion {
-    .resetBox;
-    .resetBorder;
+    .lynn_resetBox;
+    .lynn_resetBorder;
 
     color: #777;
 
@@ -194,15 +190,15 @@ div#lynn_container div#lynn {
   }
 
   .lynn_mainline {
-    .resetBox;
-    .resetBorder;
+    .lynn_resetBox;
+    .lynn_resetBorder;
 
     font-size: 16px;
   }
 
   .lynn_tagline {
-    .resetBox;
-    .resetBorder;
+    .lynn_resetBox;
+    .lynn_resetBorder;
 
     text-align: right;
     font-size: 16px;
@@ -246,8 +242,8 @@ div#lynn_container div#lynn {
   /* lynn bot */
 
   #lynn_bot {
-    .resetBox;
-    .resetBorder;
+    .lynn_resetBox;
+    .lynn_resetBorder;
 
     height: 40px;
     font-size: 14px;

@@ -97,7 +97,7 @@ Lynn = React.createClass
     className = ''
     if @state.animation isnt 'no'
       className += 'animated ' + @state.animation
-    className += ' hidden' unless @state.visible
+    className += ' lynn_hidden' unless @state.visible
 
     # Prevent font being overridden by :lang
     # Prepare for i18n
