@@ -6,4 +6,4 @@ $ ->
   $mountPoint = $("<div id='lynn_container'>")
   $('body').prepend($mountPoint)
 
-  React.renderComponent Lynn(), $mountPoint[0]
+  React.render Lynn(), $mountPoint[0]
