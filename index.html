@@ -2,7 +2,7 @@
 layout: default
 ---
 
-<section id="home" class="view animated selected">
+<section id="home" class="view selected">
 
   <h2>Lynn</h2>
   <p>Chrome bookmark manager. #Tags. The Vim way.</p>
@@ -41,7 +41,7 @@ layout: default
 </section>
 
 {% for post in site.posts reversed %}
-<section id="{{ post.title }}" class="view animated">
+<section id="{{ post.title }}" class="view">
   <p>{{ post.content }}</p>
 </section>
 {% endfor %}

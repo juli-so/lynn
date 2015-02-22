@@ -6,78 +6,39 @@
 /* --------------------------------------------------------- */
 
 @font-face {
-  font-family: "Open Sans";
+  font-family: 'Open Sans';
   src: url('../fonts/OpenSans-Regular.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: "Open Sans Bold";
-  src: url('../fonts/OpenSans-Bold.ttf') format('truetype');
+  font-family: 'Exo Light';
+  src: url('../fonts/Exo-Light.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Exo';
+  src: url('../fonts/Exo-Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Exo Medium';
+  src: url('../fonts/Exo-Medium.otf') format('opentype');
 }
 
 /* Base */
 /* --------------------------------------------------------- */
 
 body {
-  background-color: #fdfdfd;
   overflow: scroll;
+  background-color: #fff;
 }
 
 /* Layout */
 /* --------------------------------------------------------- */
-.main {
+#mid {
     max-width: 720px;
     margin: 0 auto;
-    margin-top: 20px;
-    margin-bottom: 50px;
-    padding: 30px;
-}
-
-/* Github Markdown tweak */
-/* --------------------------------------------------------- */
-.markdown-body {
-  & {
-    color: #404040;
-    margin: 0 25px;
-  }
-
-  a         { color: #6f92ba; text-decoration: none; }
-  a:hover   { color: #4772a3; text-decoration: none; }
-
-  h2 {
-    font-weight: normal;
-
-    margin-top: 40px;
-  }
-
-}
-
-/* Main */
-/* --------------------------------------------------------- */
-.header {
-  & {
-    margin-bottom: 48px;
-  }
-
-  h1 {
-    font-size: 46px;
-    font-weight: normal;
-  }
-
-  .subheading {
-    text-align: right;
-    font-size: 18px;
-    color: #444;
-  }
-
-  .subheading:before {
-    content: "——";
-    margin-right: 6px;
-  }
-}
-
-.mode {
-  text-align: center;
+    padding: 0 30px;
 }
 
 /* View */
@@ -94,16 +55,97 @@ body {
   display: block;
 }
 
+/* Main */
+/* --------------------------------------------------------- */
+#header {
+  & {
+    margin-top: 100px;
+    margin-bottom: 48px;
+  }
+
+  .heading {
+    font-size: 46px;
+    font-family: 'Exo Light';
+    color: #434343;
+  }
+
+  .subheading {
+    padding-top: 24px;
+
+    text-align: right;
+    font-size: 18px;
+    font-family: 'Exo';
+    color: #444;
+  }
+
+  .subheading:before {
+    content: '——';
+    margin-right: 8px;
+  }
+
+}
+
 /* Doc */
 /* --------------------------------------------------------- */
+
+/*
+ * Text
+ */
+#main {
+  & {
+    font-family: 'Open Sans';
+    color: #434343;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  a, a:focus, a:visited {
+    color: #6f92ba;
+  }
+
+  a:hover {
+    color: #4772a3;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Exo';
+  }
+}
+
+/*
+ * Image
+ */
+#main {
+  img {
+    width: 600px;
+    display: block;
+    margin: 40px auto;
+
+  }
+}
+
+/*
+ * Special
+ */
 .mode table {
-  display: table;
-  width: 400px;
-  margin: 0 auto;
-  margin-bottom: 40px;
+  & {
+    text-align: center;
+    display: table;
+    width: 400px;
+    margin: 0 auto;
+    margin-bottom: 40px;
+  }
+
+  // Font-Awesome
+  tbody:first-child td {
+    width: 100px;
+  }
 }
 
 /* Locale */
+/* --------------------------------------------------------- */
 #locale {
   position: fixed;
   top: 16px;
@@ -113,4 +155,5 @@ body {
   width: 32px;
 
   -webkit-animation-duration: 0.5s;
+          animation-duration: 0.5s;
 }
