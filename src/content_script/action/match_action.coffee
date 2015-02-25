@@ -123,8 +123,10 @@ ActionMatch =
         action = @matchInSpecialMode(keyString, specialMode)
       else
         action = switch keyString
-          when 'tab'   then 'noop'
-          when 's-tab' then 'noop'
+          when 'tab'        then 'noop'
+          when 's-tab'      then 'noop'
+          when 'leftArrow'  then 'noop'
+          when 'rightArrow' then 'noop'
           else @matchCommon(keyString)
     else
       action = switch mode
@@ -181,8 +183,6 @@ ActionMatch =
 
       'c-a':              'n_toggleAllSelectionInCurrentPage'
       'c-s-a':            'n_toggleAll'
-
-      # Other N_Action
 
     actionMap[keyString] || 'noop'
 
@@ -266,7 +266,6 @@ ActionMatch =
 
       'c-leftArrow':        'n_setCaretToPrevWord'
       'c-rightArrow':       'n_setCaretToNextWord'
-
 
     actionMap =
       'recoverBookmark':
