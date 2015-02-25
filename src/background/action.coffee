@@ -141,15 +141,15 @@ Action =
       res: 'suggestTag'
       tagArr: tagArr
     else
-      tagArrArr = []
+      tagMetaArr = []
 
       _.forEach msg.bookmarkArr, (bookmark) =>
         hostname = @_getHostname(bookmark.url)
         tagArr = Tag.autoTag(bookmark.title, hostname)
-        tagArrArr.push(tagArr)
+        tagMetaArr.push(tagArr)
 
       res: 'suggestTag'
-      tagArrArr: tagArrArr
+      tagMetaArr: tagMetaArr
 
   addBookmark: (msg) ->
     Bookmark.create(msg.bookmark, msg.tagArr)

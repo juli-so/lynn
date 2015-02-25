@@ -41,7 +41,7 @@ I_Action =
       reqObj = { bookmarkArr: nodeArr }
       Listener.listenOnce 'suggestTag', reqObj, (msg) =>
         _.forEach nodeArr, (node, index) =>
-          node.suggestedTagArr = msg.tagArrArr[index]
+          node.suggestedTagArr = msg.tagMetaArr[index]
 
         @setState { nodeArr }
 
@@ -61,7 +61,7 @@ I_Action =
       reqObj = { bookmarkArr: nodeArr }
       Listener.listenOnce 'suggestTag', reqObj, (msg) =>
         _.forEach nodeArr, (node, index) =>
-          node.suggestedTagArr = msg.tagArrArr[index]
+          node.suggestedTagArr = msg.tagMetaArr[index]
 
         @setState { nodeArr }
 
@@ -81,7 +81,7 @@ I_Action =
       reqObj = { bookmarkArr: nodeArr }
       Listener.listenOnce 'suggestTag', reqObj, (msg) =>
         _.forEach nodeArr, (node, index) =>
-          node.suggestedTagArr = msg.tagArrArr[index]
+          node.suggestedTagArr = msg.tagMetaArr[index]
 
         @setState { nodeArr }
 
