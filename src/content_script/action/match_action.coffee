@@ -80,6 +80,9 @@ Key =
 
 # Matching shortcut keycode to action names
 ActionMatch =
+  # In case need to check before loading
+  MAIN_SHORTCUT: 'b'
+
   loadMainShortcut: (MAIN_SHORTCUT) ->
     @MAIN_SHORTCUT = MAIN_SHORTCUT
 
@@ -109,7 +112,7 @@ ActionMatch =
     return 'n_hide'       if keyString is 'c-q'
 
     # Reset
-    return 'n_reset'       if keyString is 'c-c'
+    return 'n_reset'      if keyString is 'c-c'
 
     # E_Action
     return 'e_esc'        if keyString is 'esc'
