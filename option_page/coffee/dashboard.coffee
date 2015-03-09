@@ -1,6 +1,6 @@
-{ div, span, a, p, ol, ul, li } = React.DOM
-{ h1, h2, h3, h4, h5, h6 }      = React.DOM
-{ hr }                          = React.DOM
+{ div, span, a, b, p, ol, ul, li } = React.DOM
+{ h1, h2, h3, h4, h5, h6 }         = React.DOM
+{ hr }                             = React.DOM
 
 Dashboard = React.createClass
   render: ->
@@ -42,17 +42,23 @@ Dashboard = React.createClass
 
       div null,
         h2 null, 'Sessions'
-        _.map @props.state.sessionMap, (sessionRecord, sessionName) ->
-          div null, ':', sessionName, ' to invoke: ',
-            if sessionRecord.type is 'window'
-              ul className: 'dash-list',
-                _.map sessionRecord.session, (node) ->
-                  li null,
-                    a href: node.url, node.title
-            else
-              ul null,
-                _.map sessionRecord.session, (nodeArray) ->
-                  ul className: 'dash-list', hr {},
-                    _.map nodeArray, (node) ->
-                      li null,
-                        a href: node.url, node.title
+        if _.isEmpty(@props.state.sessionMap)
+          div null, 'No session'
+        else
+          _.map @props.state.sessionMap, (sessionRecord, sessionName) ->
+            div null,
+              p null,
+                b null, ":#{sessionName}"
+                " to invoke"
+              if sessionRecord.type is 'window'
+                ul className: 'dash-list',
+                  _.map sessionRecord.session, (node) ->
+                    li null,
+                      a href: node.url, node.title
+              else
+                ul null,
+                  _.map sessionRecord.session, (nodeArray) ->
+                    ul className: 'dash-list', hr {},
+                      _.map nodeArray, (node) ->
+                        li null,
+                          a href: node.url, node.title
