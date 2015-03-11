@@ -49,6 +49,7 @@ option_page_src =
   'option_page/site/js/option.js': [
     'option_page/coffee/dashboard.coffee',
     'option_page/coffee/general.coffee',
+    'option_page/coffee/json.coffee',
     'option_page/coffee/main.coffee'
   ]
 

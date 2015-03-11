@@ -41,6 +41,15 @@ Bookmark =
       initNode(nodeArr[0])
       initTag()
 
+  initLocal: (allNode) ->
+    @allNode = allNode
+    @allTag = {}
+    _.forEach allNode, (node) =>
+      if node.tagArr
+        @allTag[node.id] = node.tagArr
+      else
+        @allTag[node.id] = node.tagArr = []
+
   # ------------------------------------------------------------
   # Tag
   # ------------------------------------------------------------
@@ -282,15 +291,17 @@ Bookmark =
   # ------------------------------------------------------------
 
   stats: ->
-    bmAmount = _.keys(@allNode).length
-    tagBmAmount = (_.filter @allNode, (node) -> node.tagArr.length > 0).length
+    bmAmount      = _.keys(@allNode).length
+    tagBmAmount   = (_.filter @allNode, (node) -> node.tagArr.length > 0).length
     noTagBmAmount = bmAmount - tagBmAmount
-    tagPercent= _.toTwoDec(tagBmAmount / bmAmount * 100)
-    noTagPercent = _.toTwoDec(100 - tagPercent)
-    fiveRandBm = _.flatten(_.times 5, => _.randPopFromArr(_.values(@allNode)))
+    tagPercent    = _.toTwoDec(tagBmAmount   / bmAmount * 100)
+    noTagPercent  = _.toTwoDec(noTagBmAmount / bmAmount * 100)
+    allNode       = @allNode
+    fiveRandBm    = _.flatten(_.times 5, => _.randPopFromArr(_.values(@allNode)))
 
     { bmAmount, tagBmAmount, noTagBmAmount,
       tagPercent, noTagPercent,
+      allNode,
       fiveRandBm }
 
   # ------------------------------------------------------------

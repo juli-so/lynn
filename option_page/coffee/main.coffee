@@ -36,6 +36,13 @@ render = ->
             save:   saveGeneral
           ), $('#general_container')[0])
 
+        React.render(JsonIO(
+          allNode: statsMsg.stats.allNode
+        ), $('#json_container')[0])
+
+        initMenuAnimation()
+        initJSONSelect()
+
 # ---------------------------------------------------------------------------- #
 # Init                                                                         #
 # ---------------------------------------------------------------------------- #
@@ -53,14 +60,19 @@ initMenuAnimation = ->
     currentView.show()
     currentView.addClass('selected')
 
+initJSONSelect = ->
+  $('#json-select').click (ev) ->
+    ev.preventDefault()
+
+    $('#jsonio').select()
+
 # ---------------------------------------------------------------------------- #
 # Go                                                                           #
 # ---------------------------------------------------------------------------- #
 
 $ ->
-  initMenuAnimation()
-
   Message.init()
   Listener.init()
 
   render()
+

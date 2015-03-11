@@ -5,11 +5,11 @@
 
 General = React.createClass
   render: ->
-    div {},
-      p {}, "Command to Open / Hide Lynn"
-      p {}, "Only b / m / y / i supported now"
-      p {}, "Default is b"
-      span {}, "Ctrl + "
+    div null,
+      p null, "Command to Open / Hide Lynn"
+      p null, "Only b / m / y / i supported now"
+      p null, "Default is b"
+      span null, "Ctrl + "
       input {
         type: "text"
         id: "MAIN_SHORTCUT"
@@ -18,29 +18,29 @@ General = React.createClass
 
       div { className: "custom-hr" }
 
-      p {}, "Number of suggestion shown"
-      p {}, "Default is 8"
+      p null, "Number of suggestion shown"
+      p null, "Default is 8"
 
-      span {}, "Show "
+      span null, "Show "
       input {
         type: "text"
         id: "MAX_SUGGESTION_NUM"
         defaultValue: @props.option['MAX_SUGGESTION_NUM']
       }
-      span {}, " every page"
+      span null, " every page"
 
       div { className: "custom-hr" }
 
-      p {}, "How many removed bookmarks saved for recovering later"
-      p {}, "Default is 10"
+      p null, "How many removed bookmarks saved for recovering later"
+      p null, "Default is 10"
 
-      span {}, "Store "
+      span null, "Store "
       input {
         type: "text"
         id: "MAX_RECOVER_NUM"
         defaultValue: @props.option['MAX_RECOVER_NUM']
       }
-      span {}, " bookmarks for recovering later"
+      span null, " bookmarks for recovering later"
 
-      div { className: "save-top-border" },
+      div { className: "top-hr" },
         button { id: "save-general", onClick: @props.save }, "Save"
