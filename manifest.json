@@ -48,7 +48,6 @@
     },
 
     "web_accessible_resources": [
-      "vendor/font/fontawesome-webfont.woff",
-      "vendor/font/OpenSans-Regular-webfont.woff"
+      "vendor/font/fontawesome-webfont.woff"
     ]
 }
