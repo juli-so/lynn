@@ -17,6 +17,16 @@ saveGeneral = ->
   Listener.listenOnce 'setOption', { optionObj }, ->
     render()
 
+addAutoTaggingRule = ->
+  tag       = $('#autoTagging_tag'      ).val()
+  matchProp = $('#autoTagging_matchProp').val()
+  matchType = $('#autoTagging_matchType').val()
+  matchStr  = $('#autoTagging_matchStr' ).val()
+
+  reqObj = { tag, matchProp, matchType, matchStr }
+  Listener.listenOnce 'addAutoTaggingRule', reqObj, ->
+    render()
+
 render = ->
   Listener.listenOnce 'stats', {}, (statsMsg) ->
     Listener.listenOnce 'getOption', {}, (optionMsg) ->
@@ -35,6 +45,13 @@ render = ->
             stats:  statsMsg.stats
             save:   saveGeneral
           ), $('#general_container')[0])
+
+        React.render(
+          Tagging(
+            option: optionMsg.option
+            state:  stateMsg.state
+            addAutoTaggingRule: addAutoTaggingRule
+          ), $('#tagging_container')[0])
 
         React.render(JsonIO(
           allNode: statsMsg.stats.allNode

@@ -60,6 +60,12 @@ Tag =
         tagArr.push(tag)
 
     tagArr
+
+  addAutoTaggingRule: (tag, matchProp, matchType, matchStr) ->
+    autoTaggingMap = CStorage.getState('autoTaggingMap')
+
+    autoTaggingMap[tag] = { matchProp, matchType, matchStr }
+    CStorage.setState { autoTaggingMap }
       
   _log: ->
     console.log @titleContainsMap

@@ -80,4 +80,3 @@ CStorage =
       valArr = _.map(nameArr, @getState, @)
       _.zipObject(nameArr, valArr)
   
-

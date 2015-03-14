@@ -108,6 +108,13 @@ Action =
     nodeArr: Bookmark.tagify(msg.nodeArr)
 
   # ------------------------------------------------------------
+
+  addAutoTaggingRule: (msg) ->
+    Tag.addAutoTaggingRule(msg.tag, msg.matchProp, msg.matchType, msg.matchStr)
+
+    res: 'addAutoTaggingRule'
+
+  # ------------------------------------------------------------
   # Sessions
   # ------------------------------------------------------------
 
