@@ -9,21 +9,25 @@ Dashboard = React.createClass
 
         h2 null, 'Bookmark Stats'
 
-        p null, "Total bookmark count: #{@props.stats.bmAmount}"
-        p null, "#{@props.stats.tagBmAmount} tagged,
-                 around #{@props.stats.tagPercent}%"
-        p null, "#{@props.stats.noTagBmAmount} not tagged, 
-                 around #{@props.stats.noTagPercent}%"
+        if @props.stats.bmAmount is 0
+          div null, 'No bookmark yet'
+        else
+          p null, "Total bookmark count: #{@props.stats.bmAmount}"
+          p null, "#{@props.stats.tagBmAmount} tagged,
+                   around #{@props.stats.tagPercent}%"
+          p null, "#{@props.stats.noTagBmAmount} not tagged, 
+                   around #{@props.stats.noTagPercent}%"
 
-        div className: 'five-rand',
-          span className: 'five-rand-hint', 'Five random bookmarks to explore: '
-          ul null,
-            _.map @props.stats.fiveRandBm, (bm) ->
-              li null,
-                a href: bm.url, bm.title
+          div className: 'five-rand',
+            span className: 'five-rand-hint', 'Five random bookmarks to explore: '
+            ul null,
+              _.map @props.stats.fiveRandBm, (bm) ->
+                li null,
+                  a href: bm.url, bm.title
 
       div null,
         h2 null, 'Auto-tagging'
+
         if _.isEmpty(@props.state.autoTaggingMap)
           div null, 'No auto-tagging rule'
         else
@@ -43,6 +47,7 @@ Dashboard = React.createClass
 
       div null,
         h2 null, 'Sessions'
+
         if _.isEmpty(@props.state.sessionMap)
           div null, 'No session'
         else
