@@ -11,7 +11,7 @@ Tag = React.createClass
   render: ->
     className = switch @props.type
       when 'normal'   then 'lynn_tag'
-      when 'suggest' then 'lynn_suggested_tag'
+      when 'suggest'  then 'lynn_suggested_tag'
       when 'pending'  then 'lynn_pending_tag'
       when 'special'  then 'lynn_special_tag'
 
