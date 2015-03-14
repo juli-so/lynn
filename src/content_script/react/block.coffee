@@ -68,8 +68,12 @@ Mid = React.createClass
 
 Bot = React.createClass
   render: ->
-    numToString = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five',
-      'Six', 'Seven', 'Eight', 'Nine', 'Ten']
+    numToString = (num) ->
+      if num > 10
+        num.toString()
+      else
+        ['Zero', 'One', 'Two', 'Three', 'Four', 'Five',
+        'Six', 'Seven', 'Eight', 'Nine', 'Ten'][num]
 
     infoString = @props.nodeArr.length + ' result'
     infoString += 's' if @props.nodeArr.length > 1
@@ -91,5 +95,5 @@ Bot = React.createClass
 
           'Speical Mode: ' + botString
       span className: 'lynn_bot_right',
-        'Page ' + numToString[@props.currentPageIndex + 1]
+        'Page ' + numToString(@props.currentPageIndex + 1)
 
