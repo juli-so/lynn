@@ -12,8 +12,8 @@
     ],
 
     "icons": {
-      "64":  "icon/lynn-64.png",
-      "128": "icon/lynn-128.png"
+      "64":  "icon/lynn-transparent-64.png",
+      "128": "icon/lynn-transparent-128.png"
     },
 
     "options_page": "option_page/site/html/option.html",
