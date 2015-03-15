@@ -8,6 +8,11 @@
 # Helper                                                                       #
 # ---------------------------------------------------------------------------- #
 
+toggleSuccessFadeMsg = (id) ->
+  $('#' + id).toggleClass('success-result')
+  fade = -> $('#' + id).toggleClass('success-result')
+  setTimeout(fade, 1300)
+
 saveGeneral = ->
   MAIN_SHORTCUT = $('#MAIN_SHORTCUT').val()
   MAX_SUGGESTION_NUM = $('#MAX_SUGGESTION_NUM').val()
@@ -16,6 +21,7 @@ saveGeneral = ->
   optionObj = { MAIN_SHORTCUT, MAX_SUGGESTION_NUM, MAX_RECOVER_NUM }
   Listener.listenOnce 'setOption', { optionObj }, ->
     render()
+    toggleSuccessFadeMsg('save-result')
 
 addAutoTaggingRule = ->
   tag       = $('#autoTagging_tag'      ).val()
@@ -24,8 +30,12 @@ addAutoTaggingRule = ->
   matchStr  = $('#autoTagging_matchStr' ).val()
 
   reqObj = { tag, matchProp, matchType, matchStr }
+  if _.any(reqObj, _.isEmpty)
+    return
+
   Listener.listenOnce 'addAutoTaggingRule', reqObj, ->
     render()
+    toggleSuccessFadeMsg('add-autotagging-rule-result')
 
 autoTaggingExample = ->
   $('#autoTagging_tag'      ).val('#python')

@@ -31,16 +31,19 @@ General = React.createClass
 
       div { className: 'custom-hr' }
 
-      p null, 'How many removed bookmarks saved for recovering later'
-      p null, 'Default is 10'
+      div { className: 'bot-20px-margin' },
+        p null, 'How many removed bookmarks saved for recovering later'
+        p null, 'Default is 10'
 
-      span null, 'Store '
-      input {
-        type: 'text'
-        id: 'MAX_RECOVER_NUM'
-        defaultValue: @props.option['MAX_RECOVER_NUM']
-      }
-      span null, ' bookmarks for recovering later'
+        span null, 'Store '
+        input {
+          type: 'text'
+          id: 'MAX_RECOVER_NUM'
+          defaultValue: @props.option['MAX_RECOVER_NUM']
+        }
+        span null, ' bookmarks for recovering later'
 
-      div { className: 'top-hr' },
+      div { className: 'controls-top' },
+        span { id: 'save-result', className: 'result transparent' }, 'Success'
+        div { className: 'spacer' }
         button { id: 'save-general', onClick: @props.save }, 'Save'

@@ -9,7 +9,8 @@ JsonIO = React.createClass
       textarea { id: 'jsonio', rows: 20, cols: 56 },
       JSON.stringify(@props.allNode, null, 2)
 
-      div { className: "top-hr" },
+      div { className: 'custom-hr'}
+      div { className: 'right' },
         button { id: 'json-select' }, "Select All"
 
 

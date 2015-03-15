@@ -63,6 +63,7 @@ Tagging = React.createClass
         }
 
         div { className: 'controls' },
+          span { id: 'add-autotagging-rule-result', className: 'result transparent' }, 'Success'
           div { className: 'spacer' }
           button
             id: 'autotagging-example'
