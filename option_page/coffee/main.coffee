@@ -27,6 +27,12 @@ addAutoTaggingRule = ->
   Listener.listenOnce 'addAutoTaggingRule', reqObj, ->
     render()
 
+autoTaggingExample = ->
+  $('#autoTagging_tag'      ).val('#python')
+  $('#autoTagging_matchProp').val('title')
+  $('#autoTagging_matchType').val('contains')
+  $('#autoTagging_matchStr' ).val('python')
+
 render = ->
   Listener.listenOnce 'stats', {}, (statsMsg) ->
     Listener.listenOnce 'getOption', {}, (optionMsg) ->
@@ -51,6 +57,7 @@ render = ->
             option: optionMsg.option
             state:  stateMsg.state
             addAutoTaggingRule: addAutoTaggingRule
+            autoTaggingExample: autoTaggingExample
           ), $('#tagging_container')[0])
 
         React.render(JsonIO(

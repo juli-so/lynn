@@ -65,6 +65,10 @@ Tagging = React.createClass
         div { className: 'controls' },
           div { className: 'spacer' }
           button
+            id: 'autotagging-example'
+            onClick: @props.autoTaggingExample
+          , 'Example'
+          button
             id: 'add-autotagging-rule'
             onClick: @props.addAutoTaggingRule
           , 'Add rule'
