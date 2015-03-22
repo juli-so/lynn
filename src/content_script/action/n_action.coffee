@@ -280,6 +280,17 @@ N_Action =
   openInNewIncognitoWin: ->
     @callAction('n_h_open', [{ incognito: yes }, yes, yes])
 
+  openRandom: (args, flags, modifierString) ->
+    n = parseInt(args[0]) || 5
+
+    Listener.listenOnce 'random', { n }, (msg) =>
+      @setState
+        mode: 'fast'
+        nodeArr: msg.nodeArr
+        input: ''
+
+      @callAction('n_selectAll')
+
   # ------------------------------------------------------------
   # Remove bookmarks
   # ------------------------------------------------------------

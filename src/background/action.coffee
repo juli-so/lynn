@@ -31,6 +31,9 @@ Action =
     else
       res: 'search'
       result: Bookmark.find(msg.input)
+
+  random: (msg, done) ->
+    done({ nodeArr: Bookmark.random(msg.n) })
   
   # ------------------------------------------------------------
 

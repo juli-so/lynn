@@ -303,7 +303,7 @@ Bookmark =
     tagPercent    = _.toTwoDec(tagBmAmount   / bmAmount * 100)
     noTagPercent  = _.toTwoDec(noTagBmAmount / bmAmount * 100)
     allNode       = @allNode
-    fiveRandBm    = _.flatten(_.times 5, => _.randPopFromArr(_.values(@allNode)))
+    fiveRandBm    = @random(5)
 
     { bmAmount, tagBmAmount, noTagBmAmount,
       tagPercent, noTagPercent,
@@ -323,3 +323,8 @@ Bookmark =
       if node.url in allUrl
         node.tagArr = _.values(@fbURL(node.url))[0].tagArr
       node
+
+  # Get n random bookmarks
+  random: (n) ->
+    allNodeArr = _.values(@allNode)
+    _.flatten(_.times n, => _.randPopFromArr(allNodeArr))

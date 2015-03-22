@@ -17,15 +17,18 @@ CommandMap =
   'al'            : 'i_addLinkBookmark'
   'as'            : 'i_addSelectionBookmark'
 
+  'd'             : 'i_deleteCurrentPageBookmark'
+
   's'             : 'i_storeWinSession'
   'S'             : 'i_storeChromeSession'
   'rs'            : 'i_removeSession'
 
-  'r'             : 'i_recoverBookmark'
-
   'md'            : 'i_insertMarkDown'
 
-  'd'             : 'i_deleteCurrentPageBookmark'
+  'r'             : 'i_recoverBookmark'
+
+  'rand'          : 'n_openRandom'
+
 
   # Site specific
   'ahn'           : 't_addHNBookmark'
@@ -84,9 +87,10 @@ E_Action =
           console.log command
           console.log flags
           console.log args
+          console.log modifierString
 
-        if CommandMap[modifierString + command]
-          @callAction(CommandMap[modifierString + command], [args, flags])
+        if CommandMap[command]
+          @callAction(CommandMap[command], [args, flags, modifierString])
         else if @state.sessionMap[command]
           @callAction('n_openSession', [command, modifierString])
         else if @state.sessionMap[@state.hint[1..]]
