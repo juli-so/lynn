@@ -1,15 +1,10 @@
 # ---------------------------------------------------------------------------- #
 #                                                                              #
-# Store / Get state & option to chrome.storage                                 #
-#                                                                              #
-# Option is shared between front/back                                          #
-# Front-end state is handled by React                                          #
+# Wrapper for setting Option and State in chrome.storage.local                 #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
 CStorage =
-  option: {}
-  state : {}
 
   # Defaults for Option/State when they are first created
   defaultOption: {
@@ -24,59 +19,45 @@ CStorage =
     autoTaggingMap: {}
   }
 
-  # Use callback to ensure sequence of operation
-  sync: (cb) ->
+  # Call cb with all options if 'null' is passed
+  # Call cb with default values for unspecified options 
+  # Call cb with an object of all requested options, if passed an array
+  getOption: (optionNameOrArr, cb) ->
     chrome.storage.local.get null, (storObj) =>
-      @option = storObj['option'] || {}
-      @state  = storObj['state' ] || {}
-      cb()
+      option = _.defaults({}, storObj['option'] || {}, @defaultOption)
 
-  clear: ->
-    setObj =
-      option: {}
-      state : {}
+      if _.isNull(optionNameOrArr)
+        cb(option)
+      else if _.isString(optionNameOrArr)
+        cb(option[optionNameOrArr])
+      else
+        cb(_.at(option, optionNameOrArr))
 
-    chrome.storage.local.set setObj, =>
-      @option = {}
-      @state  = {}
+  # Call cb with all state if 'null' is passed
+  # Call cb with default values for unspecified states
+  # Call cb with an object of all requested states, if passed an array
+  getState: (stateNameOrArr, cb) ->
+    chrome.storage.local.get null, (storObj) =>
+      state = _.defaults({}, storObj['state'] || {}, @defaultState)
+
+      if _.isNull(stateNameOrArr)
+        cb(state)
+      else if _.isString(stateNameOrArr)
+        cb(state[stateNameOrArr])
+      else
+        cb(_.at(state, stateNameOrArr))
 
   setOption: (optionObj, cb) ->
-    @option = _.assign(@option, optionObj)
-    chrome.storage.local.set { option: @option }, ->
-      if cb
-        cb()
+    @getOption null, (option) =>
+      option = _.assign({}, option, optionObj)
+      
+      chrome.storage.local.set { option }, ->
+        cb() if cb
 
   setState: (stateObj, cb) ->
-    @state = _.assign(@state, stateObj)
-    chrome.storage.local.set { state: @state }, ->
-      if cb
-        cb()
+    @getState null, (state) =>
+      state = _.assign({}, state, stateObj)
+      
+      chrome.storage.local.set { state }, ->
+        cb() if cb
 
-  # Return all options if 'null' is passed
-  # Return default values for unspecified options 
-  # Return an object of all requested options, if passed an array
-  getOption: (optionNameOrArr) ->
-    if _.isNull(optionNameOrArr)
-      _.defaults(@option, @defaultOption)
-    else if _.isString(optionNameOrArr)
-      name = optionNameOrArr
-      @option[name] || @defaultOption[name]
-    else
-      nameArr = optionNameOrArr
-      valArr = _.map(nameArr, @getOption, @)
-      _.zipObject(nameArr, valArr)
-
-  # Return all state if 'null' is passed
-  # Return default values for unspecified states
-  # Return an object of all requested states, if passed an array
-  getState: (stateNameOrArr) ->
-    if _.isNull(stateNameOrArr)
-      _.defaults(@state, @defaultState)
-    else if _.isString(stateNameOrArr)
-      name = stateNameOrArr
-      @state[name] || @defaultState[name]
-    else
-      nameArr = stateNameOrArr
-      valArr = _.map(nameArr, @getState, @)
-      _.zipObject(nameArr, valArr)
-  
