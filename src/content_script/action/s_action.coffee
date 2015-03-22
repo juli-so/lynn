@@ -105,6 +105,16 @@ S_Action =
     @callAction('n_hide')
 
   # ------------------------------------------------------------
+
+  editBookmarkTitle: ->
+    Message.postMessage
+      req: 'editBookmarkTitle'
+      id: @getCurrentNode().id
+      title: @state.input
+
+    @callAction('n_hide')
+
+  # ------------------------------------------------------------
   # Tag
   # ------------------------------------------------------------
 

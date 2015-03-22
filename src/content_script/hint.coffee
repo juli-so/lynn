@@ -4,6 +4,7 @@ Hint =
   inputPlaceHolderSpecialModeMap:
     'tag'                        : 'Enter your tag here'
     'editTag'                    : 'Enter your tag here'
+    'editBookmarkTitle'          : 'Enter title for bookmark'
 
     'addBookmark'                : 'Enter your tag here'
     'addMultipleBookmark'        : 'Enter your tag here'
@@ -23,6 +24,7 @@ Hint =
   botStringSpecialModeMap:
     'tag'                        : 'Tag'
     'editTag'                    : 'Edit Tag'
+    'editBookmarkTitle'          : 'Edit bookmark title'
 
     'addBookmark'                : 'Add Bookmark'
     'addMultipleBookmark'        : 'Add multiple Bookmark'

@@ -63,6 +63,66 @@ Action =
       incognito: msg.option.incognito
 
   # ------------------------------------------------------------
+  # Adding / Removing Bookmark
+  # ------------------------------------------------------------
+
+  _getHostname: (url) ->
+    a = document.createElement('a')
+    a.href = url
+    a.hostname
+
+  suggestTag: (msg) ->
+    if msg.bookmark
+      hostname = @_getHostname(msg.bookmark.url)
+      tagArr = Tag.autoTag(msg.bookmark.title, hostname)
+
+      res: 'suggestTag'
+      tagArr: tagArr
+    else
+      tagMetaArr = []
+
+      _.forEach msg.bookmarkArr, (bookmark) =>
+        hostname = @_getHostname(bookmark.url)
+        tagArr = Tag.autoTag(bookmark.title, hostname)
+        tagMetaArr.push(tagArr)
+
+      res: 'suggestTag'
+      tagMetaArr: tagMetaArr
+
+  addBookmark: (msg) ->
+    Bookmark.create(msg.bookmark, msg.tagArr)
+
+  removeBookmark: (msg) ->
+    if msg.id
+      Bookmark.remove(msg.id)
+    else
+      _.forEach msg.idArr, (id) ->
+        Bookmark.remove(id)
+
+  queryDeletedBookmark: (msg) ->
+    res: 'queryDeletedBookmark'
+    nodeArr: CStorage.getState('lastDeletedNodeArr')
+
+  recoverBookmark: (msg) ->
+    if _.isNumber(msg.index)
+      Bookmark.recover(msg.index)
+    else
+      Bookmark.recover(msg.indexArr)
+
+  # ------------------------------------------------------------
+
+  deleteCurrentPageBookmark: (msg, done) ->
+    WinTab.getCurrTab (tab) ->
+      done({ nodeArr: _.values(Bookmark.fbExactURL(tab.url)) })
+
+  # ------------------------------------------------------------
+  # Editing bookmark
+  # ------------------------------------------------------------
+
+  editBookmarkTitle: (msg, done) ->
+    Bookmark.update(msg.id, { title: msg.title }, done)
+
+  # ------------------------------------------------------------
   # Tags
   # ------------------------------------------------------------
 
@@ -119,59 +179,6 @@ Action =
 
   removeSession: (msg, done) ->
     Session.remove(msg.sessionName, done)
-
-  # ------------------------------------------------------------
-  # Adding / Removing Bookmark
-  # ------------------------------------------------------------
-
-  _getHostname: (url) ->
-    a = document.createElement('a')
-    a.href = url
-    a.hostname
-
-  suggestTag: (msg) ->
-    if msg.bookmark
-      hostname = @_getHostname(msg.bookmark.url)
-      tagArr = Tag.autoTag(msg.bookmark.title, hostname)
-
-      res: 'suggestTag'
-      tagArr: tagArr
-    else
-      tagMetaArr = []
-
-      _.forEach msg.bookmarkArr, (bookmark) =>
-        hostname = @_getHostname(bookmark.url)
-        tagArr = Tag.autoTag(bookmark.title, hostname)
-        tagMetaArr.push(tagArr)
-
-      res: 'suggestTag'
-      tagMetaArr: tagMetaArr
-
-  addBookmark: (msg) ->
-    Bookmark.create(msg.bookmark, msg.tagArr)
-
-  removeBookmark: (msg) ->
-    if msg.id
-      Bookmark.remove(msg.id)
-    else
-      _.forEach msg.idArr, (id) ->
-        Bookmark.remove(id)
-
-  queryDeletedBookmark: (msg) ->
-    res: 'queryDeletedBookmark'
-    nodeArr: CStorage.getState('lastDeletedNodeArr')
-
-  recoverBookmark: (msg) ->
-    if _.isNumber(msg.index)
-      Bookmark.recover(msg.index)
-    else
-      Bookmark.recover(msg.indexArr)
-
-  # ------------------------------------------------------------
-
-  deleteCurrentPageBookmark: (msg, done) ->
-    WinTab.getCurrTab (tab) ->
-      done({ nodeArr: _.values(Bookmark.fbExactURL(tab.url)) })
 
   # ------------------------------------------------------------
   # Others

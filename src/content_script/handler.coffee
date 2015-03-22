@@ -117,6 +117,15 @@ InputHandler =
 
   # ------------------------------------------------------------
 
+  s_editBookmarkTitle: (input) ->
+    if @hasNoSelection()
+      nodeArr = @state.nodeArr
+      nodeArr[@getCurrentNodeFullIndex()].title = input
+
+    @setState { nodeArr, input }
+  
+  # ------------------------------------------------------------
+
   # When using '!', ignore suggested tags
   h_addBookmark: (input) ->
     useSuggestedTag = input[0] isnt '!'

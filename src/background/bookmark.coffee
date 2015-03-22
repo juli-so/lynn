@@ -239,7 +239,7 @@ Bookmark =
     Rank.rank(kwArr, tagArr, result)
 
   # ------------------------------------------------------------
-  # Create / Remove / Recover
+  # Create / Update / Remove / Recover
   # ------------------------------------------------------------
 
   create: (node, tagArr, parentId = '1') ->
@@ -249,6 +249,13 @@ Bookmark =
       node.tagArr = @allTag[node.id] = tagArr
       @allNode[node.id] = node
       @storeTag()
+
+  update: (id, changes, cb) ->
+    chrome.bookmarks.update id, changes, (node) =>
+      node.tagArr = @allTag[node.id]
+      @allNode[node.id] = node
+      @storeTag()
+      cb()
     
   remove: (id) ->
     chrome.bookmarks.remove id, =>

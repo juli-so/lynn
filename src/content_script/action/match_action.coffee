@@ -245,6 +245,7 @@ ActionMatch =
       # I_Action
       't':                'i_tag'
       's-t':              'i_editTag'
+      'n':                'i_editBookmarkTitle'
 
     actionMap[keyString] || 'noop'
 
