@@ -46,4 +46,3 @@ Util =
     e = document.getElementById('lynn_console')
     e.setSelectionRange(start, end)
 
-

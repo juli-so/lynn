@@ -31,8 +31,9 @@
           "lib/jquery.min.js",
           "lib/react.min.js",
 
-          "js/shared.js",
-          "js/messaging.js",
+          "js/shared_util.js",
+          "js/shared_messaging.js",
+          "js/shared_storage.js",
           "js/content_script.js"
         ]
       }
@@ -42,7 +43,8 @@
       "scripts": [
         "lib/lodash.min.js",
 
-        "js/shared.js",
+        "js/shared_util.js",
+        "js/shared_storage.js",
         "js/background.js"
       ]
     },

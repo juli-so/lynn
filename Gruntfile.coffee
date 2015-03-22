@@ -3,18 +3,21 @@
 # --------------------------------------------------------------
 
 main_src =
-  'js/shared.js': [
-    'src/shared/lodash_mixin.coffee',
-    'src/shared/util.coffee'
+  'js/shared_util.js': [
+    'src/shared/util/lodash_mixin.coffee',
+    'src/shared/util/util.coffee'
   ]
 
-  'js/messaging.js': [
-    'src/messaging/message.coffee',
-    'src/messaging/listener.coffee'
+  'js/shared_messaging.js': [
+    'src/shared/messaging/message.coffee',
+    'src/shared/messaging/listener.coffee'
+  ]
+
+  'js/shared_storage.js': [
+    'src/shared/storage/c_storage.coffee'
   ]
 
   'js/background.js': [
-    'src/background/c_storage.coffee',
     'src/background/wintab.coffee',
     'src/background/message.coffee',
     'src/background/session.coffee',
