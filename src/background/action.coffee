@@ -34,19 +34,6 @@ Action =
   
   # ------------------------------------------------------------
 
-  # If no input option is given return all option
-  getOption: (msg) ->
-    res: 'getOption'
-    option: CStorage.getOption(msg.option || null)
-
-  # If no input state is given return all state
-  getState: (msg) ->
-    res: 'getState'
-    state: CStorage.getState(msg.state || null)
-
-  setOption: (msg, done) ->
-    CStorage.setOption(msg.optionObj, done)
-
   setState: (msg, done) ->
     CStorage.setState(msg.stateObj, done)
 
@@ -118,9 +105,9 @@ Action =
   # Sessions
   # ------------------------------------------------------------
 
-  searchSession: (msg) ->
-    res: 'searchSession'
-    sessionRecord: Session.search(msg.input)
+  searchSession: (msg, done) ->
+    Session.search msg.input, (sessionRecord) ->
+      done({ sessionRecord })
   
   storeWinSession: (msg, done) ->
     Session.storeWin(msg.sessionName, msg.tabArr, done)

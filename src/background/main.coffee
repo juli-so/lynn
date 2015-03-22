@@ -6,6 +6,5 @@
 
 Message.init()
 
-CStorage.sync ->
-  Bookmark.init()
-  Tag.init()
+Bookmark.init()
+Tag.init()

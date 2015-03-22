@@ -19,7 +19,7 @@ saveGeneral = ->
   MAX_RECOVER_NUM = $('#MAX_RECOVER_NUM').val()
 
   optionObj = { MAIN_SHORTCUT, MAX_SUGGESTION_NUM, MAX_RECOVER_NUM }
-  Listener.listenOnce 'setOption', { optionObj }, ->
+  CStorage.setOption optionObj, ->
     render()
     toggleSuccessFadeMsg('save-result')
 
@@ -45,27 +45,27 @@ autoTaggingExample = ->
 
 render = ->
   Listener.listenOnce 'stats', {}, (statsMsg) ->
-    Listener.listenOnce 'getOption', {}, (optionMsg) ->
-      Listener.listenOnce 'getState', {}, (stateMsg) ->
+    CStorage.getOption null, (option) ->
+      CStorage.getState null, (state) ->
         React.render(
           Dashboard(
-            option: optionMsg.option
-            state:  stateMsg.state
+            option: option
+            state:  state
             stats:  statsMsg.stats
           ), $('#dashboard_container')[0])
 
         React.render(
           General(
-            option: optionMsg.option
-            state:  stateMsg.state
+            option: option
+            state:  state
             stats:  statsMsg.stats
             save:   saveGeneral
           ), $('#general_container')[0])
 
         React.render(
           Tagging(
-            option: optionMsg.option
-            state:  stateMsg.state
+            option: option
+            state:  state
             addAutoTaggingRule: addAutoTaggingRule
             autoTaggingExample: autoTaggingExample
           ), $('#tagging_container')[0])

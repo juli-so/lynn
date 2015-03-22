@@ -5,43 +5,43 @@
 # ---------------------------------------------------------------------------- #
 
 Session =
-  search: (input) ->
-    sessionMap = CStorage.getState('sessionMap')
-    
-    _.find sessionMap, (s, sName) ->
-      _.ciStartsWith(sName, input)
+  search: (input, cb) ->
+    CStorage.getState 'sessionMap', (sessionMap) ->
+      sessionRecord = _.find sessionMap, (s, sName) ->
+        _.ciStartsWith(sName, input)
+
+      cb(sessionRecord)
 
   storeWin: (sessionName, tabArr, cb) ->
-    sessionMap = CStorage.getState('sessionMap')
+    CStorage.getState 'sessionMap', (sessionMap) ->
+      sessionMap[sessionName] =
+        name: sessionName
+        type: 'window'
+        session: tabArr
 
-    sessionMap[sessionName] =
-      name: sessionName
-      type: 'window'
-      session: tabArr
-
-    CStorage.setState({ sessionMap }, cb)
+      CStorage.setState({ sessionMap }, cb)
 
   storeAll: (sessionName, tabArr, currWinId, cb) ->
-    sessionMap = CStorage.getState('sessionMap')
+    CStorage.getState 'sessionMap', (sessionMap) ->
+      tabArrGroups = _.groupBy(tabArr, 'windowId')
+      currWinTabArr = tabArrGroups[currWinId]
+      
+      # Current window tabs go first
+      session = _.without(_.values(tabArrGroups), currWinTabArr)
+      session.unshift(currWinTabArr)
 
-    tabArrGroups = _.groupBy(tabArr, 'windowId')
-    currWinTabArr = tabArrGroups[currWinId]
-    
-    session = _.without(_.values(tabArrGroups), currWinTabArr)
-    session.unshift(currWinTabArr)
+      sessionMap[sessionName] =
+        name: sessionName
+        type: 'chrome'
+        session: session
 
-    sessionMap[sessionName] =
-      name: sessionName
-      type: 'chrome'
-      session: session
-
-    CStorage.setState({ sessionMap }, cb)
+      CStorage.setState({ sessionMap }, cb)
 
   remove: (input, cb) ->
-    sessionMap = CStorage.getState('sessionMap')
-    sessionName = _.findKey sessionMap, (s, sName) ->
-      _.ciStartsWith(sName, input)
+    CStorage.getState 'sessionMap', (sessionMap) ->
+      sessionName = _.findKey sessionMap, (s, sName) ->
+        _.ciStartsWith(sName, input)
 
-    if sessionName
-      delete sessionMap[sessionName]
-      CStorage.setState({ sessionMap }, cb)
+      if sessionName
+        delete sessionMap[sessionName]
+        CStorage.setState({ sessionMap }, cb)

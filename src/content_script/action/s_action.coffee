@@ -7,14 +7,6 @@
 S_Action =
 
   # ------------------------------------------------------------
-  # Update State
-  # ------------------------------------------------------------
-
-  h_updateState: ->
-    Message.postMessage
-      req: 'getState'
-
-  # ------------------------------------------------------------
   # Bookmarks
   # ------------------------------------------------------------
 
@@ -111,7 +103,6 @@ S_Action =
       id: @getCurrentNode().id
 
     @callAction('n_hide')
-    @callAction('s_h_updateState')
 
   # ------------------------------------------------------------
   # Tag
@@ -165,8 +156,6 @@ S_Action =
     if not _.isEmpty(sessionName) and not CommandMap[sessionName]
       tabArr = @state.actionTmp['currWinTabArr']
       Listener.listenOnce 'storeWinSession', { sessionName, tabArr }, (message) =>
-        Message.postMessage { req: 'getState' }
-
         @callAction('n_hide')
 
   storeChromeSession: ->
@@ -178,8 +167,6 @@ S_Action =
 
       msgObj = { sessionName, tabArr, currWinId }
       Listener.listenOnce 'storeChromeSession', msgObj, (message) =>
-          Message.postMessage { req: 'getState' }
-
           @callAction('n_hide')
 
   removeSession: ->
@@ -187,8 +174,6 @@ S_Action =
 
     if not _.isEmpty(sessionName)
       Listener.listenOnce 'removeSession', { sessionName }, (message) =>
-        Message.postMessage { req: 'getState' }
-
         Listener.stopListen('searchSession')
 
         @callAction('n_hide')

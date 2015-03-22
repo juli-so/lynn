@@ -56,21 +56,23 @@ Lynn = React.createClass
           hint: ''
 
     # ----------------------------------------------------------
-    # Load & listen to background state & option
+    # Update according to newest Option and State
     # ----------------------------------------------------------
 
-    Listener.listen 'getOption', (message) =>
-      option = message.option
+    optionHandler = (option) =>
       @setState { option }
       ActionMatch.loadMainShortcut(option['MAIN_SHORTCUT'])
 
-    Listener.listen 'getState' , (message) =>
-      state = message.state
-      @setState
-        sessionMap: state.sessionMap
+    stateHandler = (state) =>
+      @setState { sessionMap: state.sessionMap }
 
-    Message.postMessage { req: 'getOption' }
-    Message.postMessage { req: 'getState'  }
+    chrome.storage.onChanged.addListener =>
+      CStorage.getOption(null, optionHandler)
+      CStorage.getState(null, stateHandler)
+
+    # First time init
+    CStorage.getOption(null, optionHandler)
+    CStorage.getState(null, stateHandler)
 
     # ----------------------------------------------------------
 

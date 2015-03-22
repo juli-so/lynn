@@ -52,12 +52,12 @@ CStorage =
       option = _.assign({}, option, optionObj)
       
       chrome.storage.local.set { option }, ->
-        cb() if cb
+        cb(option) if cb
 
   setState: (stateObj, cb) ->
     @getState null, (state) =>
       state = _.assign({}, state, stateObj)
       
       chrome.storage.local.set { state }, ->
-        cb() if cb
+        cb(state) if cb
 
