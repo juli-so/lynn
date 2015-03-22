@@ -6,8 +6,12 @@
 JsonIO = React.createClass
   render: ->
     div null,
-      textarea { id: 'jsonio', rows: 20, cols: 56 },
-      JSON.stringify(@props.allNode, null, 2)
+      textarea
+        id: 'jsonio'
+        rows: 20
+        cols: 56
+        value: JSON.stringify(@props.allNode, null, 2)
+        readOnly: yes
 
       div { className: 'custom-hr'}
       div { className: 'right' },
