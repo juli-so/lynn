@@ -22,6 +22,7 @@ Top = React.createClass
         id: 'lynn_console_hint'
         type: 'text'
         size: '80'
+
         readOnly: true
 
         value: @props.hint
@@ -32,7 +33,9 @@ Top = React.createClass
         id: 'lynn_console'
         type: 'text'
         size: '80'
+
         placeholder: inputPlaceHolder
+        spellCheck: no
 
         value: @props.input
         onChange: @props.onConsoleChange
