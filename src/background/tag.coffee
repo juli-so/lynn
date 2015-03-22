@@ -31,7 +31,7 @@ Tag =
   hostnameContainsMap: {}
 
   init: ->
-    CStorage.getState 'autoTaggingMap', (autoTaggingMap) =>
+    autoTaggingMapHandler = (autoTaggingMap) =>
       _.forEach autoTaggingMap, (taggingRule, tag) =>
         { matchProp, matchType, matchStr } = taggingRule
         if matchProp is 'title'
@@ -42,6 +42,8 @@ Tag =
             @hostnameExactMap['www.' + matchStr] = tag
           else
             @hostnameContainsMap[matchStr] = tag
+
+    CStorage.getState('autoTaggingMap', autoTaggingMapHandler)
 
   autoTag: (title, hostname) ->
     tagArr = []
@@ -60,10 +62,15 @@ Tag =
 
     tagArr
 
-  addAutoTaggingRule: (tag, matchProp, matchType, matchStr) ->
+  addAutoTaggingRule: (tag, matchProp, matchType, matchStr, cb) ->
     CStorage.getState 'autoTaggingMap', (autoTaggingMap) ->
       autoTaggingMap[tag] = { matchProp, matchType, matchStr }
-      CStorage.setState { autoTaggingMap }
+      CStorage.setState({ autoTaggingMap }, cb)
+
+  removeAutoTaggingRule: (tag, cb) ->
+    CStorage.getState 'autoTaggingMap', (autoTaggingMap) ->
+      delete autoTaggingMap[tag]
+      CStorage.setState({ autoTaggingMap }, cb)
       
   _log: ->
     console.log @titleContainsMap

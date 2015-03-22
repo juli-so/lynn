@@ -96,10 +96,12 @@ Action =
 
   # ------------------------------------------------------------
 
-  addAutoTaggingRule: (msg) ->
-    Tag.addAutoTaggingRule(msg.tag, msg.matchProp, msg.matchType, msg.matchStr)
+  addAutoTaggingRule: (msg, done) ->
+    Tag.addAutoTaggingRule(
+      msg.tag, msg.matchProp, msg.matchType, msg.matchStr, done)
 
-    res: 'addAutoTaggingRule'
+  removeAutoTaggingRule: (msg, done) ->
+    Tag.removeAutoTaggingRule(msg.tag, done)
 
   # ------------------------------------------------------------
   # Sessions

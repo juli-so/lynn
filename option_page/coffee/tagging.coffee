@@ -74,3 +74,19 @@ Tagging = React.createClass
             onClick: @props.addAutoTaggingRule
           , 'Add rule'
 
+        h3 null, 'Remove a rule'
+        p null, 'Tag name'
+        input {
+          type: 'text'
+          id: 'autoTagging_remove_tag'
+          placeholder: 'Your tag here'
+        }
+
+        div { className: 'controls' },
+          span { id: 'remove-autotagging-rule-result', className: 'result transparent' }, 'Success'
+          div { className: 'spacer' }
+          button
+            id: 'remove-autotagging-rule'
+            onClick: @props.removeAutoTaggingRule
+          , 'Remove'
+

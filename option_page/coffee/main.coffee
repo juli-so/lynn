@@ -30,12 +30,19 @@ addAutoTaggingRule = ->
   matchStr  = $('#autoTagging_matchStr' ).val()
 
   reqObj = { tag, matchProp, matchType, matchStr }
-  if _.any(reqObj, _.isEmpty)
-    return
+  return if _.any(reqObj, _.isEmpty)
 
   Listener.listenOnce 'addAutoTaggingRule', reqObj, ->
     render()
     toggleSuccessFadeMsg('add-autotagging-rule-result')
+
+removeAutoTaggingRule = ->
+  tag = $('#autoTagging_remove_tag').val()
+  return if _.isEmpty(tag)
+
+  Listener.listenOnce 'removeAutoTaggingRule', { tag }, ->
+    render()
+    toggleSuccessFadeMsg('remove-autotagging-rule-result')
 
 autoTaggingExample = ->
   $('#autoTagging_tag'      ).val('#python')
@@ -66,8 +73,9 @@ render = ->
           Tagging(
             option: option
             state:  state
-            addAutoTaggingRule: addAutoTaggingRule
             autoTaggingExample: autoTaggingExample
+            addAutoTaggingRule: addAutoTaggingRule
+            removeAutoTaggingRule: removeAutoTaggingRule
           ), $('#tagging_container')[0])
 
         React.render(JsonIO(
