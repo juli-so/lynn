@@ -41,6 +41,15 @@ Bookmark =
       initNode(nodeArr[0])
       initTag()
 
+    # Listen on bookmark events to update @allNode
+    chrome.bookmarks.onCreated.addListener (id, bm) =>
+      if not _.contains(@allNode, id)
+        @allNode[id] = bm
+        @allNode[id].tagArr = @allTag[id] = []
+
+    chrome.bookmarks.onRemoved.addListener (id, removeInfo) =>
+      @h_remove(id)
+
   initLocal: (allNode) ->
     @allNode = allNode
     @allTag = {}
@@ -257,17 +266,21 @@ Bookmark =
       @storeTag()
       cb()
     
+  # Remove the node internally
+  h_remove: (id) ->
+    CStorage.getState 'lastDeletedNodeArr', (lastDeletedNodeArr) =>
+      CStorage.getOption 'MAX_RECOVER_NUM', (MAX_RECOVER_NUM) =>
+        clone = _.cloneDeep(@allNode[id])
+        lastDeletedNodeArr.unshift(clone)
+        lastDeletedNodeArr = lastDeletedNodeArr[0...MAX_RECOVER_NUM]
+        CStorage.setState({ lastDeletedNodeArr })
+
+        delete @allNode[id]
+        @delAllTag(id)
+
+  # No callback here since we listen on chrome.bookmarks.onRemoved
   remove: (id) ->
     chrome.bookmarks.remove id, =>
-      CStorage.getState 'lastDeletedNodeArr', (lastDeletedNodeArr) =>
-        CStorage.getOption 'MAX_RECOVER_NUM', (MAX_RECOVER_NUM) =>
-          clone = _.cloneDeep(@allNode[id])
-          lastDeletedNodeArr.unshift(clone)
-          lastDeletedNodeArr = lastDeletedNodeArr[0...MAX_RECOVER_NUM]
-          CStorage.setState({ lastDeletedNodeArr })
-
-          delete @allNode[id]
-          @delAllTag(id)
 
   # Recover deleted bookmarks
   recover: (indexOrIndexArr) ->
