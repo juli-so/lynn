@@ -2,10 +2,9 @@ _site/
 
 .*
 
-css/style.css
+css/*.css
+js/*.js
 
-bin/
 node_modules/
-options/site
+option_page/site
 
-tags
