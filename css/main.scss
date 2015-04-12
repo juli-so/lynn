@@ -2,29 +2,6 @@
 # Front matter for Jekyll
 ---
 
-/* Fonts */
-/* --------------------------------------------------------- */
-
-@font-face {
-  font-family: 'Open Sans';
-  src: url('../fonts/OpenSans-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Exo Light';
-  src: url('../fonts/Exo-Light.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'Exo';
-  src: url('../fonts/Exo-Regular.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'Exo Medium';
-  src: url('../fonts/Exo-Medium.otf') format('opentype');
-}
-
 /* Base */
 /* --------------------------------------------------------- */
 
@@ -65,7 +42,8 @@ body {
 
   .heading {
     font-size: 46px;
-    font-family: 'Exo Light';
+    font-family: Exo;
+    font-weight: 300;
     color: #434343;
   }
 
@@ -74,7 +52,8 @@ body {
 
     text-align: right;
     font-size: 18px;
-    font-family: 'Exo';
+    font-family: Exo;
+    font-weight: 300;
     color: #444;
   }
 
@@ -110,7 +89,8 @@ body {
   }
 
   h1, h2, h3, h4 {
-    font-family: 'Exo';
+    font-family: Exo;
+    font-weight: 500;
   }
 }
 
