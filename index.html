@@ -40,9 +40,18 @@ layout: default
 
 </section>
 
-{% for post in site.posts reversed %}
-<section id="{{ post.title }}" class="view">
-  <p>{{ post.content }}</p>
+<section id="doc" class="view">
+  {% capture doc %}{% include pages/doc.md %}{% endcapture %}
+  {{ doc | markdownify }}
 </section>
-{% endfor %}
+
+<section id="cn_doc" class="view">
+  {% capture cn_doc %}{% include pages/cn_doc.md %}{% endcapture %}
+  {{ cn_doc | markdownify }}
+</section>
+
+<section id="about" class="view">
+  {% capture about %}{% include pages/about.md %}{% endcapture %}
+  {{ about | markdownify }}
+</section>
 

@@ -1,8 +1,3 @@
----
-layout: null
-title: doc-cn
----
-
 ## 文档
 
 ### 基本介绍

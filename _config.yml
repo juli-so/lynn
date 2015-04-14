@@ -1,9 +1,9 @@
 # Lynn
 
 title: Lynn - Vim-like Bookmarking with tags
-baseurl: "/lynn"
+baseurl: "/lynn/"
 
-markdown: kramdown
+markdown: redcarpet
 
 github:
   main: https://github.com/octref

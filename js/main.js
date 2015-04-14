@@ -30,9 +30,9 @@ $(function() {
     e.preventDefault();
 
     if ($('#nav a[href="#doc"]').length) {
-      $('#nav a[href="#doc"]').attr('href', '#doc-cn').click();
+      $('#nav a[href="#doc"]').attr('href', '#cn_doc').click();
     } else {
-      $('#nav a[href="#doc-cn"]').attr('href', '#doc').click();
+      $('#nav a[href="#cn_doc').attr('href', '#doc').click();
     }
 
     var item = $(this);

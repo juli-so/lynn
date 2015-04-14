@@ -1,8 +1,3 @@
----
-layout: null
-title: doc
----
-
 ## Documentation
 
 ### First things first
