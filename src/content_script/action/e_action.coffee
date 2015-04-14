@@ -29,7 +29,6 @@ CommandMap =
 
   'rand'          : 'n_openRandom'
 
-
   # Site specific
   'ahn'           : 't_addHNBookmark'
   'phn'           : 't_postHN'
