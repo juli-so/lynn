@@ -1,10 +1,2 @@
 _site/
-
 .*
-
-css/*.css
-js/*.js
-
-node_modules/
-option_page/site
-
