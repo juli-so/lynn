@@ -12,7 +12,7 @@ Action =
 
   # ------------------------------------------------------------
 
-  search: (msg) ->
+  search: (msg, done) ->
     query = msg.input
 
     if _.startsWith(query, '$')
@@ -21,16 +21,14 @@ Action =
       
       if sessionRecord
         nodeArr = Util.tabToNode(_.flatten(sessionRecord.session))
-        res: 'search'
-        result: Bookmark.tagify(nodeArr)
-        sName: sessionRecord.name
+        done
+          result: Bookmark.tagify(nodeArr)
+          sName: sessionRecord.name
       else
-        res: 'search'
-        result: []
+        done({ result: [] })
 
     else
-      res: 'search'
-      result: Bookmark.find(msg.input)
+      done({ result: Bookmark.find(msg.input) })
 
   random: (msg, done) ->
     done({ nodeArr: Bookmark.random(msg.n) })
@@ -74,13 +72,12 @@ Action =
     a.href = url
     a.hostname
 
-  suggestTag: (msg) ->
+  suggestTag: (msg, done) ->
     if msg.bookmark
       hostname = @_getHostname(msg.bookmark.url)
       tagArr = Tag.autoTag(msg.bookmark.title, hostname)
 
-      res: 'suggestTag'
-      tagArr: tagArr
+      done({ tagArr: tagArr })
     else
       tagMetaArr = []
 
@@ -89,8 +86,7 @@ Action =
         tagArr = Tag.autoTag(bookmark.title, hostname)
         tagMetaArr.push(tagArr)
 
-      res: 'suggestTag'
-      tagMetaArr: tagMetaArr
+      done({ tagMetaArr: tagMetaArr })
 
   addBookmark: (msg) ->
     Bookmark.create(msg.bookmark, msg.tagArr)
@@ -102,9 +98,8 @@ Action =
       _.forEach msg.idArr, (id) ->
         Bookmark.remove(id)
 
-  queryDeletedBookmark: (msg) ->
-    res: 'queryDeletedBookmark'
-    nodeArr: CStorage.getState('lastDeletedNodeArr')
+  queryDeletedBookmark: (msg, done) ->
+    done({ nodeArr: CStorage.getState('lastDeletedNodeArr') })
 
   recoverBookmark: (msg) ->
     if _.isNumber(msg.index)
@@ -153,9 +148,8 @@ Action =
 
     Bookmark.storeTag()
 
-  tagify: (msg) ->
-    res: 'tagify'
-    nodeArr: Bookmark.tagify(msg.nodeArr)
+  tagify: (msg, done) ->
+    done({ nodeArr: Bookmark.tagify(msg.nodeArr) })
 
   # ------------------------------------------------------------
 
@@ -190,6 +184,5 @@ Action =
   queryTab: (msg, done) ->
     WinTab.getAllTab(yes, done)
 
-  stats: (msg) ->
-    res: 'stats'
-    stats: Bookmark.stats()
+  stats: (msg, done) ->
+    done({ stats: Bookmark.stats() })
