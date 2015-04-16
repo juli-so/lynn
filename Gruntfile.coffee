@@ -127,6 +127,13 @@ module.exports = (grunt) ->
       option_page:
         files: less_option_page
 
+    autoprefixer:
+      options:
+        browsers: ['last 2 versions', 'bb 10']
+      animate:
+        src: 'css/animate.css'
+        dest: 'css/animate.css'
+
     # ----------------------------------------------------------
     # Watch
     # ----------------------------------------------------------
@@ -143,7 +150,7 @@ module.exports = (grunt) ->
 
       less_main:
         files: ['less/*.less']
-        tasks: ['less:main']
+        tasks: ['less:main', 'autoprefixer']
 
       option_page_coffee:
         files: ['option_page/coffee/*.coffee']
@@ -233,6 +240,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-uglify')
 
   grunt.loadNpmTasks('grunt-contrib-compress')
+  grunt.loadNpmTasks('grunt-autoprefixer')
 
   # ------------------------------------------------------------
   # Rename to resolve conflict
@@ -242,7 +250,7 @@ module.exports = (grunt) ->
 
   # ------------------------------------------------------------
 
-  grunt.registerTask('default', ['coffee', 'jade', 'less'])
+  grunt.registerTask('default', ['coffee', 'jade', 'less', 'autoprefixer'])
 
   grunt.registerTask('build', ['default'])
   grunt.registerTask('watch', ['g_watch'])

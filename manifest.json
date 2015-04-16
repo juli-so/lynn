@@ -23,7 +23,7 @@
         "matches": ["<all_urls>"],
         "css": [
           "css/lynn.css",
-          "vendor/css/animate.min.css",
+          "css/animate.css",
           "vendor/css/font-awesome.min.css"
         ],
         "js": [

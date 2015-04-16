@@ -1,0 +1,50 @@
+/* Animation adapted from animate.css github.com/daneden/animate.css */
+
+.animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -30px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+.fadeInDown {
+  animation-name: fadeInDown;
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(-20px, 0, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+.fadeInLeft {
+  animation-name: fadeInLeft;
+}
+
+@keyframes fadeOutRight {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(20px, 0, 0);
+  }
+}
+.fadeOutRight {
+  animation-name: fadeOutRight;
+}
