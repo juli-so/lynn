@@ -71,9 +71,8 @@ jade_option_page =
 # --------------------------------------------------------------
 
 less_main =
-  'css/lynn.css': [
-    'less/lynn.less'
-  ]
+  'css/lynn.css': 'less/lynn.less'
+  'css/animate.css': 'less/animate.less'
 
 less_option_page =
   'option_page/site/css/option.css': [
