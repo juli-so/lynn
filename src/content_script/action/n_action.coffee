@@ -13,6 +13,7 @@ N_Action =
   # App-wise actions
   # ------------------------------------------------------------
 
+  # Hide with animation
   hide: (clearCache = yes, clearActionTmp = yes) ->
     @setState { animation: 'fadeOutUp' }
 
@@ -21,6 +22,11 @@ N_Action =
       @callAction('n_reset', [clearCache])
 
     setTimeout(timeOutFunc, 200)
+
+  # Hide without animation
+  hideNow: ->
+    @callAction('n_reset')
+    @setState { visible: no }
 
   show: ->
     @setState
@@ -264,7 +270,7 @@ N_Action =
     Message.postMessage(message)
 
     if needHide
-      @callAction('n_hide')
+      @callAction('n_hideNow')
     else
       @setState { selectedArr: [] }
 
