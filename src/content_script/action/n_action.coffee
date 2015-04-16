@@ -15,7 +15,7 @@ N_Action =
 
   # Hide with animation
   hide: (clearCache = yes, clearActionTmp = yes) ->
-    @setState { animation: 'fadeOutUp' }
+    @setState { animation: 'lynn-fadeOutUp' }
 
     timeOutFunc = =>
       @setState { visible: no }
@@ -31,7 +31,7 @@ N_Action =
   show: ->
     @setState
       visible: yes
-      animation: 'fadeInDown'
+      animation: 'lynn-fadeInDown'
 
   toggle: ->
     if @state.visible
@@ -49,7 +49,7 @@ N_Action =
       mode: 'query'
       specialMode: 'no'
 
-      animation: 'fadeInDown'
+      animation: 'lynn-fadeInDown'
       nodeAnimation: {}
 
       nodeArr: []
@@ -311,7 +311,7 @@ N_Action =
         # index within all nodeArr, not within current page nodes
         currentNodeFullIndex = @getCurrentNodeFullIndex()
         nodeAnimation = {}
-        nodeAnimation[currentNodeFullIndex] = 'fadeOutRight'
+        nodeAnimation[currentNodeFullIndex] = 'lynn-fadeOutRight'
         @setState { nodeAnimation }
 
         # Remove the bookmark in DB
@@ -352,7 +352,7 @@ N_Action =
       else # HasSelection
         nodeAnimation = {}
         _.forEach selectedArr, (nodeIndex) ->
-          nodeAnimation[nodeIndex] = 'fadeOutRight'
+          nodeAnimation[nodeIndex] = 'lynn-fadeOutRight'
         @setState { nodeAnimation }
 
         # Remove the bookmark in DB

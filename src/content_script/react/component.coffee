@@ -19,7 +19,7 @@ Tag = React.createClass
 
 Suggestion = React.createClass
   render: ->
-    className = 'lynn_suggestion animated '
+    className = 'lynn_suggestion lynn-animated '
     className += @props.animation
     className += ' lynn_suggestion_current' if @props.isCurrent
     className += ' lynn_suggestion_selected' if @props.isSelected

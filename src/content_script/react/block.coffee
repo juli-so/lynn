@@ -56,7 +56,7 @@ Mid = React.createClass
   render: ->
     div { id: 'lynn_mid' },
       _.map @props.nodeArr[@props.start...@props.end], (node, index) =>
-        animation = @props.nodeAnimation[@props.start + index] || 'fadeInLeft'
+        animation = @props.nodeAnimation[@props.start + index] || 'lynn-fadeInLeft'
 
         Suggestion
           key: node.id

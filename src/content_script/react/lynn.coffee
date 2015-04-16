@@ -18,7 +18,7 @@ Lynn = React.createClass
     specialMode: 'no'
 
     # when 'no' animation is disabled
-    animation: 'fadeInDown'
+    animation: 'lynn-fadeInDown'
     # nodeIndex -> animation string
     nodeAnimation: {}
 
@@ -98,7 +98,7 @@ Lynn = React.createClass
     id = 'lynn'
     className = ''
     if @state.animation isnt 'no'
-      className += 'animated ' + @state.animation
+      className += 'lynn-animated ' + @state.animation
     className += ' lynn_hidden' unless @state.visible
 
     # Prevent font being overridden by :lang
@@ -190,7 +190,7 @@ Lynn = React.createClass
       @state.mode is 'query' and
       @state.specialMode is 'no' and
 
-      @state.animation is 'fadeInDown' and
+      @state.animation is 'lynn-fadeInDown' and
       _.isEmpty(@state.nodeAnimation) and
 
       _.isEmpty(@state.nodeArr) and
