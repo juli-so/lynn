@@ -1,6 +1,6 @@
 {
   "name": "Lynn",
-  "version": "0.1.0",
+  "version": "0.2.10",
   "description": "A Chrome plugin that lets you manage bookmarks with tags the Vim way.",
   "keywords": [
     "Chrome",
@@ -20,9 +20,9 @@
     "grunt-contrib-uglify": "^0.7.0",
     "grunt-contrib-watch": "^0.6.1"
   },
-  "author": "Pine Wu <octref@gmail.com> (http://octref.github.io/)",
+  "author": "Pine Wu <octref@gmail.com> (http://octref.com)",
   "license": "MIT",
-  "homepage": "https://github.com/octref/lynn",
+  "homepage": "http://octref.com/lynn",
   "repository": {
     "type": "git",
     "url": "https://github.com/octref/lynn"
