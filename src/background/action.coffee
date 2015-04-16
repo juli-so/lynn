@@ -99,7 +99,8 @@ Action =
         Bookmark.remove(id)
 
   queryDeletedBookmark: (msg, done) ->
-    done({ nodeArr: CStorage.getState('lastDeletedNodeArr') })
+    CStorage.getState 'lastDeletedNodeArr', (nodeArr) ->
+      done({ nodeArr })
 
   recoverBookmark: (msg) ->
     if _.isNumber(msg.index)
