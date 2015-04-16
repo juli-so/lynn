@@ -175,7 +175,8 @@ module.exports = (grunt) ->
           "js",
           "css",
           "option_page/site",
-          "dist"
+          "dist",
+          "lynn.zip"
         ]
 
     # ----------------------------------------------------------
