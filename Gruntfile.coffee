@@ -266,4 +266,3 @@ module.exports = (grunt) ->
 
   grunt.event.on 'watch', (action, filepath, target) ->
     grunt.log.writeln(target + ':' + filepath + ' has ' + action)
-
