@@ -2,12 +2,15 @@
 #                                                                              #
 # Handler for input in different modes                                         #
 #                                                                              #
-# For all following methods                                                    #
-# When they get called, their @ refer to Lynn                                  #
-#                                                                              #
 # ---------------------------------------------------------------------------- #
 
 InputHandler =
+
+  # ------------------------------------------------------------
+  # Used for matching correct handler
+  # @ here refers to InputHandler
+  # ------------------------------------------------------------
+
   default: (input) ->
     @setState { input }
 
@@ -17,6 +20,9 @@ InputHandler =
     else
       @['s_' + specialMode] || @default
 
+  # ------------------------------------------------------------
+  # Handlers
+  # * When they get called, their @ refer to Lynn
   # ------------------------------------------------------------
 
   query: (input) ->
