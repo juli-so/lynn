@@ -5,7 +5,6 @@
 # ---------------------------------------------------------------------------- #
 
 Util =
-
   # '#' '@' tags with no text are not allowed
   isTag: (tag) ->
     tag.length > 1 and (tag[0] is '#' or tag[0] is '@')

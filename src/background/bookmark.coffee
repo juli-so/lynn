@@ -189,36 +189,43 @@ Bookmark =
     _.filter @_allUniqTag(), (tag) ->
       _.ciContains(tag, tagFragment)
 
-  find: (query, pool = @allNode) ->
-    return [] if _.isEmpty(query)
-
-    # When query is just '#' or '@'
-    # Show all bookmarks with any of these kinds of tags
-    if query is '#' or query is '@'
-      prefix = query
-
-      return _.filter pool, (node) ->
-        _.any node.tagArr, (tag) ->
-          _.startsWith(tag, prefix)
-
-    # Process query and tokenize tag and keyword
-    if query[0] is '!'
-      strictSearch = yes
-      query = query[1..]
-    else
-      strictSearch = false
+  _processQuery:  (query) ->
+    # Full match rather than partial match for tags
+    strictSearch = _.contains(query, '!')
+    query = query.replace(/!/g, '')
+    # Only search current opened bookmarks
+    onlySearchCurrent = _.contains(query, '%')
+    query = query.replace(/%/g, '')
 
     tokenArr = query.split(' ')
     kwArr  = []
     tagArr = []
+    hasEmptyTag = no # '#' or '@'
 
+    # Filter out invalid tags
+    # Also remove single '#' or '@' when having other valid tags
     _.forEach tokenArr, (token) ->
-      # Filter out single "#"
-      if token isnt '#' and token isnt '@'
-        if Util.isTag(token)
-          tagArr.push(token)
-        else
+      if not hasEmptyTag
+        hasEmptyTag = token is '#' or token is '@'
+
+      if Util.isTag(token)
+        tagArr.push(token)
+      else
+        if token not in ['', '#', '@']
           kwArr.push(token)
+
+    { strictSearch, kwArr, tagArr, hasEmptyTag, onlySearchCurrent }
+
+  find: (query, pool = @allNode) ->
+    return [] if query is ''
+
+    { strictSearch, kwArr, tagArr, hasEmptyTag } = @_processQuery(query)
+
+    # When the only tag is '#' or '@'
+    # Find all bookmarks with keywords and at least one tag
+    if tagArr.length is 0 and hasEmptyTag
+      return _.filter @fbTitleArr(kwArr, yes, pool), (node) ->
+        node.tagArr.length > 0
 
     # Find all entries that has at least one suggested tag
     if not _.isEmpty(tagArr)
@@ -235,8 +242,6 @@ Bookmark =
         result = _.values(
           @fbTitleArr(kwArr, yes, @fbTagArr(intersection, @fbTagRange(diff)))
         )
-
-        nodeLog(Rank.rankStrict(kwArr, intersection, diff, result))
       else
         result = _.values(
           @fbTitleArr(kwArr, yes, @fbTagRange(suggestedTagArr))
