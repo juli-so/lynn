@@ -35,14 +35,8 @@ T =
     chrome.bookmarks.get(id + '', (o) -> log(o[0]))
 
   # ------------------------------------------------------------
-  # Go
+  # Async
   # ------------------------------------------------------------
 
-  go: ->
-    Bookmark.addTag(7, '#ha')
-    Bookmark.addTag(7, '#lo')
-    Bookmark.addTag(8, '#ha')
-    Bookmark.addTag(10, '#yo')
-    Bookmark.addTag(10, '#hoo')
-    Bookmark.addTag(15, '@hoo')
-    Bookmark.addTag(15, '#hey')
+  oneSec: (cb) ->
+    setTimeout(cb, 1000)

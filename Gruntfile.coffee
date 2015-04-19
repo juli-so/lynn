@@ -27,6 +27,7 @@ main_src =
     'src/background/rank.coffee',
     'src/background/log.coffee',
     'src/background/main.coffee',
+    'src/background/test.coffee'
   ]
 
   'js/content_script.js': [
