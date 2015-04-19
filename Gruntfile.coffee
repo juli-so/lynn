@@ -43,6 +43,7 @@ main_src =
     'src/content_script/handler.coffee',
    
     'src/content_script/react/element.coffee',
+    'src/content_script/react/cheatsheet.coffee',
     'src/content_script/react/component.coffee',
     'src/content_script/react/block.coffee',
     'src/content_script/react/lynn.coffee',

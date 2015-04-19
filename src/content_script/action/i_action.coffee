@@ -384,3 +384,8 @@ I_Action =
         nodeArr: nodeArr
         selectedArr: [0...nodeArr.length]
 
+  cheatSheet: ->
+    @callAction('n_storeCache')
+
+    @setState({ specialMode: 'cheatSheet' })
+

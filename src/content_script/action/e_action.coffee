@@ -29,6 +29,8 @@ CommandMap =
 
   'rand'          : 'n_openRandom'
 
+  '?'             : 'i_cheatSheet'
+
   # Site specific
   'ahn'           : 't_addHNBookmark'
   'phn'           : 't_postHN'
@@ -48,9 +50,14 @@ E_Action =
         @callAction('n_reset')
 
   escFromSpecialMode: ->
+    toFocus = @state.specialMode is 'cheatSheet'
     @setState { specialMode: 'no' }
     @callAction('n_recoverFromCache')
     @callAction('n_clearCache')
+
+    if toFocus
+      Util.focusOnConsole()
+      @callAction('n_setCaretToEnd')
 
   # ------------------------------------------------------------
 

@@ -36,9 +36,7 @@ Lynn = React.createClass
 
     # loaded from storage
     option: {}
-
     sessionMap: {}
-
     # A storage space used to pass items from I_Action to S_Action
     actionTmp: {}
 
@@ -103,45 +101,49 @@ Lynn = React.createClass
     # Prepare for i18n
     lang = "en"
 
-    div { id, className, lang },
-      Top
-        visible: @state.visible
+    if @state.specialMode is 'cheatSheet'
+      div { id, className, lang },
+        Cheatsheet()
+    else
+      div { id, className, lang },
+        Top
+          visible: @state.visible
 
-        input: @state.input
-        hint: @state.hint
+          input: @state.input
+          hint: @state.hint
 
-        mode: @state.mode
-        specialMode: @state.specialMode
+          mode: @state.mode
+          specialMode: @state.specialMode
 
-        onConsoleChange: @onConsoleChange
+          onConsoleChange: @onConsoleChange
 
-      Mid
-        start: @getNodeIndexStart()
-        end: @getNodeIndexEnd()
+        Mid
+          start: @getNodeIndexStart()
+          end: @getNodeIndexEnd()
 
-        mode: @state.mode
-        specialMode: @state.specialMode
+          mode: @state.mode
+          specialMode: @state.specialMode
 
-        nodeAnimation: @state.nodeAnimation
+          nodeAnimation: @state.nodeAnimation
 
-        nodeArr: @state.nodeArr
-        selectedArr: @state.selectedArr
+          nodeArr: @state.nodeArr
+          selectedArr: @state.selectedArr
 
-        useSuggestedTag: @state.useSuggestedTag
+          useSuggestedTag: @state.useSuggestedTag
 
-        currentNodeIndex: @state.currentNodeIndex
-        currentPageIndex: @state.currentPageIndex
+          currentNodeIndex: @state.currentNodeIndex
+          currentPageIndex: @state.currentPageIndex
 
-      Bot
-        input: @state.input
+        Bot
+          input: @state.input
 
-        mode: @state.mode
-        specialMode: @state.specialMode
+          mode: @state.mode
+          specialMode: @state.specialMode
 
-        nodeArr: @state.nodeArr
-        selectedArr: @state.selectedArr
+          nodeArr: @state.nodeArr
+          selectedArr: @state.selectedArr
 
-        currentPageIndex: @state.currentPageIndex
+          currentPageIndex: @state.currentPageIndex
 
   # ------------------------------------------------------------
 

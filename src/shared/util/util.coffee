@@ -13,8 +13,6 @@ Util =
     not @isTag(tag)
 
   # ------------------------------------------------------------
-  # To be thrown away
-  # ------------------------------------------------------------
 
   tabToNode: (tabOrTabArr) ->
     if not _.isArray(tabOrTabArr)
@@ -45,3 +43,7 @@ Util =
     e = document.getElementById('lynn_console')
     e.setSelectionRange(start, end)
 
+  # ------------------------------------------------------------
+
+  focusOnConsole: () ->
+    $('#lynn_console').focus()
