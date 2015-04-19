@@ -11,7 +11,7 @@
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
-DEBUG = yes
+DEBUG = no
 
 Key =
   '8'  : 'backspace'
@@ -222,6 +222,8 @@ ActionMatch =
 
       'u':                'n_pageUp'
       'd':                'n_pageDown'
+      's-openBracket':    'n_pageUp'
+      's-closeBracket':   'n_pageDown'
 
       # Selection
       'h':                'n_select'
