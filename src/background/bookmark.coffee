@@ -50,15 +50,6 @@ Bookmark =
     chrome.bookmarks.onRemoved.addListener (id, removeInfo) =>
       @h_remove(id)
 
-  initLocal: (allNode) ->
-    @allNode = allNode
-    @allTag = {}
-    _.forEach allNode, (node) =>
-      if node.tagArr
-        @allTag[node.id] = node.tagArr
-      else
-        @allTag[node.id] = node.tagArr = []
-
   # ------------------------------------------------------------
   # Tag
   # ------------------------------------------------------------
@@ -219,7 +210,8 @@ Bookmark =
   find: (query, pool = @allNode) ->
     return [] if query is ''
 
-    { strictSearch, kwArr, tagArr, hasEmptyTag } = @_processQuery(query)
+    { strictSearch, kwArr, tagArr,
+      hasEmptyTag, onlySearchCurrent } = @_processQuery(query)
 
     # When the only tag is '#' or '@'
     # Find all bookmarks with keywords and at least one tag
@@ -251,6 +243,15 @@ Bookmark =
       result = _.values(@fbTitleArr(kwArr, yes, pool))
 
     Rank.rank(kwArr, tagArr, result)
+
+  findCurr: (query, cb) ->
+    WinTab.getAllTab yes, (tabObj) =>
+      { allTabArr } = tabObj
+      allOpenURLArr = _.pluck(allTabArr, 'url')
+      results = _.filter @find(query), (node) ->
+        node.url in allOpenURLArr
+
+      cb(results)
 
   # ------------------------------------------------------------
   # Create / Update / Remove / Recover

@@ -28,7 +28,11 @@ Action =
         done({ result: [] })
 
     else
-      done({ result: Bookmark.find(msg.input) })
+      if '%' in msg.input
+        Bookmark.findCurr msg.input, (result) ->
+          done({ result })
+      else
+        done({ result: Bookmark.find(msg.input) })
 
   random: (msg, done) ->
     done({ nodeArr: Bookmark.random(msg.n) })
