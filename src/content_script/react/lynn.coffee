@@ -4,8 +4,6 @@
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
-{ div, span } = React.DOM
-
 Lynn = React.createClass
   getInitialState: ->
     visible: no

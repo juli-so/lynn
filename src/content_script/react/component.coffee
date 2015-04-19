@@ -5,8 +5,6 @@
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
-{ div, span } = React.DOM
-
 Tag = React.createClass
   render: ->
     className = switch @props.type
