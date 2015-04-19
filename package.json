@@ -1,6 +1,6 @@
 {
   "name": "Lynn",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "A Chrome plugin that lets you manage bookmarks with tags the Vim way.",
   "keywords": [
     "Chrome",
