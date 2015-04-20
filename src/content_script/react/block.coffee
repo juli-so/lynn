@@ -59,7 +59,8 @@ Mid = React.createClass
         animation = @props.nodeAnimation[@props.start + index] || 'lynn-fadeInLeft'
 
         Suggestion
-          key: node.id
+          # Use dateAdded for nodes created from tabs
+          key: node.url + (if node.id then node.id else node.dateAdded)
 
           node: node
           isCurrent: index is @props.currentNodeIndex
