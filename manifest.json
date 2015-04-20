@@ -29,7 +29,7 @@
         "js": [
           "lib/lodash.min.js",
           "lib/jquery.min.js",
-          "lib/react.min.js",
+          "lib/react.js",
 
           "js/shared_util.js",
           "js/shared_messaging.js",
