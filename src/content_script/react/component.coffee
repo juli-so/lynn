@@ -5,7 +5,7 @@
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
-Tag = React.createClass
+TagClass = React.createClass
   render: ->
     className = switch @props.type
       when 'normal'   then 'lynn_tag'
@@ -15,7 +15,9 @@ Tag = React.createClass
 
     span { className }, @props.tag
 
-Suggestion = React.createClass
+Tag = React.createFactory(TagClass)
+
+SuggestionClass = React.createClass
   render: ->
     className = 'lynn_suggestion lynn-animated '
     className += @props.animation
@@ -29,16 +31,16 @@ Suggestion = React.createClass
       div className: 'lynn_tagline',
         if @props.useSuggestedTag
           _.map @props.node.suggestedTagArr, (tag) ->
-            Tag { type: 'suggest', tag: tag }
+            Tag { type: 'suggest', tag: tag, key: tag }
 
         _.map @props.node.tagArr, (tag) ->
           if _.ciEquals(tag, '#todo')
             type = 'special'
           else
             type = 'normal'
-          Tag { type, tag }
+          Tag { type: type, tag: tag, key: tag }
 
         _.map @props.node.pendingTagArr, (tag) ->
-          Tag { type: 'pending', tag: tag }
+          Tag { type: 'pending', tag: tag, key: tag }
 
-
+Suggestion = React.createFactory(SuggestionClass)

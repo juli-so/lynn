@@ -103,10 +103,10 @@ Lynn = React.createClass
 
     if @state.specialMode is 'cheatSheet'
       div { id, className, lang },
-        Cheatsheet()
+        React.createElement(Cheatsheet)
     else
       div { id, className, lang },
-        Top
+        React.createElement Top,
           visible: @state.visible
 
           input: @state.input
@@ -117,7 +117,7 @@ Lynn = React.createClass
 
           onConsoleChange: @onConsoleChange
 
-        Mid
+        React.createElement Mid,
           start: @getNodeIndexStart()
           end: @getNodeIndexEnd()
 
@@ -134,7 +134,7 @@ Lynn = React.createClass
           currentNodeIndex: @state.currentNodeIndex
           currentPageIndex: @state.currentPageIndex
 
-        Bot
+        React.createElement Bot,
           input: @state.input
 
           mode: @state.mode
