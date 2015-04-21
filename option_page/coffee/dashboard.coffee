@@ -2,7 +2,7 @@
 { h1, h2, h3, h4, h5, h6 }         = React.DOM
 { hr }                             = React.DOM
 
-Dashboard = React.createClass
+DashboardClass = React.createClass
   render: ->
     div id: 'dashboard_content',
       div null,
@@ -22,7 +22,7 @@ Dashboard = React.createClass
             span className: 'five-rand-hint', 'Five random bookmarks to explore: '
             ul null,
               _.map @props.stats.fiveRandBm, (bm) ->
-                li null,
+                li key: bm.url + bm.id,
                   a href: bm.url, bm.title
 
       div null,
@@ -42,8 +42,8 @@ Dashboard = React.createClass
                 prereq = 'If bookmark title contains ' + autoTagRecord.matchStr
 
               autoTagDescription = prereq + ' -> '
-              li null, autoTagDescription,
-                span { className: 'lynn_tag' }, tagName
+              li key: tagName, autoTagDescription,
+                span className: 'lynn_tag', tagName
 
       div null,
         h2 null, 'Sessions'
@@ -52,19 +52,24 @@ Dashboard = React.createClass
           div null, 'No session'
         else
           _.map @props.state.sessionMap, (sessionRecord, sessionName) ->
-            div null,
+            div key: sessionName,
               p null,
                 b null, ":#{sessionName}"
                 " to invoke"
               if sessionRecord.type is 'window'
                 ul className: 'dash-list',
                   _.map sessionRecord.session, (node) ->
-                    li null,
+                    li { key: node.url + node.id },
                       a href: node.url, node.title
               else
                 ul null,
                   _.map sessionRecord.session, (nodeArray) ->
-                    ul className: 'dash-list', hr {},
+                    ul
+                      key: JSON.stringify(nodeArray)
+                      className: 'dash-list',
+                      hr {},
                       _.map nodeArray, (node) ->
-                        li null,
+                        li { key: node.url + node.id },
                           a href: node.url, node.title
+
+Dashboard = React.createFactory(DashboardClass)

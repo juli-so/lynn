@@ -2,7 +2,7 @@
 { h1, h2, h3, h4, h5, h6 }         = React.DOM
 { hr }                             = React.DOM
 
-Tagging = React.createClass
+TaggingClass = React.createClass
   render: ->
     div null,
       h2 null, 'Auto-tagging',
@@ -22,7 +22,7 @@ Tagging = React.createClass
                   prereq = 'If bookmark title contains ' + autoTagRecord.matchStr
 
                 autoTagDescription = prereq + ' -> '
-                li null, autoTagDescription,
+                li key: JSON.stringify(autoTagRecord), autoTagDescription,
                   span { className: 'lynn_tag' }, tagName
 
         div { className: 'custom-hr' }
@@ -90,3 +90,4 @@ Tagging = React.createClass
             onClick: @props.removeAutoTaggingRule
           , 'Remove'
 
+Tagging = React.createFactory(TaggingClass)

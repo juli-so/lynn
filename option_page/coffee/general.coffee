@@ -3,7 +3,7 @@
 { hr }                          = React.DOM
 { input, button }               = React.DOM
 
-General = React.createClass
+GeneralClass = React.createClass
   render: ->
     div null,
       p null, 'Command to Open / Hide Lynn'
@@ -47,3 +47,5 @@ General = React.createClass
         span { id: 'save-result', className: 'result transparent' }, 'Success'
         div { className: 'spacer' }
         button { id: 'save-general', onClick: @props.save }, 'Save'
+
+General = React.createFactory(GeneralClass)

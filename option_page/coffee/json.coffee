@@ -3,7 +3,7 @@
 { textarea }                    = React.DOM
 { input, button }               = React.DOM
 
-JsonIO = React.createClass
+JsonIOClass = React.createClass
   render: ->
     div null,
       textarea
@@ -17,6 +17,4 @@ JsonIO = React.createClass
       div { className: 'right' },
         button { id: 'json-select' }, "Select All"
 
-
-
-
+JsonIO = React.createFactory(JsonIOClass)
