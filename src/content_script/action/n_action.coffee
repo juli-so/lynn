@@ -173,6 +173,16 @@ N_Action =
           currentNodeIndex: 0
           currentPageIndex: @state.currentPageIndex + 1
 
+  firstItemInPage: ->
+    if @state.nodeArr.length is 0
+      return
+    @setState { currentNodeIndex: 0 }
+
+  lastItemInPage: ->
+    if @state.nodeArr.length is 0
+      return
+    @setState { currentNodeIndex: @state.option.MAX_SUGGESTION_NUM - 1 }
+
   # ------------------------------------------------------------
 
   pageUp: ->

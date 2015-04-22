@@ -219,6 +219,8 @@ ActionMatch =
       # Movment
       'k':                'n_up'
       'j':                'n_down'
+      '0':                'n_firstItemInPage'
+      's-4':              'n_lastItemInPage' # $
 
       'u':                'n_pageUp'
       'd':                'n_pageDown'
