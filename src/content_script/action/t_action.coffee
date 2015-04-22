@@ -28,7 +28,7 @@ T_Action =
 
   postHN: ->
     Listener.listenOnce 'queryTab', {}, (msg) =>
-      node = Util.tabToNode(message.current)
+      node = Util.tabToNode(msg.current)
 
       url = "http://news.ycombinator.com/submitlink?u=#{node.url}&t=#{node.title}"
 
