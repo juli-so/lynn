@@ -1,3 +1,6 @@
+# Global debug switch
+DEBUG = no
+
 $ ->
   Message.init()
   Listener.init()

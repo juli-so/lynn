@@ -11,8 +11,6 @@
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
-DEBUG = no
-
 Key =
   '8'  : 'backspace'
   '9'  : 'tab'
@@ -104,6 +102,8 @@ ActionMatch =
 
   findActionName: (event, mode, specialMode) ->
     keyString = @getKeyString(event)
+
+    console.log keyString if DEBUG
 
     # Log for debugging
     return 'n_log'        if keyString is 'c-p'

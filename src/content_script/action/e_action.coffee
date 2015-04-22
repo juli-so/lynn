@@ -5,8 +5,6 @@
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
-DEBUG = no
-
 # Actions to be made in command mode
 CommandMap =
   'a'             : 'i_addBookmark'
